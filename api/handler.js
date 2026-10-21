@@ -1,6 +1,7 @@
 // GENERATED from api/index.ts by scripts/build-vercel-handler.mjs — do not edit by hand.
 
 // api/index.ts
+import dns from "node:dns";
 import * as serverBuild from "../dist/server/index.js";
 import {
   createRequestHandler,
@@ -302,6 +303,10 @@ var FOOTER_QUERY = `#graphql
 `;
 
 // api/index.ts
+try {
+  dns.setDefaultResultOrder("ipv4first");
+} catch {
+}
 var cache = new InMemoryCache();
 function safeWaitUntil(promise) {
   try {
@@ -323,12 +328,16 @@ function getEnv() {
   };
 }
 async function handler(request) {
+  const t0 = Date.now();
+  const mark = (phase) => console.log(`[wra-handler] ${phase} +${Date.now() - t0}ms`);
   try {
+    mark("enter");
     const env = getEnv();
     if (!env.SESSION_SECRET) {
       throw new Error("SESSION_SECRET environment variable is not set");
     }
     const session = await AppSession.init(request, [env.SESSION_SECRET]);
+    mark("session");
     const hydrogenContext = createHydrogenContext({
       env,
       request,
@@ -340,12 +349,19 @@ async function handler(request) {
         queryFragment: CART_QUERY_FRAGMENT
       }
     });
+    mark("context");
     const handleRequest = createRequestHandler({
       build: serverBuild,
       mode: process.env.NODE_ENV,
       getLoadContext: () => hydrogenContext
     });
-    const response = await handleRequest(request);
+    const response = await Promise.race([
+      handleRequest(request),
+      new Promise(
+        (_, reject) => setTimeout(() => reject(new Error("handler watchdog: 25s")), 25e3)
+      )
+    ]);
+    mark("handled");
     if (hydrogenContext.session.isPending) {
       response.headers.set(
         "Set-Cookie",

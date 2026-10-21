@@ -11,7 +11,14 @@
  * call a worker-style `export default {fetch}` object — that shape dies
  * at launch with FUNCTION_INVOCATION_FAILED.
  */
+import dns from 'node:dns';
 import * as serverBuild from '../dist/server/index.js';
+
+// Serverless runtimes can stall outbound fetches on a broken IPv6
+// route (works locally, hangs on Vercel). Prefer IPv4.
+try {
+  dns.setDefaultResultOrder('ipv4first');
+} catch {}
 import {
   createRequestHandler,
   createHydrogenContext,
@@ -46,13 +53,18 @@ function getEnv() {
 }
 
 export default async function handler(request: Request): Promise<Response> {
+  const t0 = Date.now();
+  const mark = (phase: string) =>
+    console.log(`[wra-handler] ${phase} +${Date.now() - t0}ms`);
   try {
+    mark('enter');
     const env = getEnv();
     if (!env.SESSION_SECRET) {
       throw new Error('SESSION_SECRET environment variable is not set');
     }
 
     const session = await AppSession.init(request, [env.SESSION_SECRET]);
+    mark('session');
 
     const hydrogenContext = createHydrogenContext({
       env,
@@ -66,13 +78,25 @@ export default async function handler(request: Request): Promise<Response> {
       },
     });
 
+    mark('context');
+
     const handleRequest = createRequestHandler({
       build: serverBuild,
       mode: process.env.NODE_ENV,
       getLoadContext: () => hydrogenContext,
     });
 
-    const response = await handleRequest(request);
+    // Watchdog: if anything upstream stalls (observed: requests hanging
+    // to the platform timeout with zero bytes sent), fail visibly with
+    // our own 500 instead of a platform 504 so the phase logs show
+    // exactly where it stopped.
+    const response = await Promise.race([
+      handleRequest(request),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('handler watchdog: 25s')), 25_000),
+      ),
+    ]);
+    mark('handled');
 
     if (hydrogenContext.session.isPending) {
       response.headers.set(
