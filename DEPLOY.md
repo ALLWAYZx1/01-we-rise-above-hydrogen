@@ -10,6 +10,15 @@ bundle as an Edge Function and failed with
 `NOW_SANDBOX_WORKER_EDGE_FUNCTION_UNSUPPORTED_MODULES` — a runtime/target
 mismatch, not a Node-version or lockfile problem.
 
+## Second fault found (2026-10-21)
+
+The Vercel project also carried a custom **Install Command** override:
+`base64 -d wra-source.tar.gz.b64 > /tmp/wra-source.tar.gz && tar -xzf ...`
+That file does not exist in this repo, so every deployment failed in
+seconds at the install step, regardless of source. The override was
+cleared (Install Command reset to default) on 2026-10-21. Do not set a
+custom install command on this project.
+
 ## What changed
 
 - `vite.config.ts` — removed the `@shopify/mini-oxygen` `oxygen()` plugin.
