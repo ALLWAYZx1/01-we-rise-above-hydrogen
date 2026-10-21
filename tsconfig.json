@@ -53,6 +53,7 @@
     ],
     "incremental": true,
     "composite": false,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true
   }
 }
