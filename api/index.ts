@@ -53,7 +53,44 @@ function getEnv() {
   };
 }
 
-export default async function handler(request: Request): Promise<Response> {
+function toWebRequest(incomingRequest: any): Request {
+  if (
+    incomingRequest instanceof Request &&
+    incomingRequest.headers &&
+    typeof incomingRequest.headers.get === 'function'
+  ) {
+    return incomingRequest;
+  }
+
+  const headers = new Headers();
+  for (const [name, value] of Object.entries(incomingRequest?.headers ?? {})) {
+    if (value == null) continue;
+    if (Array.isArray(value)) {
+      for (const item of value) headers.append(name, String(item));
+    } else {
+      headers.set(name, String(value));
+    }
+  }
+
+  const protocol = headers.get('x-forwarded-proto')?.split(',')[0]?.trim() || 'https';
+  const host =
+    headers.get('x-forwarded-host')?.split(',')[0]?.trim() ||
+    headers.get('host') ||
+    'localhost';
+  const url = new URL(incomingRequest?.url || '/', `${protocol}://${host}`);
+  const method = String(incomingRequest?.method || 'GET').toUpperCase();
+  const init: RequestInit & {duplex?: 'half'} = {method, headers};
+
+  if (method !== 'GET' && method !== 'HEAD') {
+    init.body = incomingRequest;
+    init.duplex = 'half';
+  }
+
+  return new Request(url, init);
+}
+
+export default async function handler(incomingRequest: any): Promise<Response> {
+  const request = toWebRequest(incomingRequest);
   const t0 = Date.now();
   const mark = (phase: string) =>
     console.log(`[wra-handler] ${phase} +${Date.now() - t0}ms`);
