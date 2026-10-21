@@ -19,6 +19,19 @@ seconds at the install step, regardless of source. The override was
 cleared (Install Command reset to default) on 2026-10-21. Do not set a
 custom install command on this project.
 
+## Third fault found (2026-10-21) — fix/vercel-handler-bundle
+
+With the handler exported correctly, the deployed function still died:
+`ERR_MODULE_NOT_FOUND: Cannot find module '/var/task/app/lib/session'`.
+Vercel's Node runtime cannot resolve the handler's local TypeScript
+source imports (`../app/lib/session`, `../app/lib/fragments`) — they
+were never emitted into the function package. Fix: the deployed entry
+is now a bundled file. `scripts/build-vercel-handler.mjs` (esbuild)
+bundles `api/index.ts` into `api/handler.js`, inlining all local
+files; npm packages and `../dist/server/index.js` stay external.
+`vercel.json` runs it as part of the build and routes all traffic to
+`/api/handler`. `api/index.ts` remains the source of truth.
+
 ## What changed
 
 - `vite.config.ts` — removed the `@shopify/mini-oxygen` `oxygen()` plugin.

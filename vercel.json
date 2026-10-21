@@ -1,9 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build && npm run build:handler",
   "framework": null,
   "functions": {
-    "api/index.ts": {
+    "api/handler.js": {
       "maxDuration": 30,
       "includeFiles": "dist/server/**"
     }
@@ -11,7 +11,7 @@
   "outputDirectory": "dist/client",
   "rewrites": [
     {
-      "destination": "/api/index",
+      "destination": "/api/handler",
       "source": "/(.*)"
     }
   ]
