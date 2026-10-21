@@ -5,10 +5,7 @@
   "functions": {
     "api/index.ts": {
       "maxDuration": 30,
-      "includeFiles": [
-        "dist/server/**",
-        "app/lib/**"
-      ]
+      "includeFiles": "{dist/server/**,app/lib/**}"
     }
   },
   "outputDirectory": "dist/client",
