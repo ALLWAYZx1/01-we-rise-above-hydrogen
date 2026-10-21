@@ -25,19 +25,20 @@ import {
   InMemoryCache,
   storefrontRedirect,
 } from '@shopify/hydrogen';
-import {waitUntil} from '@vercel/functions';
 import {AppSession} from '../app/lib/session';
 import {CART_QUERY_FRAGMENT} from '../app/lib/fragments';
 
 const cache = new InMemoryCache();
 
-// Vercel's waitUntil needs a live request scope; never let it break a request.
+// Fire-and-forget. Deliberately NOT @vercel/functions' waitUntil:
+// Hydrogen registers background promises (cache puts, session work)
+// with it, and in Vercel's runtime a registered promise that never
+// settles holds the response open until the platform timeout —
+// observed as requests hanging with zero bytes sent while the same
+// code answered in ~1s locally. With an in-process InMemoryCache,
+// plain fire-and-forget loses nothing.
 function safeWaitUntil(promise: Promise<unknown>) {
-  try {
-    waitUntil(promise);
-  } catch {
-    Promise.resolve(promise).catch(() => {});
-  }
+  Promise.resolve(promise).catch(() => {});
 }
 
 function getEnv() {

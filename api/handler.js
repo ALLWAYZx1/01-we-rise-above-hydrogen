@@ -9,7 +9,6 @@ import {
   InMemoryCache,
   storefrontRedirect
 } from "@shopify/hydrogen";
-import { waitUntil } from "@vercel/functions";
 
 // app/lib/session.ts
 import {
@@ -309,12 +308,8 @@ try {
 }
 var cache = new InMemoryCache();
 function safeWaitUntil(promise) {
-  try {
-    waitUntil(promise);
-  } catch {
-    Promise.resolve(promise).catch(() => {
-    });
-  }
+  Promise.resolve(promise).catch(() => {
+  });
 }
 function getEnv() {
   return {
