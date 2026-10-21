@@ -27,7 +27,7 @@ export function Header({
   return (
     <header className="header">
       <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
+        <strong><span aria-hidden="true" style={{color:"#d4af37",marginRight:".45rem"}}>A★</span>We Rise Above</strong>
       </NavLink>
       <HeaderMenu
         menu={menu}

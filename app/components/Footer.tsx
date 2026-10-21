@@ -18,6 +18,7 @@ export function Footer({
       <Await resolve={footerPromise}>
         {(footer) => (
           <footer className="footer">
+            <div className="footer-brand"><span>A★</span><strong>WE RISE ABOVE</strong><p>Faith. Discipline. Hard work. Keep rising.</p><small>NO FINAL FORM.</small></div>
             {footer?.menu && header.shop.primaryDomain?.url && (
               <FooterMenu
                 menu={footer.menu}

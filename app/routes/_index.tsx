@@ -10,7 +10,7 @@ import {ProductItem} from '~/components/ProductItem';
 import {MockShopNotice} from '~/components/MockShopNotice';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'We Rise Above | Streetwear, Music & Creative Culture'}];
+  return [{title: 'We Rise Above | No Final Form'}, {name: 'description', content: 'Streetwear armor for the ones still rising. Faith. Discipline. Hard work. No final form.'}];
 };
 
 export async function loader(args: Route.LoaderArgs) {
@@ -66,9 +66,9 @@ export default function Homepage() {
       <section className="wra-hero">
         <p className="wra-hero-eyebrow">We Rise Above — Season 00</p>
         <h1 className="wra-hero-title">
-          Pressure builds.
+          Built by
           <br />
-          <span className="wra-hero-gold">We rise.</span>
+          <span className="wra-hero-gold">the <span className="wra-hero-gold">pressure.</span></span>
         </h1>
         <p className="wra-hero-copy">
           Heavyweight streetwear forged under pressure. Cut heavy, printed
@@ -81,8 +81,10 @@ export default function Homepage() {
           </Link>
         </div>
       </section>
-      <FeaturedCollection collection={data.featuredCollection} />
+      <section className="wra-section"><p className="eyebrow">First things first</p><h2>Wear the rise.</h2><p className="collection-intro">Pieces with presence. Built for the days that test you and the nights that define you.</p><FeaturedCollection collection={data.featuredCollection} /></section>
       <RecommendedProducts products={data.recommendedProducts} />
+      <section className="wra-duality" aria-label="Angel and demon duality"><Link to="/collections/all"><span>Chapter I · The light</span><strong>Angel energy.</strong><p>Move with faith. Protect your peace. Keep your purpose in sight.</p></Link><Link to="/collections/all"><span>Chapter II · The fire</span><strong>Demon mode.</strong><p>Face the pressure. Own your shadow. Turn every limit into fuel.</p></Link></section>
+      <section className="wra-creed"><p className="eyebrow">The code we live by</p><h2>The creed.</h2><div className="wra-creed-words">{["FAITH","DISCIPLINE","HARD WORK","NEVER SETTLE","KEEP RISING","STAY TRUE"].map((word) => <span key={word}>{word}</span>)}</div><p className="wra-creed-tagline">NO FINAL FORM.</p></section>
     </div>
   );
 }

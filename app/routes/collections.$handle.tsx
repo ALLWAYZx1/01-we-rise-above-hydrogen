@@ -7,7 +7,7 @@ import {ProductItem} from '~/components/ProductItem';
 import type {ProductItemFragment} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
+  return [{title: `${data?.collection.title ?? 'Collection'} | We Rise Above`}];
 };
 
 export async function loader(args: Route.LoaderArgs) {
@@ -70,7 +70,9 @@ export default function Collection() {
 
   return (
     <div className="collection">
+      <p className="eyebrow">We Rise Above · Collection</p>
       <h1>{collection.title}</h1>
+      <p className="collection-intro">Every piece carries the code. Choose your armor.</p>
       <p className="collection-description">{collection.description}</p>
       <PaginatedResourceSection<ProductItemFragment>
         connection={collection.products}
