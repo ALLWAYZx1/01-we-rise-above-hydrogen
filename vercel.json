@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm run build && npm run build:handler",
+  "buildCommand": "npm run build",
   "framework": null,
   "functions": {
     "api/handler.js": {

@@ -29,8 +29,12 @@ were never emitted into the function package. Fix: the deployed entry
 is now a bundled file. `scripts/build-vercel-handler.mjs` (esbuild)
 bundles `api/index.ts` into `api/handler.js`, inlining all local
 files; npm packages and `../dist/server/index.js` stay external.
-`vercel.json` runs it as part of the build and routes all traffic to
-`/api/handler`. `api/index.ts` remains the source of truth.
+The generated `api/handler.js` is committed, and `vercel.json` routes
+all traffic to `/api/handler`. (First attempt generated it during the
+Vercel build instead — that deployment errored instantly, before the
+build stage; a committed bundle removes the ordering question.)
+`api/index.ts` remains the source of truth: after editing it, run
+`npm run build:handler` and commit the regenerated `api/handler.js`.
 
 ## What changed
 
