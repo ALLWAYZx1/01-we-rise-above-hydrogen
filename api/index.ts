@@ -6,6 +6,10 @@
  * Vercel Functions: env from process.env, an in-memory Web Cache API
  * implementation instead of the workerd `caches` global, and Vercel's
  * `waitUntil` so background work survives the response.
+ *
+ * NOTE: Vercel invokes a default-exported handler FUNCTION. It does not
+ * call a worker-style `export default {fetch}` object — that shape dies
+ * at launch with FUNCTION_INVOCATION_FAILED.
  */
 import * as serverBuild from '../dist/server/index.js';
 import {
@@ -41,55 +45,53 @@ function getEnv() {
   };
 }
 
-export default {
-  async fetch(request: Request): Promise<Response> {
-    try {
-      const env = getEnv();
-      if (!env.SESSION_SECRET) {
-        throw new Error('SESSION_SECRET environment variable is not set');
-      }
-
-      const session = await AppSession.init(request, [env.SESSION_SECRET]);
-
-      const hydrogenContext = createHydrogenContext({
-        env,
-        request,
-        cache,
-        waitUntil: safeWaitUntil,
-        session,
-        i18n: {language: 'EN', country: 'US'},
-        cart: {
-          queryFragment: CART_QUERY_FRAGMENT,
-        },
-      });
-
-      const handleRequest = createRequestHandler({
-        build: serverBuild,
-        mode: process.env.NODE_ENV,
-        getLoadContext: () => hydrogenContext,
-      });
-
-      const response = await handleRequest(request);
-
-      if (hydrogenContext.session.isPending) {
-        response.headers.set(
-          'Set-Cookie',
-          await hydrogenContext.session.commit(),
-        );
-      }
-
-      if (response.status === 404) {
-        return storefrontRedirect({
-          request,
-          response,
-          storefront: hydrogenContext.storefront,
-        });
-      }
-
-      return response;
-    } catch (error) {
-      console.error(error);
-      return new Response('An unexpected error occurred', {status: 500});
+export default async function handler(request: Request): Promise<Response> {
+  try {
+    const env = getEnv();
+    if (!env.SESSION_SECRET) {
+      throw new Error('SESSION_SECRET environment variable is not set');
     }
-  },
-};
+
+    const session = await AppSession.init(request, [env.SESSION_SECRET]);
+
+    const hydrogenContext = createHydrogenContext({
+      env,
+      request,
+      cache,
+      waitUntil: safeWaitUntil,
+      session,
+      i18n: {language: 'EN', country: 'US'},
+      cart: {
+        queryFragment: CART_QUERY_FRAGMENT,
+      },
+    });
+
+    const handleRequest = createRequestHandler({
+      build: serverBuild,
+      mode: process.env.NODE_ENV,
+      getLoadContext: () => hydrogenContext,
+    });
+
+    const response = await handleRequest(request);
+
+    if (hydrogenContext.session.isPending) {
+      response.headers.set(
+        'Set-Cookie',
+        await hydrogenContext.session.commit(),
+      );
+    }
+
+    if (response.status === 404) {
+      return storefrontRedirect({
+        request,
+        response,
+        storefront: hydrogenContext.storefront,
+      });
+    }
+
+    return response;
+  } catch (error) {
+    console.error(error);
+    return new Response('An unexpected error occurred', {status: 500});
+  }
+}
