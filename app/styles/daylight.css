@@ -7,6 +7,7 @@
   --wra-gold: #8A641B;
   --wra-gold-deep: #67470D;
   --wra-gold-soft: #E8D8B5;
+  --wra-cta-gradient: linear-gradient(115deg, #8A641B 0%, #67470D 100%);
   --wra-border: #DED6C8;
   --wra-shadow: 0 16px 40px rgba(23, 23, 23, 0.08);
   --wra-shadow-hover: 0 22px 48px rgba(23, 23, 23, 0.13);
@@ -124,7 +125,7 @@ button:not(.reset), input[type="submit"] {
   border: 1px solid var(--wra-gold);
   border-radius: var(--wra-radius);
   padding: .7rem 1.15rem;
-  background: var(--wra-gold);
+  background: var(--wra-cta-gradient);
   color: #FFFFFF;
   font-size: .76rem;
   font-weight: 750;
@@ -133,7 +134,7 @@ button:not(.reset), input[type="submit"] {
   cursor: pointer;
 }
 button:not(.reset):hover, input[type="submit"]:hover {
-  background: var(--wra-gold-deep);
+  background: linear-gradient(115deg, #67470D 0%, #493108 100%);
   border-color: var(--wra-gold-deep);
 }
 input, select, textarea {
