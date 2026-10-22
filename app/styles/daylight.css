@@ -120,7 +120,7 @@ button {
   color: var(--wra-ink);
   border-color: var(--wra-border);
 }
-button:not(.reset), input[type="submit"] {
+button[type="submit"], input[type="submit"] {
   min-height: 44px;
   border: 1px solid var(--wra-gold);
   border-radius: var(--wra-radius);
@@ -133,7 +133,7 @@ button:not(.reset), input[type="submit"] {
   text-transform: uppercase;
   cursor: pointer;
 }
-button:not(.reset):hover, input[type="submit"]:hover {
+button[type="submit"]:hover, input[type="submit"]:hover {
   background: linear-gradient(115deg, #67470D 0%, #493108 100%);
   border-color: var(--wra-gold-deep);
 }
@@ -229,6 +229,14 @@ aside input, .predictive-search input { width: 100%; }
 .cart-line-quantity button, .cart-discount button {
   min-height: 36px;
   padding: .35rem .65rem;
+  border: 1px solid var(--wra-border);
+  border-radius: var(--wra-radius);
+  background: var(--wra-surface);
+  color: var(--wra-ink);
+}
+.cart-line-quantity button:hover, .cart-discount button:hover {
+  background: var(--wra-page);
+  border-color: var(--wra-gold);
 }
 .cart-subtotal { justify-content: space-between; gap: 1rem; }
 .cart-summary-page { max-width: 560px; margin: 2rem 0 3rem auto; }
