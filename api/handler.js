@@ -322,6 +322,82 @@ function getEnv() {
     SHOP_ID: process.env.SHOP_ID
   };
 }
+function withTimeout(p, ms, label) {
+  return Promise.race([
+    p,
+    new Promise(
+      (_, reject) => setTimeout(() => reject(new Error(`${label}: timeout ${ms}ms`)), ms)
+    )
+  ]);
+}
+async function wraDiag(request, env) {
+  const lines = [];
+  const step = (s) => lines.push(s);
+  step(
+    `env: SESSION_SECRET=${env.SESSION_SECRET ? "set" : "MISSING"} DOMAIN=${env.PUBLIC_STORE_DOMAIN} PUBTOK=${env.PUBLIC_STOREFRONT_API_TOKEN ? "set" : "MISSING"} PRIVTOK=${env.PRIVATE_STOREFRONT_API_TOKEN ? "set" : "MISSING"}`
+  );
+  let session = null;
+  try {
+    session = await withTimeout(
+      AppSession.init(request, [env.SESSION_SECRET]),
+      6e3,
+      "session"
+    );
+    step("session: OK");
+  } catch (e) {
+    step(`session: FAIL ${e.message}`);
+    return new Response(lines.join("\n"), {
+      headers: { "content-type": "text/plain" }
+    });
+  }
+  let hydrogenContext = null;
+  try {
+    hydrogenContext = createHydrogenContext({
+      env,
+      request,
+      cache,
+      waitUntil: safeWaitUntil,
+      session,
+      i18n: { language: "EN", country: "US" },
+      cart: { queryFragment: CART_QUERY_FRAGMENT }
+    });
+    step("context: OK");
+  } catch (e) {
+    step(`context: FAIL ${e.message}`);
+    return new Response(lines.join("\n"), {
+      headers: { "content-type": "text/plain" }
+    });
+  }
+  try {
+    const data = await withTimeout(
+      hydrogenContext.storefront.query("{ shop { name } }"),
+      8e3,
+      "storefront"
+    );
+    step(`storefront: OK ${JSON.stringify(data)}`);
+  } catch (e) {
+    step(`storefront: FAIL ${e.message}`);
+  }
+  try {
+    const handleRequest = createRequestHandler({
+      build: serverBuild,
+      mode: process.env.NODE_ENV,
+      getLoadContext: () => hydrogenContext
+    });
+    const res = await withTimeout(
+      handleRequest(new Request(new URL("/", request.url))),
+      15e3,
+      "handleRequest"
+    );
+    const body = await res.text();
+    step(`handleRequest /: ${res.status} bytes=${body.length}`);
+  } catch (e) {
+    step(`handleRequest: FAIL ${e.message}`);
+  }
+  return new Response(lines.join("\n"), {
+    headers: { "content-type": "text/plain" }
+  });
+}
 async function handler(request) {
   const t0 = Date.now();
   const mark = (phase) => console.log(`[wra-handler] ${phase} +${Date.now() - t0}ms`);
@@ -331,7 +407,14 @@ async function handler(request) {
     if (!env.SESSION_SECRET) {
       throw new Error("SESSION_SECRET environment variable is not set");
     }
-    const session = await AppSession.init(request, [env.SESSION_SECRET]);
+    if (new URL(request.url).pathname === "/__wra_diag") {
+      return await wraDiag(request, env);
+    }
+    const session = await withTimeout(
+      AppSession.init(request, [env.SESSION_SECRET]),
+      1e4,
+      "session"
+    );
     mark("session");
     const hydrogenContext = createHydrogenContext({
       env,
