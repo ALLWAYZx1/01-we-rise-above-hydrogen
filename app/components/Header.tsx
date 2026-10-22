@@ -23,11 +23,11 @@ export function Header({
   cart,
   publicStoreDomain,
 }: HeaderProps) {
-  const {menu} = header;
+  const {shop, menu} = header;
   return (
     <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end aria-label="We Rise Above home">
-        <strong>WE RISE ABOVE</strong>
+      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
+        <strong>{shop.name}</strong>
       </NavLink>
       <HeaderMenu
         menu={menu}
@@ -226,6 +226,7 @@ function activeLinkStyle({
 }) {
   return {
     fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'black',
+    color: 'inherit',
+    opacity: isPending ? 0.55 : undefined,
   };
 }
