@@ -1,5 +1,5 @@
 /* Route-owned DAYLIGHT page styling. All color values come from the shared token layer. */
-.daylight-home, .daylight-collection-page, .daylight-product-page, .daylight-page { color: var(--wra-ink); }
+.daylight-home, .daylight-collection-page, .daylight-product-page, .daylight-page { color: var(--wra-ink); width: 100%; min-width: 0; max-width: 100%; overflow-x: clip; }
 .daylight-hero { position: relative; isolation: isolate; overflow: hidden; text-align: center; padding: clamp(4rem, 10vw, 9rem) 1rem clamp(3rem, 8vw, 7rem); background: radial-gradient(ellipse at 50% 0%, var(--wra-gold-soft), transparent 62%), var(--wra-page); border-bottom: 1px solid var(--wra-border); }
 .daylight-astar { color: var(--wra-gold); font-size: clamp(3rem, 7vw, 6rem); line-height: 1; margin-bottom: 1rem; }
 .daylight-eyebrow { color: var(--wra-gold-deep); font-size: .75rem; font-weight: 750; letter-spacing: .2em; text-transform: uppercase; margin: 0 0 .9rem; }
@@ -21,7 +21,10 @@
 .daylight-image-fallback { display: grid; place-items: center; color: var(--wra-gold); font-size: 2rem; }
 .daylight-product-rail { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(.75rem, 2vw, 1.5rem); }
 .daylight-product-rail .product-item, .daylight-product-grid .product-item { display: block; min-width: 0; padding: .65rem; border: 1px solid var(--wra-border); border-radius: var(--wra-radius); background: var(--wra-surface); color: var(--wra-ink); text-decoration: none; }
-.daylight-product-rail .product-item img, .daylight-product-grid .product-item img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.daylight-product-rail .product-item img, .daylight-product-grid .product-item img { display: block; width: 100%; max-width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+/* Product photography is consistently portrait across rails, collection grids, and detail galleries. */
+.daylight-product-rail .product-item, .daylight-product-grid .product-item { min-width: 0; overflow: hidden; }
+.daylight-product-rail .product-item img, .daylight-product-grid .product-item img, .daylight-gallery-main img { aspect-ratio: 4 / 5; object-fit: cover; }
 .daylight-product-rail .product-item h4, .daylight-product-grid .product-item h4 { margin: .75rem 0 .3rem; color: var(--wra-ink); }
 .daylight-product-rail .product-item small, .daylight-product-grid .product-item small { color: var(--wra-muted); }
 .daylight-values { display: flex; justify-content: center; flex-wrap: wrap; gap: .8rem 2rem; padding: 1.5rem 1rem; border-block: 1px solid var(--wra-border); color: var(--wra-gold-deep); font-size: .75rem; font-weight: 800; letter-spacing: .13em; }
