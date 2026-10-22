@@ -1,0 +1,88 @@
+/* Route-owned DAYLIGHT page styling. All color values come from the shared token layer. */
+.daylight-home, .daylight-collection-page, .daylight-product-page, .daylight-page { color: var(--wra-ink); }
+.daylight-hero { position: relative; isolation: isolate; overflow: hidden; text-align: center; padding: clamp(4rem, 10vw, 9rem) 1rem clamp(3rem, 8vw, 7rem); background: radial-gradient(ellipse at 50% 0%, var(--wra-gold-soft), transparent 62%), var(--wra-page); border-bottom: 1px solid var(--wra-border); }
+.daylight-astar { color: var(--wra-gold); font-size: clamp(3rem, 7vw, 6rem); line-height: 1; margin-bottom: 1rem; }
+.daylight-eyebrow { color: var(--wra-gold-deep); font-size: .75rem; font-weight: 750; letter-spacing: .2em; text-transform: uppercase; margin: 0 0 .9rem; }
+.daylight-hero h1 { font-size: clamp(3rem, 9vw, 8.5rem); letter-spacing: -.035em; margin: 0; }
+.daylight-hero h1 span { color: var(--wra-gold); }
+.daylight-hero-copy { max-width: 42rem; margin: 1.4rem auto 0; color: var(--wra-muted); font-size: clamp(1rem, 2vw, 1.25rem); }
+.daylight-actions { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 1.5rem; margin-top: 2rem; }
+.daylight-button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: .85rem 1.4rem; border: 1px solid var(--wra-gold); border-radius: var(--wra-radius); background: var(--wra-cta-gradient); color: var(--wra-surface); font-size: .78rem; font-weight: 750; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; cursor: pointer; }
+.daylight-button:hover { color: var(--wra-surface); box-shadow: var(--wra-shadow-hover); }
+.daylight-text-link { color: var(--wra-gold-deep); font-weight: 700; text-decoration-thickness: 1px; }
+.daylight-section { padding: clamp(2.5rem, 6vw, 5.5rem) 0; }
+.daylight-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+.daylight-section-heading h2 { margin: 0; }
+.daylight-collection-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(.75rem, 2vw, 1.5rem); }
+.daylight-collection-card { position: relative; display: flex; flex-direction: column; gap: .8rem; min-width: 0; color: var(--wra-ink); text-decoration: none; font-weight: 750; }
+.daylight-collection-card img, .daylight-image-fallback { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: var(--wra-surface); box-shadow: var(--wra-shadow); }
+.daylight-collection-card:hover img { box-shadow: var(--wra-shadow-hover); }
+.daylight-card-arrow { position: absolute; right: .75rem; bottom: .75rem; color: var(--wra-gold-deep); }
+.daylight-image-fallback { display: grid; place-items: center; color: var(--wra-gold); font-size: 2rem; }
+.daylight-product-rail { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(.75rem, 2vw, 1.5rem); }
+.daylight-product-rail .product-item, .daylight-product-grid .product-item { display: block; min-width: 0; padding: .65rem; border: 1px solid var(--wra-border); border-radius: var(--wra-radius); background: var(--wra-surface); color: var(--wra-ink); text-decoration: none; }
+.daylight-product-rail .product-item img, .daylight-product-grid .product-item img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.daylight-product-rail .product-item h4, .daylight-product-grid .product-item h4 { margin: .75rem 0 .3rem; color: var(--wra-ink); }
+.daylight-product-rail .product-item small, .daylight-product-grid .product-item small { color: var(--wra-muted); }
+.daylight-values { display: flex; justify-content: center; flex-wrap: wrap; gap: .8rem 2rem; padding: 1.5rem 1rem; border-block: 1px solid var(--wra-border); color: var(--wra-gold-deep); font-size: .75rem; font-weight: 800; letter-spacing: .13em; }
+.daylight-newsletter { margin: clamp(2.5rem, 7vw, 6rem) 0; padding: clamp(2rem, 6vw, 4rem); text-align: center; background: var(--wra-surface); border: 1px solid var(--wra-border); box-shadow: var(--wra-shadow); }
+.daylight-newsletter h2 { margin: 0; }
+.daylight-newsletter > p:not(.daylight-eyebrow) { color: var(--wra-muted); }
+.daylight-newsletter-note { max-width: 42rem; margin: 1rem auto 0; font-size: .88rem; }
+.daylight-collection-heading { padding: 2.5rem 0 1.5rem; }
+.daylight-collection-heading h1 { margin: 0 0 .75rem; }
+.daylight-collection-heading > p:last-child { max-width: 55rem; color: var(--wra-muted); }
+.daylight-breadcrumb { display: flex; flex-wrap: wrap; gap: .65rem; padding-top: 1.25rem; color: var(--wra-muted); font-size: .82rem; }
+.daylight-breadcrumb a { color: var(--wra-gold-deep); }
+.daylight-filters { display: flex; align-items: end; flex-wrap: wrap; gap: .8rem; padding: 1rem; margin: 1rem 0; background: var(--wra-surface); border: 1px solid var(--wra-border); }
+.daylight-filters label { display: grid; gap: .35rem; flex: 1 1 10rem; color: var(--wra-muted); font-size: .8rem; font-weight: 650; }
+.daylight-filters input, .daylight-filters select { width: 100%; min-height: 44px; padding: .6rem; border: 1px solid var(--wra-border); border-radius: var(--wra-radius); background: var(--wra-surface); color: var(--wra-ink); }
+.daylight-result-count { color: var(--wra-muted); font-size: .85rem; }
+.daylight-product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(.75rem, 2vw, 1.5rem); }
+.daylight-empty, .daylight-empty-state { padding: 2rem; text-align: center; background: var(--wra-surface); border: 1px solid var(--wra-border); color: var(--wra-muted); }
+.daylight-empty-state h2 { color: var(--wra-ink); }
+.daylight-empty-state .daylight-button { margin-top: .5rem; }
+.daylight-product-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(18rem, .9fr); align-items: start; gap: clamp(2rem, 6vw, 5rem); padding: 1.5rem 0 4rem; }
+.daylight-gallery-main img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: var(--wra-surface); }
+.daylight-gallery-thumbs { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: .75rem; }
+.daylight-gallery-thumbs button { width: 5rem; padding: .2rem; border: 1px solid var(--wra-border); background: var(--wra-surface); cursor: pointer; }
+.daylight-gallery-thumbs button[aria-pressed="true"] { border-color: var(--wra-gold); box-shadow: var(--wra-shadow); }
+.daylight-gallery-thumbs img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
+.daylight-product-details { position: sticky; top: calc(var(--header-height) + 1rem); }
+.daylight-product-details h1 { margin: 0 0 1rem; font-size: clamp(2.4rem, 5vw, 4.5rem); }
+.daylight-product-description { color: var(--wra-muted); margin: 1.5rem 0; }
+.daylight-quantity { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 1.5rem 0; }
+.daylight-quantity > div { display: flex; align-items: center; border: 1px solid var(--wra-border); }
+.daylight-quantity button { min-width: 40px; min-height: 40px; border: 0; background: var(--wra-surface); color: var(--wra-ink); cursor: pointer; }
+.daylight-quantity button:disabled { opacity: .4; cursor: not-allowed; }
+.daylight-quantity output { min-width: 2rem; text-align: center; }
+.daylight-product-form .product-options { min-width: 0; padding: 0; margin: 1rem 0; border: 0; }
+.daylight-product-form legend { margin-bottom: .6rem; font-weight: 750; }
+.daylight-product-form .product-options-grid { display: flex; flex-wrap: wrap; gap: .6rem; }
+.daylight-product-form .product-options-item { min-width: 2.75rem; min-height: 2.75rem; padding: .5rem .7rem; border: 1px solid var(--wra-border); border-radius: var(--wra-radius); background: var(--wra-surface); color: var(--wra-ink); cursor: pointer; }
+.daylight-product-form .product-options-item[aria-pressed="true"] { border-color: var(--wra-gold); box-shadow: inset 0 0 0 1px var(--wra-gold); }
+.daylight-product-form .product-options-item:disabled { opacity: .4; cursor: not-allowed; }
+.daylight-product-form button[type="submit"] { width: 100%; min-height: 52px; margin-top: 1rem; background: var(--wra-cta-gradient); color: var(--wra-surface); }
+.daylight-checkout-note { color: var(--wra-muted); font-size: .8rem; margin-top: 1rem; }
+.daylight-description-html { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--wra-border); }
+.daylight-page-heading { padding: clamp(3rem, 8vw, 6rem) 0 2rem; }
+.daylight-page-heading h1 { margin: 0; }
+.daylight-page-lede { max-width: 45rem; color: var(--wra-muted); font-size: clamp(1.1rem, 2vw, 1.5rem); }
+.daylight-page-content { max-width: 52rem; padding-bottom: 3rem; }
+.daylight-page-content h2, .daylight-page-content h3 { margin-top: 2rem; }
+.daylight-page-values { padding: 2rem 0 4rem; border-top: 1px solid var(--wra-border); }
+.daylight-page-values p { color: var(--wra-gold-deep); font-weight: 800; letter-spacing: .08em; }
+@media (max-width: 760px) {
+  .daylight-collection-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .daylight-product-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .daylight-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .daylight-product-layout { grid-template-columns: minmax(0, 1fr); }
+  .daylight-product-details { position: static; }
+  .daylight-section-heading { align-items: start; }
+  .daylight-section-heading h2 { font-size: clamp(1.6rem, 6vw, 2.5rem); }
+}
+@media (max-width: 420px) {
+  .daylight-section-heading { flex-direction: column; }
+  .daylight-values { gap: .8rem 1rem; font-size: .68rem; }
+  .daylight-filters { align-items: stretch; }
+}
