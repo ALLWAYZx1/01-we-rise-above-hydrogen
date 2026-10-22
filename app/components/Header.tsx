@@ -26,8 +26,8 @@ export function Header({
   const {shop, menu} = header;
   return (
     <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
+      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end aria-label="We Rise Above home">
+        <strong>WE RISE ABOVE</strong>
       </NavLink>
       <HeaderMenu
         menu={menu}
