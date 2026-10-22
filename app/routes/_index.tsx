@@ -37,7 +37,7 @@ export default function Homepage() {
         <h1 id="home-title">NO FINAL <span>FORM.</span></h1>
         <p className="daylight-hero-copy">Built under pressure. Still becoming. Every day is another chance to rise.</p>
         <div className="daylight-actions">
-          <Link className="daylight-button" to="/collections/all">Shop the collection</Link>
+          <Link className="daylight-button" to="/collections">Shop the collection</Link>
           <Link className="daylight-text-link" to="/pages/about">Our story <span aria-hidden="true">↗</span></Link>
         </div>
       </section>
@@ -62,7 +62,7 @@ export default function Homepage() {
       <section className="daylight-section" aria-labelledby="featured-title">
         <div className="daylight-section-heading">
           <div><p className="daylight-eyebrow">Made to move with you</p><h2 id="featured-title">BUILT UNDER PRESSURE</h2></div>
-          <Link className="daylight-text-link" to="/collections/all">Shop all <span aria-hidden="true">↗</span></Link>
+          <Link className="daylight-text-link" to="/collections">Shop all <span aria-hidden="true">↗</span></Link>
         </div>
         <Suspense fallback={<p className="daylight-empty">Loading the latest from the collection…</p>}>
           <Await resolve={products}>
