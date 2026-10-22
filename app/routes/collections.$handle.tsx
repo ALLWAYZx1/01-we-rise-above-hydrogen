@@ -19,7 +19,7 @@ export async function loader({context, params, request}: Route.LoaderArgs) {
   if (!handle) throw new Response('Collection not found', {status: 404});
   const url = new URL(request.url);
   const sort = url.searchParams.get('sort') || 'featured';
-  const sortMap: Record<string, {sortKey: 'COLLECTION_DEFAULT' | 'CREATED' | 'PRICE' | 'BEST_SELLING'; reverse: boolean}> = {
+  const sortMap: Record<string, {sortKey: string; reverse: boolean}> = {
     featured: {sortKey: 'COLLECTION_DEFAULT', reverse: false},
     newest: {sortKey: 'CREATED', reverse: true},
     price_asc: {sortKey: 'PRICE', reverse: false},

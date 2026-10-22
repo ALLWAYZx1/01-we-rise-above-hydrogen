@@ -79,12 +79,6 @@ export default function Homepage() {
         {['FAITH', 'DISCIPLINE', 'HARD WORK', 'NEVER SETTLE', 'KEEP RISING', 'STAY TRUE'].map((value) => <span key={value}>{value}</span>)}
       </section>
 
-      <section className="daylight-newsletter" aria-labelledby="newsletter-title">
-        <p className="daylight-eyebrow">Stay in the loop</p>
-        <h2 id="newsletter-title">The next phase starts here.</h2>
-        <p>Get release news and updates from WE RISE ABOVE.</p>
-        <p className="daylight-newsletter-note">Newsletter signup is unavailable until the existing Klaviyo list/form configuration is connected to this storefront.</p>
-      </section>
     </main>
   );
 }
