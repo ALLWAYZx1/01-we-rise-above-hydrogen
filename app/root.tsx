@@ -10,6 +10,7 @@ import {
   ScrollRestoration,
   useRouteLoaderData,
 } from 'react-router';
+import {SpeedInsights} from '@vercel/speed-insights/react';
 import type {Route} from './+types/root';
 import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
@@ -156,6 +157,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
       </head>
       <body>
         {children}
+        <SpeedInsights />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>
