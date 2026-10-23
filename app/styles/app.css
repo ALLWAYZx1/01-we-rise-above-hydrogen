@@ -958,3 +958,188 @@ a:hover {
     display: none;
   }
 }
+
+/*
+* --------------------------------------------------
+* Homepage v2 (PREZZURE) — featured banner, category
+* tiles, creed band. Daylight tokens only.
+* --------------------------------------------------
+*/
+
+.wra-hero-ctas {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.wra-hero-cta-ghost {
+  background: transparent;
+  border: 1px solid var(--wra-gold-deep);
+  color: var(--wra-gold-deep);
+}
+
+.wra-hero-cta-ghost:hover {
+  color: var(--wra-gold-deep);
+  transform: scale(1.04);
+}
+
+/* Featured banner — the money category, image-forward */
+.wra-feature {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 3.5rem auto;
+  padding: 0 1.5rem;
+}
+
+.wra-feature-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.wra-feature-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.wra-feature-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0;
+  color: var(--wra-ink);
+}
+
+.wra-feature-copy {
+  color: var(--wra-ink-soft);
+  line-height: 1.65;
+  margin: 1rem 0 1.75rem;
+  max-width: 46ch;
+}
+
+/* Category tiles — shop the lineup */
+.wra-tiles {
+  max-width: 1200px;
+  margin: 0 auto 3.5rem;
+  padding: 0 1.5rem;
+}
+
+.wra-tiles h2 {
+  color: var(--wra-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.wra-tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.wra-tile {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--wra-line);
+  background: var(--wra-cream);
+  text-decoration: none;
+}
+
+.wra-tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.wra-tile:hover img {
+  transform: scale(1.05);
+}
+
+.wra-tile-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--wra-gold-deep);
+  font-size: 1.4rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.wra-tile-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.7rem 1rem;
+  background: rgba(250, 246, 239, 0.92);
+  color: var(--wra-ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* Creed band — one ink moment on a daylight page */
+.wra-creed {
+  background: var(--wra-ink);
+  color: var(--wra-daylight);
+  text-align: center;
+  padding: 4.5rem 1.5rem;
+  margin: 3.5rem 0;
+}
+
+.wra-creed-line {
+  font-size: clamp(1.9rem, 5.5vw, 3.6rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.wra-creed-sub {
+  color: var(--wra-daylight);
+  opacity: 0.75;
+  letter-spacing: 0.08em;
+  margin: 1.25rem 0 1.75rem;
+}
+
+.wra-creed-link {
+  color: var(--wra-gold-bright);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+}
+
+.wra-creed-link:hover {
+  color: var(--wra-gold-bright);
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .wra-feature {
+    grid-template-columns: 1fr;
+  }
+
+  .wra-tiles-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

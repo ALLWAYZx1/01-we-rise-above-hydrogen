@@ -35,7 +35,12 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
 
   return {
     isShopLinked: Boolean(context.env.PUBLIC_STORE_DOMAIN),
-    featuredCollection: collections.nodes[0],
+    featuredCollection:
+      collections.nodes.find(
+        (collection: FeaturedCollectionFragment) =>
+          collection.handle === 'hoodies',
+      ) ?? collections.nodes[0],
+    collections: collections.nodes,
   };
 }
 
@@ -86,6 +91,12 @@ export default function Homepage() {
           <Link className="wra-hero-cta" to="/collections/all">
             Shop everything
           </Link>
+          <Link
+            className="wra-hero-cta wra-hero-cta-ghost"
+            to="/collections/hoodies"
+          >
+            Shop hoodies
+          </Link>
         </div>
       </section>
       <div className="wra-marquee" aria-hidden="true">
@@ -100,13 +111,15 @@ export default function Homepage() {
           </span>
         </div>
       </div>
-      <FeaturedCollection collection={data.featuredCollection} />
+      <FeaturedBanner collection={data.featuredCollection} />
+      <CategoryTiles collections={data.collections} />
+      <CreedBand />
       <RecommendedProducts products={data.recommendedProducts} />
     </div>
   );
 }
 
-function FeaturedCollection({
+function FeaturedBanner({
   collection,
 }: {
   collection: FeaturedCollectionFragment;
@@ -114,21 +127,100 @@ function FeaturedCollection({
   if (!collection) return null;
   const image = collection?.image;
   return (
-    <Link
-      className="featured-collection"
-      to={`/collections/${collection.handle}`}
+    <section
+      className="wra-feature"
+      aria-label={`Featured: ${collection.title}`}
     >
       {image && (
-        <div className="featured-collection-image">
+        <div className="wra-feature-media">
           <Image
             data={image}
-            sizes="100vw"
+            sizes="(min-width: 768px) 50vw, 100vw"
             alt={image.altText || collection.title}
           />
         </div>
       )}
-      <h1>{collection.title}</h1>
-    </Link>
+      <div className="wra-feature-body">
+        <p className="wra-hero-eyebrow">The heavyweight lineup</p>
+        <h2 className="wra-feature-title">{collection.title}</h2>
+        <p className="wra-feature-copy">
+          Cut heavy, printed with intent. The hoodies carry the weight so you
+          don&apos;t have to.
+        </p>
+        <Link
+          className="wra-hero-cta"
+          to={`/collections/${collection.handle}`}
+        >
+          Shop {collection.title.toLowerCase()}
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+const TILE_ORDER = [
+  'hoodies',
+  'tees',
+  'crewnecks',
+  'headwear',
+  'joggers',
+  'bags',
+];
+
+function CategoryTiles({
+  collections,
+}: {
+  collections: FeaturedCollectionFragment[];
+}) {
+  const tiles = TILE_ORDER.map((handle) =>
+    collections.find((collection) => collection?.handle === handle),
+  ).filter(
+    (collection): collection is FeaturedCollectionFragment =>
+      Boolean(collection),
+  );
+  if (!tiles.length) return null;
+  return (
+    <section className="wra-tiles" aria-labelledby="wra-tiles-heading">
+      <h2 id="wra-tiles-heading">Shop the lineup</h2>
+      <div className="wra-tiles-grid">
+        {tiles.map((collection) => (
+          <Link
+            key={collection.id}
+            className="wra-tile"
+            to={`/collections/${collection.handle}`}
+          >
+            {collection.image ? (
+              <Image
+                data={collection.image}
+                sizes="(min-width: 768px) 33vw, 50vw"
+                alt={collection.image.altText || collection.title}
+              />
+            ) : (
+              <span className="wra-tile-fallback" aria-hidden="true">
+                {collection.title}
+              </span>
+            )}
+            <span className="wra-tile-label">{collection.title} →</span>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CreedBand() {
+  return (
+    <section className="wra-creed">
+      <p className="wra-creed-line">
+        The avalanche is <span className="wra-hero-gold">PREZZURE</span>.
+        <br />
+        The mountain is <span className="wra-hero-gold">RIZE</span>.
+      </p>
+      <p className="wra-creed-sub">Pressure builds. We rise. No final form.</p>
+      <Link className="wra-creed-link" to="/pages/about">
+        Read the creed →
+      </Link>
+    </section>
   );
 }
 
@@ -176,7 +268,7 @@ const FEATURED_COLLECTION_QUERY = `#graphql
   }
   query FeaturedCollection($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    collections(first: 1, sortKey: UPDATED_AT, reverse: true) {
+    collections(first: 12, sortKey: UPDATED_AT) {
       nodes {
         ...FeaturedCollection
       }
