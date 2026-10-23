@@ -88,6 +88,18 @@ export default function Homepage() {
           </Link>
         </div>
       </section>
+      <div className="wra-marquee" aria-hidden="true">
+        <div className="wra-marquee-track">
+          <span>
+            Faith · Discipline · Hard work · Never settle · Keep rising · Stay
+            true ·{' '}
+          </span>
+          <span>
+            Faith · Discipline · Hard work · Never settle · Keep rising · Stay
+            true ·{' '}
+          </span>
+        </div>
+      </div>
       <FeaturedCollection collection={data.featuredCollection} />
       <RecommendedProducts products={data.recommendedProducts} />
     </div>
