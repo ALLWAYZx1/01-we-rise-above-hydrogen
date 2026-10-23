@@ -4,7 +4,7 @@
   --cart-aside-summary-height: 250px;
   --grid-item-width: 355px;
   --header-height: 64px;
-  --color-dark: #000;
+  --color-dark: #16130c;
   --color-light: #fff;
 }
 
@@ -646,63 +646,80 @@ button.reset:hover:not(:has(> *)) {
 
 /*
 * --------------------------------------------------
-* WE RISE ABOVE — brand theme layer (PREZZURE)
-* Black + gold, celestial fire. Appended overrides:
-* wins on equal specificity, template styles intact.
+* WE RISE ABOVE — DAYLIGHT foundation (PREZZURE, Step 1)
+* Design tokens live here. Every surface consumes the
+* --wra-* variables; nobody hardcodes a color.
+* Brand canon in daylight: ivory ground, warm ink,
+* deep gold accent, ember in the gradient only.
 * --------------------------------------------------
 */
 
 :root {
-  --wra-gold: #d4af37;
-  --wra-gold-bright: #f5c518;
-  --wra-ember: #ff7a18;
-  --wra-ink: #060606;
-  --wra-bone: #f5f1e8;
+  --wra-daylight: #faf6ef;
+  --wra-cream: #f1ead9;
+  --wra-card: #ffffff;
+  --wra-ink: #16130c;
+  --wra-ink-soft: rgba(22, 19, 12, 0.68);
+  --wra-gold: #b08a1e;
+  --wra-gold-deep: #8a6508;
+  --wra-gold-bright: #d9a514;
+  --wra-ember: #e85d04;
+  --wra-line: rgba(22, 19, 12, 0.14);
+  --wra-gold-line: rgba(176, 138, 30, 0.45);
 }
 
 body {
-  background: var(--wra-ink);
-  color: var(--wra-bone);
+  background: var(--wra-daylight);
+  color: var(--wra-ink);
+  overflow-x: clip;
 }
 
 a {
-  color: var(--wra-bone);
+  color: var(--wra-ink);
 }
 
 a:hover {
-  color: var(--wra-gold-bright);
+  color: var(--wra-gold-deep);
 }
 
-/* Header */
+/* Header — light glass, ink type, gold hairline */
 .header {
-  background: rgba(6, 6, 6, 0.92);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.35);
-  color: var(--wra-bone);
+  background: rgba(250, 246, 239, 0.92);
+  border-bottom: 1px solid var(--wra-gold-line);
+  color: var(--wra-ink);
   backdrop-filter: blur(10px);
+  max-width: 100vw;
 }
 
 .header a,
-.header-menu-item {
-  color: var(--wra-bone);
+.header-menu-item,
+.header button {
+  color: var(--wra-ink);
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
 
 .header a:hover,
-.header-menu-item:hover {
-  color: var(--wra-gold-bright);
+.header-menu-item:hover,
+.header button:hover {
+  color: var(--wra-gold-deep);
 }
 
-/* Hero */
+.header-ctas {
+  grid-gap: 0.75rem;
+  flex-wrap: nowrap;
+}
+
+/* Hero — daylight, soft celestial gold glow */
 .wra-hero {
   position: relative;
   text-align: center;
   padding: 5.5rem 1.5rem 4.5rem;
   background:
-    radial-gradient(ellipse 60% 45% at 50% 0%, rgba(212, 175, 55, 0.22), transparent 70%),
-    radial-gradient(ellipse 40% 30% at 50% 110%, rgba(255, 122, 24, 0.12), transparent 70%),
-    var(--wra-ink);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+    radial-gradient(ellipse 60% 45% at 50% 0%, rgba(217, 165, 20, 0.2), transparent 70%),
+    radial-gradient(ellipse 40% 30% at 50% 110%, rgba(232, 93, 4, 0.08), transparent 70%),
+    var(--wra-daylight);
+  border-bottom: 1px solid var(--wra-gold-line);
   overflow: hidden;
 }
 
@@ -710,7 +727,7 @@ a:hover {
   text-transform: uppercase;
   letter-spacing: 0.45em;
   font-size: 0.72rem;
-  color: var(--wra-gold);
+  color: var(--wra-gold-deep);
   margin: 0 0 1.25rem;
 }
 
@@ -721,11 +738,11 @@ a:hover {
   text-transform: uppercase;
   letter-spacing: -0.01em;
   margin: 0;
-  color: var(--wra-bone);
+  color: var(--wra-ink);
 }
 
 .wra-hero-gold {
-  background: linear-gradient(92deg, var(--wra-gold-bright) 10%, var(--wra-gold) 45%, var(--wra-ember) 90%);
+  background: linear-gradient(92deg, var(--wra-gold) 10%, var(--wra-gold-bright) 45%, var(--wra-ember) 90%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -736,7 +753,7 @@ a:hover {
   margin: 1.5rem auto 0;
   font-size: 1.05rem;
   line-height: 1.65;
-  color: rgba(245, 241, 232, 0.72);
+  color: var(--wra-ink-soft);
 }
 
 .wra-hero-ctas {
@@ -748,7 +765,7 @@ a:hover {
   padding: 0.9rem 2.4rem;
   border-radius: 999px;
   background: linear-gradient(92deg, var(--wra-gold-bright), var(--wra-ember));
-  color: #000;
+  color: var(--wra-ink);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.22em;
@@ -758,35 +775,51 @@ a:hover {
 }
 
 .wra-hero-cta:hover {
-  color: #000;
+  color: var(--wra-ink);
   transform: scale(1.04);
 }
 
-/* Sections + product grid on dark */
+/* Sections + product cards on daylight */
 .featured-collection h1,
 .recommended-products h2 {
-  color: var(--wra-bone);
+  color: var(--wra-ink);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
 .product-item {
-  color: var(--wra-bone);
+  background: var(--wra-card);
+  border: 1px solid var(--wra-line);
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(22, 19, 12, 0.05);
+  color: var(--wra-ink);
+  display: block;
+  padding: 0.75rem;
+  text-decoration: none;
 }
 
 .product-item h4 {
-  color: var(--wra-bone);
+  color: var(--wra-ink);
+}
+
+.product-item:hover {
+  border-color: var(--wra-gold-line);
 }
 
 .product-item:hover h4 {
-  color: var(--wra-gold-bright);
+  color: var(--wra-gold-deep);
 }
 
-/* Footer already dark in template; give it the gold edge */
+/* Footer — cream ground, ink links, gold edge */
 .footer {
-  border-top: 1px solid rgba(212, 175, 55, 0.35);
+  background: var(--wra-cream);
+  border-top: 1px solid var(--wra-gold-line);
+}
+
+.footer-menu a {
+  color: var(--wra-ink);
 }
 
 .footer-menu a:hover {
-  color: var(--wra-gold-bright);
+  color: var(--wra-gold-deep);
 }

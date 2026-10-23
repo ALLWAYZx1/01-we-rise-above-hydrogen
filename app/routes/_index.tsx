@@ -64,6 +64,13 @@ export default function Homepage() {
     <div className="home">
       {data.isShopLinked ? null : <MockShopNotice />}
       <section className="wra-hero">
+        <img
+          className="wra-hero-emblem"
+          src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/Luminous_Gold_P_Emblem.png?v=1792758842"
+          alt="We Rise Above emblem"
+          width="112"
+          height="112"
+        />
         <p className="wra-hero-eyebrow">We Rise Above — Season 00</p>
         <h1 className="wra-hero-title">
           Pressure builds.
