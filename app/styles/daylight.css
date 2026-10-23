@@ -191,6 +191,16 @@ section { padding: clamp(1.5rem, 4vw, 3.5rem) 0; }
 .product-options-item[aria-pressed="true"], .product-options-item[aria-selected="true"] {
   border-color: var(--wra-gold);
 }
+
+/* Keep option buttons visually distinct from primary purchase actions. */
+.product-form button.product-options-item {
+  background: var(--wra-surface);
+  color: var(--wra-ink);
+  border-radius: var(--wra-radius);
+}
+.product-form button.product-options-item:hover:not(:disabled) {
+  color: var(--wra-gold-deep);
+}
 .product-form button[type="submit"] { width: 100%; }
 .product-price-on-sale { align-items: baseline; gap: .6rem; }
 
@@ -216,6 +226,31 @@ aside input, .predictive-search input { width: 100%; }
 }
 .cart-main.with-discount {
   max-height: calc(100dvh - var(--cart-aside-summary-height-with-discount));
+}
+
+/* PREZZURE QA fixes: drawer stacking, variant controls, and cart code rows. */
+/* Keep the overlay above the sticky header so drawers own focus and clicks. */
+.overlay {
+  z-index: 40;
+}
+
+/* Keep discount/gift-card input and action together in the cart drawer. */
+.cart-summary-aside section[aria-label="Discounts"] form > div,
+.cart-summary-aside section[aria-label="Gift cards"] form > div {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+.cart-summary-aside section[aria-label="Discounts"] form > div input,
+.cart-summary-aside section[aria-label="Gift cards"] form > div input {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+}
+.cart-summary-aside section[aria-label="Discounts"] form > div button,
+.cart-summary-aside section[aria-label="Gift cards"] form > div button {
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 .cart-summary-aside {
   width: calc(min(440px, 100vw) - 2.5rem);
