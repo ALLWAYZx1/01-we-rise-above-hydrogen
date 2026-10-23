@@ -89,3 +89,107 @@
   .daylight-values { gap: .8rem 1rem; font-size: .68rem; }
   .daylight-filters { align-items: stretch; }
 }
+
+
+/* Angels & Demons editorial chapter: light and shadow on the Daylight canvas. */
+.daylight-duality {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  margin-block: clamp(2rem, 5vw, 4rem);
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+  border: 1px solid var(--wra-border);
+  background: linear-gradient(118deg, var(--wra-page) 0%, var(--wra-gold-soft) 100%);
+  overflow: hidden;
+}
+.daylight-duality-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(230px, 28vw, 390px);
+  isolation: isolate;
+  overflow: hidden;
+}
+.daylight-duality-halo {
+  position: absolute;
+  width: min(29vw, 330px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(103, 71, 13, .45);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1.5rem rgba(103, 71, 13, .045), 0 0 0 3.5rem rgba(23, 23, 23, .025), inset 0 0 3rem rgba(103, 71, 13, .07);
+}
+.daylight-duality-letter {
+  position: absolute;
+  font-family: "Anton", Impact, sans-serif;
+  font-size: clamp(9rem, 20vw, 17rem);
+  line-height: 1;
+  letter-spacing: -.1em;
+}
+.daylight-duality-angel {
+  color: rgba(255, 255, 255, .92);
+  transform: translate(-18%, -5%);
+  text-shadow: 0 1rem 2rem rgba(23, 23, 23, .12);
+}
+.daylight-duality-demon {
+  color: var(--wra-gold-deep);
+  transform: translate(18%, 12%);
+  opacity: .78;
+  mix-blend-mode: multiply;
+}
+.daylight-duality-spark {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid var(--wra-gold);
+  border-radius: 50%;
+  background: var(--wra-page);
+  color: var(--wra-gold-deep);
+}
+.daylight-duality-art-label {
+  position: absolute;
+  bottom: .35rem;
+  color: var(--wra-muted);
+  font-size: .62rem;
+  letter-spacing: .25em;
+}
+.daylight-duality-copy { max-width: 34rem; }
+.daylight-duality-copy h2 {
+  margin: 0 0 1.25rem;
+  font-size: clamp(2.7rem, 5.8vw, 5.4rem);
+  line-height: .9;
+}
+.daylight-duality-copy h2 span { color: var(--wra-gold-deep); }
+.daylight-duality-copy > p:not(.daylight-eyebrow) {
+  max-width: 28rem;
+  margin-bottom: 1.5rem;
+  color: var(--wra-muted);
+}
+.daylight-duality-index {
+  align-self: end;
+  color: var(--wra-muted);
+  font-size: .62rem;
+  font-weight: 750;
+  letter-spacing: .14em;
+  line-height: 1.9;
+  text-align: right;
+  white-space: nowrap;
+}
+.daylight-gallery-thumbs button { flex: 0 0 5rem; }
+.daylight-gallery-thumbs button img { max-width: 100%; }
+@media (max-width: 760px) {
+  .daylight-duality {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+  .daylight-duality-copy { order: 1; }
+  .daylight-duality-art { order: 2; min-height: 230px; }
+  .daylight-duality-index { display: none; }
+  .daylight-duality-halo { width: 220px; }
+  .daylight-duality-letter { font-size: 12rem; }
+  .daylight-duality-copy h2 { font-size: clamp(2.6rem, 12vw, 4rem); }
+}

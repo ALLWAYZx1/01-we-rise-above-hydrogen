@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {redirect, useLoaderData} from 'react-router';
 import type {Route} from './+types/products.$handle';
 import pageStyles from '~/styles/daylight-pages.css?url';
@@ -10,8 +10,8 @@ import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: Route.MetaFunction = ({data}) => [
-  {title: `WE RISE ABOVE | ${data?.product.title ?? 'Product'}`},
-  {rel: 'canonical', href: `/products/${data?.product.handle}`},
+  {title: `WE RISE ABOVE | ${data?.product?.title ?? 'Product'}`},
+  {rel: 'canonical', href: `/products/${data?.product?.handle ?? ''}`},
   {name: 'description', content: data?.product.seo?.description || data?.product.description || 'WE RISE ABOVE. NO FINAL FORM.'},
 ];
 
@@ -33,6 +33,10 @@ export default function Product() {
   const productOptions = getProductOptions({...product, selectedOrFirstAvailableVariant: selectedVariant});
   const images = product.images.nodes;
   const [activeImage, setActiveImage] = useState(images.findIndex((image: any) => image.id === selectedVariant?.image?.id));
+  useEffect(() => {
+    const variantImageIndex = images.findIndex((image: any) => image.id === selectedVariant?.image?.id);
+    if (variantImageIndex >= 0) setActiveImage(variantImageIndex);
+  }, [images, selectedVariant?.image?.id]);
   const shownImage = images[activeImage >= 0 ? activeImage : 0] || selectedVariant?.image;
   const [quantity, setQuantity] = useState(1);
   return (
@@ -53,7 +57,7 @@ export default function Product() {
             <div><button type="button" aria-label="Decrease quantity" disabled={quantity <= 1} onClick={() => setQuantity((value) => Math.max(1, value - 1))}>−</button><output id="product-quantity">{quantity}</output><button type="button" aria-label="Increase quantity" onClick={() => setQuantity((value) => Math.min(99, value + 1))}>+</button></div>
           </div>
           <ProductForm productOptions={productOptions} selectedVariant={selectedVariant} quantity={quantity} />
-          <p className="daylight-checkout-note">Discount codes, including RISE10, are applied at Shopify checkout.</p>
+          <p className="daylight-checkout-note">Shipping, taxes, and eligible discounts are finalized at checkout.</p>
           {product.descriptionHtml ? <div className="daylight-description-html" dangerouslySetInnerHTML={{__html: product.descriptionHtml}} /> : null}
         </div>
       </div>

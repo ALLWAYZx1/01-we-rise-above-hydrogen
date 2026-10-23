@@ -59,6 +59,23 @@ export default function Homepage() {
         ) : <p className="daylight-empty">New collections are on the way. Keep rising.</p>}
       </section>
 
+      <section className="daylight-duality" aria-labelledby="duality-title">
+        <div className="daylight-duality-art" aria-hidden="true">
+          <span className="daylight-duality-halo" />
+          <span className="daylight-duality-letter daylight-duality-angel">A</span>
+          <span className="daylight-duality-spark">✦</span>
+          <span className="daylight-duality-letter daylight-duality-demon">D</span>
+          <span className="daylight-duality-art-label">LIGHT / SHADOW / SELF</span>
+        </div>
+        <div className="daylight-duality-copy">
+          <p className="daylight-eyebrow">THE DUALITY EDIT / 001</p>
+          <h2 id="duality-title">ANGELS <span>&amp; DEMONS.</span></h2>
+          <p>Two forces. One identity. The tension between who you were, who you are, and who you choose to become. Wear every side without apology.</p>
+          <Link className="daylight-button" to="/collections/all">Explore the edit <span aria-hidden="true">↗</span></Link>
+        </div>
+        <div className="daylight-duality-index" aria-hidden="true">NO HALVES.<br />NO APOLOGIES.<br />ALL OF YOU.</div>
+      </section>
+
       <section className="daylight-section" aria-labelledby="featured-title">
         <div className="daylight-section-heading">
           <div><p className="daylight-eyebrow">Made to move with you</p><h2 id="featured-title">BUILT UNDER PRESSURE</h2></div>

@@ -45,7 +45,6 @@ export async function loader({context, params, request}: Route.LoaderArgs) {
 
 export default function Collection() {
   const {collection, sort, vendor, productType, tag} = useLoaderData<typeof loader>();
-  const [searchParams] = useSearchParams();
   const hasFilters = Boolean(vendor || productType || tag);
   return (
     <main className="daylight-collection-page">
