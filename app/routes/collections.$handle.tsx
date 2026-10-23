@@ -10,7 +10,7 @@ import {ProductItem} from '~/components/ProductItem';
 import type {ProductItemFragment} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = ({data}) => [
-  {title: `WE RISE ABOVE | ${data?.collection.title ?? 'Collection'}`},
+  {title: `${data?.collection.title ?? 'Collection'} | We Rise Above`},
   {name: 'description', content: data?.collection.description || 'Explore WE RISE ABOVE.'},
 ];
 
