@@ -33,6 +33,7 @@ export default function Homepage() {
     <main className="daylight-home">
       <section className="daylight-hero" aria-labelledby="home-title">
         <div className="daylight-astar" aria-hidden="true">✦</div>
+        <img className="wra-hero-emblem" src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/Luminous_Gold_P_Emblem.png?v=1792758842" alt="We Rise Above emblem" width="112" height="112" />
         <p className="daylight-eyebrow">WE RISE ABOVE</p>
         <h1 id="home-title">NO FINAL <span>FORM.</span></h1>
         <p className="daylight-hero-copy">Built under pressure. Still becoming. Every day is another chance to rise.</p>
