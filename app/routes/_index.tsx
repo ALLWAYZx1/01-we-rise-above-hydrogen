@@ -1,128 +1,201 @@
-import {Await, Link, useLoaderData} from 'react-router';
+import {Await, useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/_index';
 import {Suspense} from 'react';
-import {Image, Money} from '@shopify/hydrogen';
+import {Image} from '@shopify/hydrogen';
+import type {
+  FeaturedCollectionFragment,
+  RecommendedProductsQuery,
+} from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
+import {MockShopNotice} from '~/components/MockShopNotice';
 
-import pageStyles from '~/styles/daylight-pages.css?url';
+export const meta: Route.MetaFunction = () => {
+  return [{title: 'We Rise Above | Streetwear, Music & Creative Culture'}];
+};
 
-export function links() { return [{rel: 'stylesheet', href: pageStyles}]; }
+export async function loader(args: Route.LoaderArgs) {
+  // Start fetching non-critical data without blocking time to first byte
+  const deferredData = loadDeferredData(args);
 
-export const meta: Route.MetaFunction = () => [
-  {title: 'WE RISE ABOVE | NO FINAL FORM'},
-  {name: 'description', content: 'Streetwear for the ones still becoming. NO FINAL FORM.'},
-];
+  // Await the critical data required to render initial state of the page
+  const criticalData = await loadCriticalData(args);
 
-export async function loader({context}: Route.LoaderArgs) {
-  const [collections, products] = await Promise.all([
-    context.storefront.query(FEATURED_COLLECTIONS_QUERY),
-    context.storefront.query(RECOMMENDED_PRODUCTS_QUERY).catch((error: Error) => {
-      console.error('Homepage product rail failed to load', error);
-      return null;
-    }),
+  return {...deferredData, ...criticalData};
+}
+
+/**
+ * Load data necessary for rendering content above the fold. This is the critical data
+ * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
+ */
+async function loadCriticalData({context}: Route.LoaderArgs) {
+  const [{collections}] = await Promise.all([
+    context.storefront.query(FEATURED_COLLECTION_QUERY),
+    // Add other queries here, so that they are loaded in parallel
   ]);
+
   return {
-    collections: collections.collections.nodes,
-    products: products ? Promise.resolve(products) : Promise.resolve(null),
+    isShopLinked: Boolean(context.env.PUBLIC_STORE_DOMAIN),
+    featuredCollection: collections.nodes[0],
+  };
+}
+
+/**
+ * Load data for rendering content below the fold. This data is deferred and will be
+ * fetched after the initial page load. If it's unavailable, the page should still 200.
+ * Make sure to not throw any errors here, as it will cause the page to 500.
+ */
+function loadDeferredData({context}: Route.LoaderArgs) {
+  const recommendedProducts = context.storefront
+    .query(RECOMMENDED_PRODUCTS_QUERY)
+    .catch((error: Error) => {
+      // Log query errors, but don't throw them so the page can still render
+      console.error(error);
+      return null;
+    });
+
+  return {
+    recommendedProducts,
   };
 }
 
 export default function Homepage() {
-  const {collections, products} = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
   return (
-    <main className="daylight-home">
-      <section className="daylight-hero" aria-labelledby="home-title">
-        <div className="daylight-astar" aria-hidden="true">✦</div>
-        <img className="wra-hero-emblem" src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/Luminous_Gold_P_Emblem.png?v=1792758842" alt="We Rise Above emblem" width="112" height="112" />
-        <p className="daylight-eyebrow">WE RISE ABOVE</p>
-        <h1 id="home-title">NO FINAL <span>FORM.</span></h1>
-        <p className="daylight-hero-copy">Built under pressure. Still becoming. Every day is another chance to rise.</p>
-        <div className="daylight-actions">
-          <Link className="daylight-button" to="/collections/all">Shop the collection</Link>
-          <Link className="daylight-text-link" to="/pages/about">Our story <span aria-hidden="true">↗</span></Link>
+    <div className="home">
+      {data.isShopLinked ? null : <MockShopNotice />}
+      <section className="wra-hero">
+        <img
+          className="wra-hero-emblem"
+          src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/Luminous_Gold_P_Emblem.png?v=1792758842"
+          alt="We Rise Above emblem"
+          width="112"
+          height="112"
+        />
+        <p className="wra-hero-eyebrow">We Rise Above — Season 00</p>
+        <h1 className="wra-hero-title">
+          Pressure builds.
+          <br />
+          <span className="wra-hero-gold">We rise.</span>
+        </h1>
+        <p className="wra-hero-copy">
+          Heavyweight streetwear forged under pressure. Cut heavy, printed
+          with intent, made for the late nights and the days that carry
+          weight. No final form. Still rising.
+        </p>
+        <div className="wra-hero-ctas">
+          <Link className="wra-hero-cta" to="/collections/all">
+            Shop everything
+          </Link>
         </div>
       </section>
-
-      <section className="daylight-section" aria-labelledby="collections-title">
-        <div className="daylight-section-heading">
-          <div><p className="daylight-eyebrow">Find your frequency</p><h2 id="collections-title">Explore collections</h2></div>
-          <Link className="daylight-text-link" to="/collections">View all <span aria-hidden="true">↗</span></Link>
-        </div>
-        {collections.length ? (
-          <div className="daylight-collection-grid">
-            {collections.map((collection: any) => (
-              <Link className="daylight-collection-card" to={`/collections/${collection.handle}`} key={collection.id}>
-                {collection.image ? <Image data={collection.image} alt={collection.image.altText || collection.title} sizes="(min-width: 760px) 33vw, 100vw" /> : <div className="daylight-image-fallback" aria-hidden="true">✦</div>}
-                <span>{collection.title}</span><span className="daylight-card-arrow" aria-hidden="true">↗</span>
-              </Link>
-            ))}
-          </div>
-        ) : <p className="daylight-empty">New collections are on the way. Keep rising.</p>}
-      </section>
-
-      <section className="daylight-duality" aria-labelledby="duality-title">
-        <div className="daylight-duality-art" aria-hidden="true">
-          <span className="daylight-duality-halo" />
-          <span className="daylight-duality-letter daylight-duality-angel">A</span>
-          <span className="daylight-duality-spark">✦</span>
-          <span className="daylight-duality-letter daylight-duality-demon">D</span>
-          <span className="daylight-duality-art-label">LIGHT / SHADOW / SELF</span>
-        </div>
-        <div className="daylight-duality-copy">
-          <p className="daylight-eyebrow">THE DUALITY EDIT / 001</p>
-          <h2 id="duality-title">ANGELS <span>&amp; DEMONS.</span></h2>
-          <p>Two forces. One identity. The tension between who you were, who you are, and who you choose to become. Wear every side without apology.</p>
-          <Link className="daylight-button" to="/collections/all">Explore the edit <span aria-hidden="true">↗</span></Link>
-        </div>
-        <div className="daylight-duality-index" aria-hidden="true">NO HALVES.<br />NO APOLOGIES.<br />ALL OF YOU.</div>
-      </section>
-
-      <section className="daylight-section" aria-labelledby="featured-title">
-        <div className="daylight-section-heading">
-          <div><p className="daylight-eyebrow">Made to move with you</p><h2 id="featured-title">BUILT UNDER PRESSURE</h2></div>
-          <Link className="daylight-text-link" to="/collections/all">Shop all <span aria-hidden="true">↗</span></Link>
-        </div>
-        <Suspense fallback={<p className="daylight-empty">Loading the latest from the collection…</p>}>
-          <Await resolve={products}>
-            {(response) => response?.products.nodes.length ? (
-              <div className="daylight-product-rail">
-                {response.products.nodes.map((product) => <ProductItem key={product.id} product={product} />)}
-              </div>
-            ) : <p className="daylight-empty">The next release is taking shape. Check back soon.</p>}
-          </Await>
-        </Suspense>
-      </section>
-
-      <section className="daylight-values" aria-label="We Rise Above values">
-        {['FAITH', 'DISCIPLINE', 'HARD WORK', 'NEVER SETTLE', 'KEEP RISING', 'STAY TRUE'].map((value) => <span key={value}>{value}</span>)}
-      </section>
-
-    </main>
+      <FeaturedCollection collection={data.featuredCollection} />
+      <RecommendedProducts products={data.recommendedProducts} />
+    </div>
   );
 }
 
-const FEATURED_COLLECTIONS_QUERY = `#graphql
-  query DaylightFeaturedCollections($country: CountryCode, $language: LanguageCode)
+function FeaturedCollection({
+  collection,
+}: {
+  collection: FeaturedCollectionFragment;
+}) {
+  if (!collection) return null;
+  const image = collection?.image;
+  return (
+    <Link
+      className="featured-collection"
+      to={`/collections/${collection.handle}`}
+    >
+      {image && (
+        <div className="featured-collection-image">
+          <Image
+            data={image}
+            sizes="100vw"
+            alt={image.altText || collection.title}
+          />
+        </div>
+      )}
+      <h1>{collection.title}</h1>
+    </Link>
+  );
+}
+
+function RecommendedProducts({
+  products,
+}: {
+  products: Promise<RecommendedProductsQuery | null>;
+}) {
+  return (
+    <section
+      className="recommended-products"
+      aria-labelledby="recommended-products"
+    >
+      <h2 id="recommended-products">Built under pressure</h2>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Await resolve={products}>
+          {(response) => (
+            <div className="recommended-products-grid">
+              {response
+                ? response.products.nodes.map((product) => (
+                    <ProductItem key={product.id} product={product} />
+                  ))
+                : null}
+            </div>
+          )}
+        </Await>
+      </Suspense>
+      <br />
+    </section>
+  );
+}
+
+const FEATURED_COLLECTION_QUERY = `#graphql
+  fragment FeaturedCollection on Collection {
+    id
+    title
+    image {
+      id
+      url
+      altText
+      width
+      height
+    }
+    handle
+  }
+  query FeaturedCollection($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    collections(first: 3, sortKey: UPDATED_AT, reverse: true) {
+    collections(first: 1, sortKey: UPDATED_AT, reverse: true) {
       nodes {
-        id
-        title
-        handle
-        image { id url altText width height }
+        ...FeaturedCollection
       }
     }
   }
 ` as const;
 
 const RECOMMENDED_PRODUCTS_QUERY = `#graphql
-  query DaylightRecommendedProducts($country: CountryCode, $language: LanguageCode)
+  fragment RecommendedProduct on Product {
+    id
+    title
+    handle
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+    }
+    featuredImage {
+      id
+      url
+      altText
+      width
+      height
+    }
+  }
+  query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    products(first: 8, sortKey: BEST_SELLING) {
+    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
       nodes {
-        id title handle
-        featuredImage { id url altText width height }
-        priceRange { minVariantPrice { amount currencyCode } }
+        ...RecommendedProduct
       }
     }
   }
