@@ -1,4 +1,5 @@
-import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
+import {Analytics as ShopifyAnalytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
+import {Analytics as VercelAnalytics} from '@vercel/analytics/react';
 import {
   Outlet,
   useRouteError,
@@ -158,6 +159,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
         {children}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
+        <VercelAnalytics />
       </body>
     </html>
   );
@@ -171,7 +173,7 @@ export default function App() {
   }
 
   return (
-    <Analytics.Provider
+    <ShopifyAnalytics.Provider
       cart={data.cart}
       shop={data.shop}
       consent={data.consent}
@@ -179,7 +181,7 @@ export default function App() {
       <PageLayout {...data}>
         <Outlet />
       </PageLayout>
-    </Analytics.Provider>
+    </ShopifyAnalytics.Provider>
   );
 }
 
