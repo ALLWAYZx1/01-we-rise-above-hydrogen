@@ -127,7 +127,7 @@ function FeaturedCollection({
           />
         </div>
       )}
-      <h1>{collection.title}</h1>
+      <h2 className="featured-collection-title">{collection.title}</h2>
     </Link>
   );
 }
@@ -142,7 +142,7 @@ function RecommendedProducts({
       className="recommended-products"
       aria-labelledby="recommended-products"
     >
-      <h2 id="recommended-products">Built under pressure</h2>
+      <h2 id="recommended-products">Latest drops</h2>
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {(response) => (
@@ -156,7 +156,6 @@ function RecommendedProducts({
           )}
         </Await>
       </Suspense>
-      <br />
     </section>
   );
 }
