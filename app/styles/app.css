@@ -1380,3 +1380,19 @@ a:hover {
 .cart-summary-aside {
   background: #14110c;
 }
+
+/* ============ HERO CENTERPIECE — cinematic banner (prezzure/hero-centerpiece) ============ */
+.wra-hero-centerpiece {
+  margin: 2.75rem 0 0;
+  width: min(1180px, 94vw);
+}
+
+.wra-hero-centerpiece img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--wra-gold-line);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.55),
+    0 0 90px rgba(232, 93, 4, 0.14);
+}
