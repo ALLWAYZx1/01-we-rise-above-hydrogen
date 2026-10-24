@@ -27,6 +27,7 @@ export function Footer({
                 publicStoreDomain={publicStoreDomain}
               />
             )}
+            <FooterTrustSignals />
           </footer>
         )}
       </Await>
@@ -129,4 +130,31 @@ function activeLinkStyle({
     color: 'inherit',
     opacity: isPending ? 0.55 : undefined,
   };
+}
+
+
+/**
+ * Policy links are kept visible even when a merchant's Shopify footer menu is
+ * incomplete. Policy content itself remains sourced from the Shopify store.
+ */
+function FooterTrustSignals() {
+  return (
+    <div className="wra-footer-trust">
+      <div className="wra-footer-trust-inner" aria-label="Store policies and checkout information">
+        <p className="wra-footer-trust-note">
+          <span className="wra-footer-trust-mark" aria-hidden="true">✦</span>
+          SHOP WITH CONFIDENCE
+        </p>
+        <div className="wra-footer-trust-links">
+          <NavLink to="/policies/shipping-policy">Shipping</NavLink>
+          <NavLink to="/policies/refund-policy">Returns &amp; refunds</NavLink>
+          <NavLink to="/policies/privacy-policy">Privacy</NavLink>
+          <NavLink to="/policies/terms-of-service">Terms</NavLink>
+        </div>
+        <p className="wra-footer-trust-checkout">
+          <span aria-hidden="true">▣</span> Secure checkout
+        </p>
+      </div>
+    </div>
+  );
 }
