@@ -1,6 +1,7 @@
 import {Suspense} from 'react';
 import {Await, NavLink} from 'react-router';
 import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
+import {KlaviyoSignup} from '~/components/KlaviyoSignup';
 
 interface FooterProps {
   footer: Promise<FooterQuery | null>;
@@ -18,6 +19,7 @@ export function Footer({
       <Await resolve={footerPromise}>
         {(footer) => (
           <footer className="footer">
+            <KlaviyoSignup />
             {footer?.menu && header.shop.primaryDomain?.url && (
               <FooterMenu
                 menu={footer.menu}
