@@ -1396,3 +1396,278 @@ a:hover {
     0 30px 80px rgba(0, 0, 0, 0.55),
     0 0 90px rgba(232, 93, 4, 0.14);
 }
+
+/*
+* --------------------------------------------------
+* FLAVOR PASS (PREZZURE) — motion + trust + texture
+* on top of CELESTIAL FIRE. Purely additive: hero
+* entrance + drifting embers, scroll reveals, a
+* trust strip with payment chips, a ghost outline
+* band, product image zoom, gradient section titles.
+* All motion honors prefers-reduced-motion.
+* --------------------------------------------------
+*/
+
+/* scroll reveal — armed by JS only, so SSR / no-JS
+   always shows content */
+.wra-reveal-armed {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.wra-reveal-armed.is-inview {
+  opacity: 1;
+  transform: none;
+}
+
+/* hero entrance — staggered rise on load */
+.wra-hero {
+  position: relative;
+}
+
+.wra-hero > *:not(.wra-embers) {
+  animation: wra-rise 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.wra-hero > :nth-child(3) {
+  animation-delay: 0.12s;
+}
+
+.wra-hero > :nth-child(4) {
+  animation-delay: 0.22s;
+}
+
+.wra-hero > :nth-child(5) {
+  animation-delay: 0.34s;
+}
+
+.wra-hero > :nth-child(6) {
+  animation-delay: 0.46s;
+}
+
+@keyframes wra-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+/* drifting embers inside the hero stage */
+.wra-embers {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.wra-embers span {
+  position: absolute;
+  bottom: 10%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    #ffd98a 0%,
+    var(--wra-ember) 55%,
+    transparent 72%
+  );
+  opacity: 0;
+  animation: wra-ember-float linear infinite;
+}
+
+.wra-embers span:nth-child(1) {
+  left: 12%;
+  width: 7px;
+  height: 7px;
+  animation-duration: 11s;
+}
+
+.wra-embers span:nth-child(2) {
+  left: 26%;
+  width: 5px;
+  height: 5px;
+  animation-duration: 14s;
+  animation-delay: 2.5s;
+}
+
+.wra-embers span:nth-child(3) {
+  left: 44%;
+  width: 8px;
+  height: 8px;
+  animation-duration: 12s;
+  animation-delay: 5s;
+}
+
+.wra-embers span:nth-child(4) {
+  left: 58%;
+  width: 5px;
+  height: 5px;
+  animation-duration: 15s;
+  animation-delay: 1.2s;
+}
+
+.wra-embers span:nth-child(5) {
+  left: 71%;
+  width: 7px;
+  height: 7px;
+  animation-duration: 10.5s;
+  animation-delay: 3.8s;
+}
+
+.wra-embers span:nth-child(6) {
+  left: 83%;
+  width: 5px;
+  height: 5px;
+  animation-duration: 13s;
+  animation-delay: 6.4s;
+}
+
+.wra-embers span:nth-child(7) {
+  left: 93%;
+  width: 6px;
+  height: 6px;
+  animation-duration: 12.5s;
+  animation-delay: 8s;
+}
+
+@keyframes wra-ember-float {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.9;
+  }
+  88% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translate3d(2.5rem, -48vh, 0);
+    opacity: 0;
+  }
+}
+
+/* trust strip */
+.wra-trust {
+  border-block: 1px solid
+    color-mix(in srgb, var(--wra-gold) 32%, transparent);
+  padding: 1.15rem 1rem 1.25rem;
+  text-align: center;
+}
+
+.wra-trust-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1.75rem;
+  justify-content: center;
+  list-style: none;
+  margin: 0 0 0.85rem;
+  padding: 0;
+  color: var(--wra-ink);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.wra-trust-mark {
+  margin-right: 0.5rem;
+  color: var(--wra-ember);
+  font-size: 0.58rem;
+  vertical-align: 0.14em;
+}
+
+.wra-pay {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.wra-pay-chip {
+  padding: 0.28rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--wra-gold) 30%, transparent);
+  border-radius: 999px;
+  color: color-mix(in srgb, var(--wra-ink) 62%, transparent);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ghost outline band */
+.wra-ghost {
+  overflow: hidden;
+  padding: 2rem 0 0.75rem;
+  text-align: center;
+}
+
+.wra-ghost span {
+  color: transparent;
+  font-size: clamp(3rem, 11.5vw, 9.5rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  white-space: nowrap;
+  -webkit-text-stroke: 1px
+    color-mix(in srgb, var(--wra-gold) 45%, transparent);
+}
+
+/* product image zoom (card already clips + lifts) */
+.product-item {
+  overflow: hidden;
+}
+
+.product-item img {
+  transition: transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.product-item:hover img {
+  transform: scale(1.05);
+}
+
+/* gradient section titles */
+@supports (
+  (background-clip: text) or (-webkit-background-clip: text)
+) {
+  .wra-tiles h2,
+  .recommended-products h2 {
+    background: linear-gradient(
+      92deg,
+      var(--wra-gold-bright),
+      var(--wra-ember)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wra-embers {
+    display: none;
+  }
+
+  .wra-hero > *:not(.wra-embers) {
+    animation: none;
+  }
+
+  .wra-reveal-armed {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .product-item img {
+    transition: none;
+  }
+
+  .product-item:hover img {
+    transform: none;
+  }
+}
