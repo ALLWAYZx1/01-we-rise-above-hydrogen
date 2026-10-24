@@ -1664,3 +1664,63 @@ a:hover {
   .wra-kinetic-track { animation: none; }
   .wra-kinetic-track { transform: none; }
 }
+
+
+/* Footer trust signals: quiet, legible, and consistent with CELESTIAL FIRE. */
+.wra-footer-trust {
+  border-top: 1px solid rgba(217, 165, 20, .24);
+  background: #0b0a08;
+  color: #f5efe3;
+}
+.wra-footer-trust-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 1.25rem clamp(1rem, 4vw, 3.5rem);
+}
+.wra-footer-trust-note,
+.wra-footer-trust-checkout {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  margin: 0;
+  color: #f5efe3;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.wra-footer-trust-mark { color: var(--wra-gold-bright); }
+.wra-footer-trust-checkout { color: var(--wra-ink-soft); letter-spacing: .06em; }
+.wra-footer-trust-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem 1.35rem;
+}
+.wra-footer-trust-links a {
+  color: #f5efe3;
+  font-size: .78rem;
+  text-decoration: underline;
+  text-decoration-color: rgba(217, 165, 20, .55);
+  text-underline-offset: .25em;
+}
+.wra-footer-trust-links a:hover,
+.wra-footer-trust-links a:focus-visible {
+  color: var(--wra-gold-bright);
+}
+.wra-footer-trust-links a:focus-visible {
+  outline: 2px solid var(--wra-gold-bright);
+  outline-offset: 4px;
+}
+@media (max-width: 700px) {
+  .wra-footer-trust-inner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .85rem;
+  }
+  .wra-footer-trust-links { gap: .75rem 1rem; }
+}
