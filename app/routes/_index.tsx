@@ -68,7 +68,8 @@ export default function Homepage() {
   return (
     <div className="home">
       {data.isShopLinked ? null : <MockShopNotice />}
-      <section className="wra-hero">
+      <section className="wra-hero wra-hero--detonation">
+        <div className="wra-hero-burst" aria-hidden="true" />
         <img
           className="wra-hero-emblem"
           src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/Luminous_Gold_P_Emblem.png?v=1792758842"
@@ -98,6 +99,7 @@ export default function Homepage() {
             Shop hoodies
           </Link>
         </div>
+        <p className="wra-hero-edition">SEASON 00 <span>·</span> BUILT UNDER PRESSURE</p>
       </section>
       <div className="wra-marquee" aria-hidden="true">
         <div className="wra-marquee-track">
@@ -111,10 +113,26 @@ export default function Homepage() {
           </span>
         </div>
       </div>
+      <div className="wra-kinetic-band" aria-label="Pressure builds. We rise. No final form.">
+        <div className="wra-kinetic-track" aria-hidden="true">
+          <span>PRESSURE BUILDS · WE RISE · NO FINAL FORM · </span>
+          <span>PRESSURE BUILDS · WE RISE · NO FINAL FORM · </span>
+        </div>
+      </div>
       <FeaturedBanner collection={data.featuredCollection} />
       <CategoryTiles collections={data.collections} />
+      <SeasonLookbook collection={data.featuredCollection} />
       <CreedBand />
       <RecommendedProducts products={data.recommendedProducts} />
+      <section className="wra-closing-cta" aria-labelledby="wra-closing-heading">
+        <p className="wra-closing-kicker">The next chapter starts here</p>
+        <h2 id="wra-closing-heading">JOIN THE <span>RISE</span></h2>
+        <p className="wra-closing-code">RISE10</p>
+        <p className="wra-closing-copy">Your first order. Ten percent off. A place in the rise.</p>
+        <Link className="wra-closing-link" to="#wra-signup-heading">
+          Get on the list <span aria-hidden="true">↗</span>
+        </Link>
+      </section>
     </div>
   );
 }
@@ -203,6 +221,48 @@ function CategoryTiles({
             <span className="wra-tile-label">{collection.title} →</span>
           </Link>
         ))}
+      </div>
+    </section>
+  );
+}
+
+function SeasonLookbook({
+  collection,
+}: {
+  collection: FeaturedCollectionFragment;
+}) {
+  return (
+    <section className="wra-lookbook" aria-labelledby="wra-lookbook-heading">
+      <div className="wra-lookbook-intro">
+        <p className="wra-lookbook-kicker">An editorial in three movements</p>
+        <h2 id="wra-lookbook-heading">SEASON <span>00</span></h2>
+        <p>Not a finish line. A first signal. Three ways to carry the pressure and keep moving.</p>
+      </div>
+      <div className="wra-lookbook-visual">
+        {collection?.image ? (
+          <Image
+            data={collection.image}
+            sizes="(min-width: 900px) 62vw, 100vw"
+            alt={collection.image.altText || 'Season 00 heavyweight collection'}
+          />
+        ) : (
+          <div className="wra-lookbook-art" role="img" aria-label="Abstract ember light over a black field" />
+        )}
+        <span className="wra-lookbook-stamp">WRA / 00</span>
+      </div>
+      <div className="wra-lookbook-index">
+        <article>
+          <span className="wra-lookbook-number">01</span>
+          <div><h3>THE WEIGHT</h3><p>Heavyweight pieces. Nothing lightweight about the intent.</p></div>
+        </article>
+        <article>
+          <span className="wra-lookbook-number">02</span>
+          <div><h3>THE WORK</h3><p>Made for the long hours, the quiet focus, the next rep.</p></div>
+        </article>
+        <article>
+          <span className="wra-lookbook-number">03</span>
+          <div><h3>THE RISE</h3><p>There is no final form. Keep becoming.</p></div>
+        </article>
       </div>
     </section>
   );
