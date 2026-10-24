@@ -108,6 +108,14 @@ export default function Homepage() {
             Shop hoodies
           </Link>
         </div>
+        <figure className="wra-hero-centerpiece">
+          <img
+            src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/hero-centerpiece-front-2560x1440.jpg?v=1792867452"
+            alt="ALLWAYZ between the angel and the demon under the eclipse — Never Settle hoodie, We Rise Above Season 00"
+            width="2560"
+            height="1440"
+          />
+        </figure>
       </section>
       <div className="wra-marquee" aria-hidden="true">
         <div className="wra-marquee-track">
