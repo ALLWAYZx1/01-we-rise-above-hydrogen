@@ -8,6 +8,7 @@ import type {
 } from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
 import {MockShopNotice} from '~/components/MockShopNotice';
+import {Reveal} from '~/components/Reveal';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: 'We Rise Above | Streetwear, Music & Creative Culture'}];
@@ -69,6 +70,15 @@ export default function Homepage() {
     <div className="home">
       {data.isShopLinked ? null : <MockShopNotice />}
       <section className="wra-hero">
+        <div className="wra-embers" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
         <img
           className="wra-hero-emblem"
           src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/Luminous_Gold_P_Emblem.png?v=1792758842"
@@ -119,10 +129,20 @@ export default function Homepage() {
           </span>
         </div>
       </div>
-      <FeaturedBanner collection={data.featuredCollection} />
-      <CategoryTiles collections={data.collections} />
-      <CreedBand />
-      <RecommendedProducts products={data.recommendedProducts} />
+      <TrustStrip />
+      <Reveal>
+        <FeaturedBanner collection={data.featuredCollection} />
+      </Reveal>
+      <Reveal>
+        <CategoryTiles collections={data.collections} />
+      </Reveal>
+      <Reveal>
+        <CreedBand />
+      </Reveal>
+      <Reveal>
+        <RecommendedProducts products={data.recommendedProducts} />
+      </Reveal>
+      <GhostBand />
     </div>
   );
 }
@@ -258,6 +278,52 @@ function RecommendedProducts({
       </Suspense>
       <br />
     </section>
+  );
+}
+
+function TrustStrip() {
+  const items = [
+    'Printed to order',
+    'Ships from the USA',
+    'Secure Shopify checkout',
+    'RISE10 — 10% off your first order',
+  ];
+  const payments = [
+    'Visa',
+    'Mastercard',
+    'Amex',
+    'Discover',
+    'Apple Pay',
+    'Shop Pay',
+  ];
+  return (
+    <section className="wra-trust" aria-label="Why shop with us">
+      <ul className="wra-trust-list">
+        {items.map((item) => (
+          <li key={item}>
+            <span className="wra-trust-mark" aria-hidden="true">
+              ◆
+            </span>
+            {item}
+          </li>
+        ))}
+      </ul>
+      <ul className="wra-pay" aria-label="Accepted payment methods">
+        {payments.map((name) => (
+          <li key={name} className="wra-pay-chip">
+            {name}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function GhostBand() {
+  return (
+    <div className="wra-ghost" aria-hidden="true">
+      <span>No final form</span>
+    </div>
   );
 }
 
