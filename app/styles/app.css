@@ -1143,3 +1143,91 @@ a:hover {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/*
+* --------------------------------------------------
+* Email capture (PREZZURE) — Klaviyo signup in the
+* footer. Daylight tokens only.
+* --------------------------------------------------
+*/
+
+.wra-signup {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 0.5rem;
+  text-align: center;
+}
+
+.wra-signup h3 {
+  color: var(--wra-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0 0 0.5rem;
+}
+
+.wra-signup p {
+  color: var(--wra-ink-soft);
+  line-height: 1.6;
+  margin: 0 0 1.25rem;
+}
+
+.wra-signup-form {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.wra-signup-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.wra-signup-input {
+  flex: 1 1 260px;
+  max-width: 340px;
+  padding: 0.8rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid var(--wra-gold-line);
+  background: var(--wra-card);
+  color: var(--wra-ink);
+  font-size: 0.95rem;
+}
+
+.wra-signup-input:focus {
+  outline: 2px solid var(--wra-gold);
+  outline-offset: 1px;
+}
+
+.wra-signup-button {
+  padding: 0.8rem 1.8rem;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(92deg, var(--wra-gold-bright), var(--wra-ember));
+  color: var(--wra-ink);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.wra-signup-button:hover {
+  transform: scale(1.04);
+}
+
+.wra-signup-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+  transform: none;
+}
+
+.wra-signup-note {
+  font-weight: 700;
+  color: var(--wra-gold-deep);
+}
