@@ -58,6 +58,11 @@ export default function Product() {
           </div>
           <ProductForm productOptions={productOptions} selectedVariant={selectedVariant} quantity={quantity} />
           <p className="daylight-checkout-note">Shipping, taxes, and eligible discounts are finalized at checkout.</p>
+          <div className="daylight-values" aria-label="Shopping benefits">
+            <span>Printed to order</span>
+            <span>Ships from the USA</span>
+            <span>RISE10 takes 10% off your first order</span>
+          </div>
           {product.descriptionHtml ? <div className="daylight-description-html" dangerouslySetInnerHTML={{__html: product.descriptionHtml}} /> : null}
         </div>
       </div>
