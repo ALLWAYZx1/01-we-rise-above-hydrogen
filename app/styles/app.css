@@ -1671,3 +1671,146 @@ a:hover {
     transform: none;
   }
 }
+
+/* ============ ENERGY PASS (PREZZURE) — supercar energy + kinetic band ============
+ * Additive only: no --wra-* token values changed. Fast kinetic
+ * marquee, car editorial grid with hover + slow drift energy,
+ * buy-path trust line. Reduced motion disables all movement. */
+
+.wra-energy {
+  padding: 4.5rem 1.25rem 3.5rem;
+  max-width: 80rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.wra-energy-title {
+  font-size: clamp(2rem, 5.5vw, 3.75rem);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  margin: 0.5rem 0 2.25rem;
+  text-transform: uppercase;
+}
+
+.wra-energy-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .wra-energy-grid {
+    grid-template-columns: 7fr 5fr;
+    align-items: stretch;
+  }
+}
+
+.wra-energy-card {
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--wra-gold-line);
+  background: var(--wra-surface, #14110c);
+}
+
+.wra-energy-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  transform: scale(1.01);
+  transition: transform 0.7s ease, filter 0.7s ease;
+}
+
+.wra-energy-card:hover img,
+.wra-energy-card:focus-within img {
+  transform: scale(1.07);
+  filter: brightness(1.08) saturate(1.1);
+}
+
+.wra-energy-card-lead img {
+  animation: wra-energy-drift 16s ease-in-out infinite alternate;
+}
+
+@keyframes wra-energy-drift {
+  from {
+    transform: scale(1.01);
+  }
+  to {
+    transform: scale(1.09);
+  }
+}
+
+.wra-energy-card figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2rem 1rem 0.8rem;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--wra-ivory, #f5efe3);
+  background: linear-gradient(transparent, rgba(9, 8, 6, 0.85));
+}
+
+/* Kinetic band — fast ember ticker, opposite energy to the slow marquee */
+.wra-kinetic {
+  overflow: hidden;
+  background: var(--wra-ember, #e85d04);
+  padding: 0.55rem 0;
+  transform: rotate(-1.2deg) scale(1.02);
+  margin: 1rem 0;
+}
+
+.wra-kinetic-track {
+  display: flex;
+  width: max-content;
+  animation: wra-marquee-scroll 9s linear infinite;
+}
+
+.wra-kinetic-track span {
+  white-space: nowrap;
+  color: #140b04;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding-right: 0.75rem;
+}
+
+/* Buy-path trust line under the product grid */
+.wra-trust-mini {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--wra-gold-deep);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wra-kinetic-track {
+    animation: none;
+  }
+
+  .wra-kinetic {
+    transform: none;
+  }
+
+  .wra-energy-card-lead img {
+    animation: none;
+  }
+
+  .wra-energy-card img {
+    transition: none;
+  }
+
+  .wra-energy-card:hover img {
+    transform: none;
+  }
+}

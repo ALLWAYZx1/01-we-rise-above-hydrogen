@@ -11,7 +11,14 @@ import {MockShopNotice} from '~/components/MockShopNotice';
 import {Reveal} from '~/components/Reveal';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'We Rise Above | Streetwear, Music & Creative Culture'}];
+  return [
+    {title: 'We Rise Above | Streetwear, Music & Creative Culture'},
+    {
+      name: 'description',
+      content:
+        'Heavyweight streetwear forged under pressure. Printed to order, shipped from the USA. Season 00 is live — pressure builds, we rise. No final form.',
+    },
+  ];
 };
 
 export async function loader(args: Route.LoaderArgs) {
@@ -139,6 +146,10 @@ export default function Homepage() {
       <Reveal>
         <CreedBand />
       </Reveal>
+      <Reveal>
+        <EnergySection />
+      </Reveal>
+      <KineticBand />
       <Reveal>
         <RecommendedProducts products={data.recommendedProducts} />
       </Reveal>
@@ -276,8 +287,59 @@ function RecommendedProducts({
           )}
         </Await>
       </Suspense>
+      <p className="wra-trust-mini">
+        Printed to order ◆ Ships from the USA ◆ Secure Shopify checkout ◆
+        RISE10 — 10% off your first order
+      </p>
       <br />
     </section>
+  );
+}
+
+function EnergySection() {
+  return (
+    <section className="wra-energy" aria-labelledby="wra-energy-heading">
+      <p className="wra-hero-eyebrow">The energy</p>
+      <h2 id="wra-energy-heading" className="wra-energy-title">
+        Built like <span className="wra-hero-gold">machines.</span>
+        <br />
+        Worn like armor.
+      </h2>
+      <div className="wra-energy-grid">
+        <figure className="wra-energy-card wra-energy-card-lead">
+          <img
+            src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-ferrari-red-1920x1280.jpg?v=1792888708"
+            alt="Red Ferrari supercar under ember light in a black and gold temple"
+            width="1920"
+            height="1280"
+            loading="lazy"
+          />
+          <figcaption>Red means go ◆ Season 00</figcaption>
+        </figure>
+        <figure className="wra-energy-card">
+          <img
+            src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-lambo-black-1920x1280.jpg?v=1792888708"
+            alt="Matte black Lamborghini with ember gold light streaks in a dark showroom"
+            width="1920"
+            height="1280"
+            loading="lazy"
+          />
+          <figcaption>Black on black ◆ No final form</figcaption>
+        </figure>
+      </div>
+    </section>
+  );
+}
+
+function KineticBand() {
+  const line = 'Pressure builds ◆ We rise ◆ No final form ◆ ';
+  return (
+    <div className="wra-kinetic" aria-hidden="true">
+      <div className="wra-kinetic-track">
+        <span>{line.repeat(3)}</span>
+        <span>{line.repeat(3)}</span>
+      </div>
+    </div>
   );
 }
 
