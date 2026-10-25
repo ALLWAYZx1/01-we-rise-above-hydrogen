@@ -146,6 +146,7 @@ export default function Homepage() {
       <Reveal>
         <CreedBand />
       </Reveal>
+      <PromoBar />
       <Reveal>
         <EnergySection />
       </Reveal>
@@ -308,26 +309,51 @@ function EnergySection() {
       <div className="wra-energy-grid">
         <figure className="wra-energy-card wra-energy-card-lead">
           <img
-            src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-ferrari-red-1920x1280.jpg?v=1792888708"
-            alt="Red Ferrari supercar under ember light in a black and gold temple"
+            src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-temple-black-front-1920x1280.jpg?v=1792950396"
+            alt="Matte black supercar with ember underglow in a black stone celestial temple"
             width="1920"
             height="1280"
             loading="lazy"
           />
-          <figcaption>Red means go ◆ Season 00</figcaption>
+          <figcaption>Forged in the temple ◆ Season 00</figcaption>
         </figure>
         <figure className="wra-energy-card">
           <img
-            src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-lambo-black-1920x1280.jpg?v=1792888708"
-            alt="Matte black Lamborghini with ember gold light streaks in a dark showroom"
+            src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-temple-blackgold-rear-1920x1280.jpg?v=1792950396"
+            alt="Black and gold supercar, rear three-quarter, under ember light in a black stone celestial temple"
             width="1920"
             height="1280"
             loading="lazy"
           />
-          <figcaption>Black on black ◆ No final form</figcaption>
+          <figcaption>Black and gold ◆ No final form</figcaption>
         </figure>
       </div>
+      <p className="wra-energy-bridge">
+        Pressure builds the machines. Pressure builds the armor. One temple,
+        one creed.
+      </p>
+      <div className="wra-energy-ctas">
+        <Link className="wra-hero-cta" to="/collections/all">
+          Shop the collection
+        </Link>
+        <a
+          className="wra-hero-cta wra-hero-cta-ghost"
+          href="#wra-signup-heading"
+        >
+          Join the rise
+        </a>
+      </div>
     </section>
+  );
+}
+
+function PromoBar() {
+  return (
+    <div className="wra-promo">
+      <p>
+        <strong>RISE10</strong> — 10% off your first order
+      </p>
+    </div>
   );
 }
 

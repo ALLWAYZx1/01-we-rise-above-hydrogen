@@ -1814,3 +1814,45 @@ a:hover {
     transform: none;
   }
 }
+
+/* ============ ENERGY BRAND FUSION (PREZZURE) — RISE10 promo bar, creed
+ * bridge line, CTA row under the car grid. Additive only: no existing
+ * rules or --wra-* token values changed. */
+
+.wra-promo {
+  background: var(--wra-daylight, #0b0a08);
+  border-top: 1px solid var(--wra-gold-line);
+  border-bottom: 1px solid var(--wra-gold-line);
+  padding: 0.6rem 1.25rem;
+  text-align: center;
+}
+
+.wra-promo p {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--wra-ink, #f5efe3);
+}
+
+.wra-promo strong {
+  color: var(--wra-ember, #e85d04);
+  font-weight: 900;
+}
+
+.wra-energy-bridge {
+  max-width: 44rem;
+  margin: 2.25rem auto 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--wra-ink-soft);
+}
+
+.wra-energy-ctas {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.75rem;
+}
