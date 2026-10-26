@@ -44,7 +44,7 @@ export default function Product() {
       <nav className="daylight-breadcrumb" aria-label="Breadcrumb"><a href="/collections/all">Shop</a><span aria-hidden="true">/</span><span>{product.title}</span></nav>
       <div className="daylight-product-layout">
         <div className="daylight-gallery">
-          <div className="daylight-gallery-main">{shownImage ? <Image data={shownImage} alt={shownImage.altText || product.title} sizes="(min-width: 900px) 55vw, 100vw" /> : <div className="daylight-image-fallback">WE RISE ABOVE</div>}</div>
+          <div className="daylight-gallery-main">{shownImage ? <Image data={shownImage} aspectRatio="1/1" alt={shownImage.altText || product.title} sizes="(min-width: 900px) 55vw, 100vw" /> : <div className="daylight-image-fallback">WE RISE ABOVE</div>}</div>
           {images.length > 1 ? <div className="daylight-gallery-thumbs" aria-label="Product images">{images.map((image: any, index: number) => <button type="button" key={image.id} aria-label={`View image ${index + 1}`} aria-pressed={index === activeImage} onClick={() => setActiveImage(index)}><Image data={image} alt={image.altText || `${product.title} view ${index + 1}`} sizes="100px" /></button>)}</div> : null}
         </div>
         <div className="daylight-product-details">

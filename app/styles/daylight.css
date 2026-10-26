@@ -19,7 +19,7 @@
   background: var(--wra-page);
 }
 
-html { background: var(--wra-page); }
+html { background: var(--wra-page); scrollbar-gutter: stable; }
 body {
   min-height: 100vh;
   background: var(--wra-page);
@@ -293,6 +293,7 @@ aside input, .predictive-search input { width: 100%; }
   margin-top: auto;
   background: var(--wra-ink);
   border-top: 3px solid var(--wra-gold);
+  color: #f5efe3;
 }
 .footer-menu {
   display: flex;
@@ -333,3 +334,88 @@ aside input, .predictive-search input { width: 100%; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
 
+/*
+* --------------------------------------------------
+* Visual defect fixes (PREZZURE) — footer nav,
+* homepage product-card text, account pages.
+* --------------------------------------------------
+*/
+
+/* Footer nav — grouped links under the signup block. */
+.footer-nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.75rem 2rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem .5rem;
+  text-align: left;
+}
+.footer-nav-brand strong {
+  font-size: .95rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.footer-nav-brand p {
+  color: rgba(245, 239, 227, .65);
+  font-size: .85rem;
+  line-height: 1.6;
+  margin: .5rem 0 0;
+}
+.footer-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+}
+.footer-nav-group h3 {
+  color: var(--wra-gold-soft);
+  font-size: .78rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin: 0 0 .35rem;
+}
+.footer-nav-group a {
+  color: #f5efe3;
+  font-size: .9rem;
+  text-decoration: none;
+}
+.footer-nav-group a:hover { color: var(--wra-gold-soft); }
+.footer-legal {
+  border-top: 1px solid rgba(245, 239, 227, .14);
+  margin-top: 1.5rem;
+}
+@media (min-width: 720px) {
+  .footer-nav { grid-template-columns: 1.4fr 1fr 1fr 1fr; }
+}
+
+/* Homepage product cards sit on the dark --wra-card surface while
+   --wra-ink is dark in this theme — keep card text ivory. Scoped to
+   the homepage grid so collection cards (light surface) are untouched. */
+.recommended-products .product-item { color: #f5efe3; }
+.recommended-products .product-item h3 { color: #f5efe3; }
+.recommended-products .product-item:hover h3 { color: var(--wra-gold-bright, #e9be44); }
+.recommended-products .product-item small { color: rgba(245, 239, 227, .78); }
+
+/* Account pages — constrain the skeleton layout to a readable measure
+   and give the order filter a finished card surface. */
+.account {
+  width: 100%;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 1rem 0 3rem;
+}
+.account h1 { margin: 0 0 .5rem; }
+.order-search-form { max-width: 46rem; }
+.order-search-fieldset {
+  background: var(--wra-surface);
+  border: 1px solid var(--wra-border);
+  border-radius: var(--wra-radius);
+  box-shadow: var(--wra-shadow);
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+.order-search-input {
+  background: var(--wra-surface);
+  border-color: var(--wra-border);
+  color: var(--wra-ink);
+}
