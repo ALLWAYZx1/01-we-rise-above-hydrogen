@@ -174,12 +174,12 @@ section { padding: clamp(1.5rem, 4vw, 3.5rem) 0; }
 .product-item:hover img, .recommended-product:hover img, .collection-item:hover img {
   box-shadow: var(--wra-shadow-hover);
 }
-.product-item h4, .recommended-product h4, .collection-item h4 {
+.product-item h3, .recommended-product h4, .collection-item h4 {
   color: var(--wra-ink);
   font-size: .92rem;
   line-height: 1.3;
 }
-.product-item:hover h4 { color: var(--wra-gold-deep); }
+.product-item:hover h3 { color: var(--wra-gold-deep); }
 .product { gap: clamp(1.5rem, 5vw, 4.5rem); }
 .product-main { min-width: 0; }
 .product-options-item, .product-options-item:disabled {
@@ -332,3 +332,4 @@ aside input, .predictive-search input { width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
