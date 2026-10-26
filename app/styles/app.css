@@ -831,9 +831,16 @@ a:hover {
 * --------------------------------------------------
 */
 
-/* Announcement bar — gold band, ink type, two messages crossfade */
+/* Announcement bar — gold band, ink type, two messages crossfade.
+   Both messages stack in one grid cell so the bar's height and text
+   alignment never change as they rotate, on any page or viewport.
+   The fade windows never overlap, so the two messages are never
+   half-visible at the same time (the old garbled double exposure). */
 .wra-announce {
   position: relative;
+  display: grid;
+  align-items: center;
+  min-height: 2.3rem;
   background: linear-gradient(
     92deg,
     var(--wra-gold-deep),
@@ -850,48 +857,53 @@ a:hover {
 }
 
 .wra-announce-msg {
+  grid-area: 1 / 1;
   display: block;
+  text-align: center;
 }
 
 .wra-announce-msg-a {
-  animation: wra-announce-out 9s ease-in-out infinite;
+  animation: wra-announce-a 9s ease-in-out infinite;
 }
 
 .wra-announce-msg-b {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   opacity: 0;
-  animation: wra-announce-in 9s ease-in-out infinite;
+  visibility: hidden;
+  animation: wra-announce-b 9s ease-in-out infinite;
 }
 
-@keyframes wra-announce-out {
+@keyframes wra-announce-a {
   0%,
-  44% {
+  42% {
     opacity: 1;
+    visibility: visible;
   }
-  52%,
+  47%,
   94% {
     opacity: 0;
+    visibility: hidden;
   }
   100% {
     opacity: 1;
+    visibility: visible;
   }
 }
 
-@keyframes wra-announce-in {
+@keyframes wra-announce-b {
   0%,
-  44% {
+  47% {
     opacity: 0;
+    visibility: hidden;
   }
-  52%,
-  94% {
+  53%,
+  88% {
     opacity: 1;
+    visibility: visible;
   }
+  94%,
   100% {
     opacity: 0;
+    visibility: hidden;
   }
 }
 
@@ -1099,7 +1111,7 @@ a:hover {
 /* Creed band — one ink moment on a daylight page */
 .wra-creed {
   background: var(--wra-ink);
-  color: var(--wra-daylight);
+  color: #f5efe3;
   text-align: center;
   padding: 4.5rem 1.5rem;
   margin: 3.5rem 0;
@@ -1114,7 +1126,7 @@ a:hover {
 }
 
 .wra-creed-sub {
-  color: var(--wra-daylight);
+  color: #f5efe3;
   opacity: 0.75;
   letter-spacing: 0.08em;
   margin: 1.25rem 0 1.75rem;
@@ -1159,7 +1171,7 @@ a:hover {
 }
 
 .wra-signup h3 {
-  color: var(--wra-ink);
+  color: #f5efe3;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin: 0 0 0.5rem;
@@ -1194,8 +1206,12 @@ a:hover {
   border-radius: 999px;
   border: 1px solid var(--wra-gold-line);
   background: var(--wra-card);
-  color: var(--wra-ink);
+  color: #f5efe3;
   font-size: 0.95rem;
+}
+
+.wra-signup-input::placeholder {
+  color: rgba(245, 239, 227, 0.45);
 }
 
 .wra-signup-input:focus {
@@ -1229,7 +1245,7 @@ a:hover {
 
 .wra-signup-note {
   font-weight: 700;
-  color: var(--wra-gold-deep);
+  color: #e9be44;
 }
 
 /*
@@ -1356,15 +1372,16 @@ a:hover {
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55);
 }
 
-/* Tiles — label flips to black glass */
+/* Tiles — label flips to black glass, text flips to ivory with it */
 .wra-tile-label {
   background: rgba(11, 10, 8, 0.88);
+  color: #f5efe3;
 }
 
-/* Creed band inverts to ivory — its link needs deep gold on light */
+/* Creed band is dark — its link needs bright gold to stay readable */
 .wra-creed-link,
 .wra-creed-link:hover {
-  color: #8a6508;
+  color: #e9be44;
 }
 
 /* Drawers, overlays, cart summary — dark surfaces */
@@ -1833,7 +1850,7 @@ a:hover {
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--wra-ink, #f5efe3);
+  color: #f5efe3;
 }
 
 .wra-promo strong {
@@ -1846,7 +1863,7 @@ a:hover {
   margin: 2.25rem auto 0;
   font-size: 1.05rem;
   line-height: 1.6;
-  color: var(--wra-ink-soft);
+  color: var(--wra-muted, #625d55);
 }
 
 .wra-energy-ctas {
