@@ -668,6 +668,17 @@ button.reset:hover:not(:has(> *)) {
   --wra-gold-line: rgba(176, 138, 30, 0.45);
 }
 
+html {
+  overflow-x: clip;
+}
+
+@supports not (overflow: clip) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+}
+
 body {
   background: var(--wra-daylight);
   color: var(--wra-ink);
@@ -1762,8 +1773,9 @@ a:hover {
   overflow: hidden;
   background: var(--wra-ember, #e85d04);
   padding: 0.55rem 0;
-  transform: rotate(-1.2deg) scale(1.02);
-  margin: 1rem 0;
+  transform: rotate(-1.2deg);
+  width: 102vw;
+  margin: 1rem 0 1rem -1vw;
 }
 
 .wra-kinetic-track {
