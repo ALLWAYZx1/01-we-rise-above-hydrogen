@@ -21,6 +21,34 @@ export const meta: Route.MetaFunction = () => {
   ];
 };
 
+const HERO_IMAGE_BASE =
+  'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/hero-centerpiece-front-2560x1440.jpg?v=1792867452';
+const HERO_SRCSET = [640, 900, 1180, 1440, 1920, 2560]
+  .map((width) => `${HERO_IMAGE_BASE}&width=${width} ${width}w`)
+  .join(', ');
+const HERO_SIZES = '(min-width: 1256px) 1180px, 94vw';
+
+const ENERGY_FRONT_BASE =
+  'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-temple-black-front-1920x1280.jpg?v=1792950396';
+const ENERGY_REAR_BASE =
+  'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-temple-blackgold-rear-1920x1280.jpg?v=1792950396';
+const energySrcSet = (base: string) =>
+  [640, 900, 1200, 1600, 1920]
+    .map((width) => `${base}&width=${width} ${width}w`)
+    .join(', ');
+
+export const links: Route.LinksFunction = () => {
+  return [
+    {
+      rel: 'preload',
+      as: 'image',
+      imageSrcSet: HERO_SRCSET,
+      imageSizes: HERO_SIZES,
+      fetchPriority: 'high',
+    },
+  ];
+};
+
 export async function loader(args: Route.LoaderArgs) {
   // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);
@@ -88,10 +116,12 @@ export default function Homepage() {
         </div>
         <img
           className="wra-hero-emblem"
-          src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/Luminous_Gold_P_Emblem.png?v=1792758842"
+          src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/Luminous_Gold_P_Emblem.png?v=1792758842&width=300"
+          srcSet="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/Luminous_Gold_P_Emblem.png?v=1792758842&width=150 150w, https://cdn.shopify.com/s/files/1/1002/6896/6179/files/Luminous_Gold_P_Emblem.png?v=1792758842&width=300 300w, https://cdn.shopify.com/s/files/1/1002/6896/6179/files/Luminous_Gold_P_Emblem.png?v=1792758842&width=450 450w"
+          sizes="150px"
           alt="We Rise Above emblem"
-          width="112"
-          height="112"
+          width="150"
+          height="150"
         />
         <p className="wra-hero-eyebrow">We Rise Above — Season 00</p>
         <h1 className="wra-hero-title">
@@ -117,10 +147,14 @@ export default function Homepage() {
         </div>
         <figure className="wra-hero-centerpiece">
           <img
-            src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/hero-centerpiece-front-2560x1440.jpg?v=1792867452"
+            src={`${HERO_IMAGE_BASE}&width=1440`}
+            srcSet={HERO_SRCSET}
+            sizes={HERO_SIZES}
             alt="ALLWAYZ between the angel and the demon under the eclipse — Never Settle hoodie, We Rise Above Season 00"
             width="2560"
             height="1440"
+            fetchPriority="high"
+            decoding="async"
           />
         </figure>
       </section>
@@ -309,21 +343,27 @@ function EnergySection() {
       <div className="wra-energy-grid">
         <figure className="wra-energy-card wra-energy-card-lead">
           <img
-            src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-temple-black-front-1920x1280.jpg?v=1792950396"
+            src={`${ENERGY_FRONT_BASE}&width=1200`}
+            srcSet={energySrcSet(ENERGY_FRONT_BASE)}
+            sizes="(min-width: 768px) 58vw, 100vw"
             alt="Matte black supercar with ember underglow in a black stone celestial temple"
             width="1920"
             height="1280"
             loading="lazy"
+            decoding="async"
           />
           <figcaption>Forged in the temple ◆ Season 00</figcaption>
         </figure>
         <figure className="wra-energy-card">
           <img
-            src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-temple-blackgold-rear-1920x1280.jpg?v=1792950396"
+            src={`${ENERGY_REAR_BASE}&width=1200`}
+            srcSet={energySrcSet(ENERGY_REAR_BASE)}
+            sizes="(min-width: 768px) 42vw, 100vw"
             alt="Black and gold supercar, rear three-quarter, under ember light in a black stone celestial temple"
             width="1920"
             height="1280"
             loading="lazy"
+            decoding="async"
           />
           <figcaption>Black and gold ◆ No final form</figcaption>
         </figure>

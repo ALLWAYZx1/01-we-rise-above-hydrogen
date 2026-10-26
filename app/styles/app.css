@@ -798,7 +798,7 @@ a:hover {
   text-decoration: none;
 }
 
-.product-item h4 {
+.product-item h3 {
   color: var(--wra-ink);
 }
 
@@ -806,7 +806,7 @@ a:hover {
   border-color: var(--wra-gold-line);
 }
 
-.product-item:hover h4 {
+.product-item:hover h3 {
   color: var(--wra-gold-deep);
 }
 
@@ -1856,3 +1856,4 @@ a:hover {
   flex-wrap: wrap;
   margin-top: 1.75rem;
 }
+
