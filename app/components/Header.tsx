@@ -226,6 +226,7 @@ function activeLinkStyle({
 }) {
   return {
     fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'black',
+    color: 'inherit',
+    opacity: isPending ? 0.55 : undefined,
   };
 }
