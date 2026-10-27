@@ -5,7 +5,14 @@ import {CartForm} from '@shopify/hydrogen';
 import {CartMain} from '~/components/CartMain';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'Your Cart | We Rise Above'}];
+  return [
+    {title: 'Your Cart | We Rise Above'},
+    {
+      name: 'description',
+      content:
+        'Your next form starts here. Review your We Rise Above pieces before checkout.',
+    },
+  ];
 };
 
 export const headers: HeadersFunction = ({actionHeaders}) => actionHeaders;

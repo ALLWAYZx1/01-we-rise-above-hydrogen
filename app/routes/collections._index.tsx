@@ -4,6 +4,17 @@ import {getPaginationVariables, Image} from '@shopify/hydrogen';
 import type {CollectionFragment} from 'storefrontapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 
+export const meta: Route.MetaFunction = () => {
+  return [
+    {title: 'Collections | We Rise Above'},
+    {
+      name: 'description',
+      content:
+        'Browse We Rise Above by collection — hoodies, tees, crewnecks, headwear, bags and more. Choose your armor.',
+    },
+  ];
+};
+
 export async function loader(args: Route.LoaderArgs) {
   // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);

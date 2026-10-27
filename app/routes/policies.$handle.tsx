@@ -8,7 +8,13 @@ type SelectedPolicies = keyof Pick<
 >;
 
 export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Hydrogen | ${data?.policy.title ?? ''}`}];
+  return [
+    {title: `${data?.policy.title ?? 'Policy'} | We Rise Above`},
+    {
+      name: 'description',
+      content: `${data?.policy.title ?? 'Policy'} at We Rise Above — the official word, in plain terms.`,
+    },
+  ];
 };
 
 export async function loader({params, context}: Route.LoaderArgs) {
