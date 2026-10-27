@@ -9,11 +9,25 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
-export const meta: Route.MetaFunction = ({data}) => [
-  {title: `WE RISE ABOVE | ${data?.product?.title ?? 'Product'}`},
-  {rel: 'canonical', href: `/products/${data?.product?.handle ?? ''}`},
-  {name: 'description', content: data?.product.seo?.description || data?.product.description || 'WE RISE ABOVE. NO FINAL FORM.'},
-];
+export const meta: Route.MetaFunction = ({data}) => {
+  return [
+    {title: `${data?.product.title ?? 'Shop'} | We Rise Above`},
+    {
+      rel: 'canonical',
+      href: `/products/${data?.product.handle}`,
+    },
+  ];
+};
+
+export async function loader(args: Route.LoaderArgs) {
+  // Start fetching non-critical data without blocking time to first byte
+  const deferredData = loadDeferredData(args);
+
+  // Await the critical data required to render initial state of the page
+  const criticalData = await loadCriticalData(args);
+
+  return {...deferredData, ...criticalData};
+}
 
 export async function loader({context, params, request}: Route.LoaderArgs) {
   const {handle} = params;
@@ -40,31 +54,28 @@ export default function Product() {
   const shownImage = images[activeImage >= 0 ? activeImage : 0] || selectedVariant?.image;
   const [quantity, setQuantity] = useState(1);
   return (
-    <main className="daylight-product-page">
-      <nav className="daylight-breadcrumb" aria-label="Breadcrumb"><a href="/collections/all">Shop</a><span aria-hidden="true">/</span><span>{product.title}</span></nav>
-      <div className="daylight-product-layout">
-        <div className="daylight-gallery">
-          <div className="daylight-gallery-main">{shownImage ? <Image data={shownImage} aspectRatio="1/1" alt={shownImage.altText || product.title} sizes="(min-width: 900px) 55vw, 100vw" /> : <div className="daylight-image-fallback">WE RISE ABOVE</div>}</div>
-          {images.length > 1 ? <div className="daylight-gallery-thumbs" aria-label="Product images">{images.map((image: any, index: number) => <button type="button" key={image.id} aria-label={`View image ${index + 1}`} aria-pressed={index === activeImage} onClick={() => setActiveImage(index)}><Image data={image} alt={image.altText || `${product.title} view ${index + 1}`} sizes="100px" /></button>)}</div> : null}
-        </div>
-        <div className="daylight-product-details">
-          <p className="daylight-eyebrow">WE RISE ABOVE · NO FINAL FORM</p>
-          <h1>{product.title}</h1>
-          <ProductPrice price={selectedVariant?.price} compareAtPrice={selectedVariant?.compareAtPrice} />
-          {product.description ? <p className="daylight-product-description">{product.description}</p> : null}
-          <div className="daylight-quantity">
-            <label htmlFor="product-quantity">Quantity</label>
-            <div><button type="button" aria-label="Decrease quantity" disabled={quantity <= 1} onClick={() => setQuantity((value) => Math.max(1, value - 1))}>−</button><output id="product-quantity">{quantity}</output><button type="button" aria-label="Increase quantity" onClick={() => setQuantity((value) => Math.min(99, value + 1))}>+</button></div>
-          </div>
-          <ProductForm productOptions={productOptions} selectedVariant={selectedVariant} quantity={quantity} />
-          <p className="daylight-checkout-note">Shipping, taxes, and eligible discounts are finalized at checkout.</p>
-          <div className="daylight-values" aria-label="Shopping benefits">
-            <span>Printed to order</span>
-            <span>Ships from the USA</span>
-            <span>RISE10 takes 10% off your first order</span>
-          </div>
-          {product.descriptionHtml ? <div className="daylight-description-html" dangerouslySetInnerHTML={{__html: product.descriptionHtml}} /> : null}
-        </div>
+    <div className="product">
+      <div className="product-gallery"><p className="eyebrow">We Rise Above · No Final Form</p><ProductImage image={selectedVariant?.image} /><p className="product-gallery-note">Faith in the details. Fire in the form.</p></div>
+      <div className="product-main">
+        <p className="eyebrow">Streetwear armor</p>
+        <h1>{title}</h1>
+        <ProductPrice
+          price={selectedVariant?.price}
+          compareAtPrice={selectedVariant?.compareAtPrice}
+        />
+        <br />
+        <ProductForm
+          productOptions={productOptions}
+          selectedVariant={selectedVariant}
+        />
+        <br />
+        <br />
+        <p>
+          <strong>Description</strong>
+        </p>
+        <br />
+        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
+        <br />
       </div>
       <Analytics.ProductView data={{products: [{id: product.id, title: product.title, price: selectedVariant?.price.amount || '0', vendor: product.vendor, variantId: selectedVariant?.id || '', variantTitle: selectedVariant?.title || '', quantity}]}} />
     </main>

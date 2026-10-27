@@ -15,9 +15,14 @@ export function Footer({footer: footerPromise, header}: FooterProps) {
       <Await resolve={footerPromise}>
         {() => (
           <footer className="footer">
-            <KlaviyoSignup />
-            <FooterNav shopName={header.shop.name} />
-            <FooterLegal />
+            <div className="footer-brand"><span>A★</span><strong>WE RISE ABOVE</strong><p>Faith. Discipline. Hard work. Keep rising.</p><small>NO FINAL FORM.</small></div>
+            {footer?.menu && header.shop.primaryDomain?.url && (
+              <FooterMenu
+                menu={footer.menu}
+                primaryDomainUrl={header.shop.primaryDomain.url}
+                publicStoreDomain={publicStoreDomain}
+              />
+            )}
           </footer>
         )}
       </Await>

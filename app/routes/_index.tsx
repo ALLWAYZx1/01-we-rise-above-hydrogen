@@ -11,42 +11,7 @@ import {MockShopNotice} from '~/components/MockShopNotice';
 import {Reveal} from '~/components/Reveal';
 
 export const meta: Route.MetaFunction = () => {
-  return [
-    {title: 'We Rise Above | Streetwear, Music & Creative Culture'},
-    {
-      name: 'description',
-      content:
-        'Heavyweight streetwear forged under pressure. Printed to order, shipped from the USA. Season 00 is live — pressure builds, we rise. No final form.',
-    },
-  ];
-};
-
-const HERO_IMAGE_BASE =
-  'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/hero-centerpiece-front-2560x1440.jpg?v=1792867452';
-const HERO_SRCSET = [640, 900, 1180, 1440, 1920, 2560]
-  .map((width) => `${HERO_IMAGE_BASE}&width=${width} ${width}w`)
-  .join(', ');
-const HERO_SIZES = '(min-width: 1256px) 1180px, 94vw';
-
-const ENERGY_FRONT_BASE =
-  'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-temple-black-front-1920x1280.jpg?v=1792950396';
-const ENERGY_REAR_BASE =
-  'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-temple-blackgold-rear-1920x1280.jpg?v=1792950396';
-const energySrcSet = (base: string) =>
-  [640, 900, 1200, 1600, 1920]
-    .map((width) => `${base}&width=${width} ${width}w`)
-    .join(', ');
-
-export const links: Route.LinksFunction = () => {
-  return [
-    {
-      rel: 'preload',
-      as: 'image',
-      imageSrcSet: HERO_SRCSET,
-      imageSizes: HERO_SIZES,
-      fetchPriority: 'high',
-    },
-  ];
+  return [{title: 'We Rise Above | No Final Form'}, {name: 'description', content: 'Streetwear armor for the ones still rising. Faith. Discipline. Hard work. No final form.'}];
 };
 
 export async function loader(args: Route.LoaderArgs) {
@@ -125,9 +90,9 @@ export default function Homepage() {
         />
         <p className="wra-hero-eyebrow">We Rise Above — Season 00</p>
         <h1 className="wra-hero-title">
-          Pressure builds.
+          Built by
           <br />
-          <span className="wra-hero-gold">We rise.</span>
+          <span className="wra-hero-gold">the <span className="wra-hero-gold">pressure.</span></span>
         </h1>
         <p className="wra-hero-copy">
           Heavyweight streetwear forged under pressure. Cut heavy, printed
@@ -158,37 +123,10 @@ export default function Homepage() {
           />
         </figure>
       </section>
-      <div className="wra-marquee" aria-hidden="true">
-        <div className="wra-marquee-track">
-          <span>
-            Faith · Discipline · Hard work · Never settle · Keep rising · Stay
-            true ·{' '}
-          </span>
-          <span>
-            Faith · Discipline · Hard work · Never settle · Keep rising · Stay
-            true ·{' '}
-          </span>
-        </div>
-      </div>
-      <TrustStrip />
-      <Reveal>
-        <FeaturedBanner collection={data.featuredCollection} />
-      </Reveal>
-      <Reveal>
-        <CategoryTiles collections={data.collections} />
-      </Reveal>
-      <Reveal>
-        <CreedBand />
-      </Reveal>
-      <PromoBar />
-      <Reveal>
-        <EnergySection />
-      </Reveal>
-      <KineticBand />
-      <Reveal>
-        <RecommendedProducts products={data.recommendedProducts} />
-      </Reveal>
-      <GhostBand />
+      <section className="wra-section"><p className="eyebrow">First things first</p><h2>Wear the rise.</h2><p className="collection-intro">Pieces with presence. Built for the days that test you and the nights that define you.</p><FeaturedCollection collection={data.featuredCollection} /></section>
+      <RecommendedProducts products={data.recommendedProducts} />
+      <section className="wra-duality" aria-label="Angel and demon duality"><Link to="/collections/all"><span>Chapter I · The light</span><strong>Angel energy.</strong><p>Move with faith. Protect your peace. Keep your purpose in sight.</p></Link><Link to="/collections/all"><span>Chapter II · The fire</span><strong>Demon mode.</strong><p>Face the pressure. Own your shadow. Turn every limit into fuel.</p></Link></section>
+      <section className="wra-creed"><p className="eyebrow">The code we live by</p><h2>The creed.</h2><div className="wra-creed-words">{["FAITH","DISCIPLINE","HARD WORK","NEVER SETTLE","KEEP RISING","STAY TRUE"].map((word) => <span key={word}>{word}</span>)}</div><p className="wra-creed-tagline">NO FINAL FORM.</p></section>
     </div>
   );
 }

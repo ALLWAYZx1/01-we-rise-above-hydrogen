@@ -29,13 +29,14 @@ export function ProductItem({
       {image && (
         <Image
           alt={image.altText || product.title}
-          aspectRatio="1/1"
+          aspectRatio="4/5"
           data={image}
           loading={loading}
-          sizes="(min-width: 45em) 25vw, 50vw"
+          sizes="(min-width: 700px) 25vw, 50vw"
         />
       )}
-      <h3>{product.title}</h3>
+      <span className="product-card-kicker">We Rise Above · Essential</span>
+      <h4>{product.title}</h4>
       <small>
         <Money data={product.priceRange.minVariantPrice} />
       </small>

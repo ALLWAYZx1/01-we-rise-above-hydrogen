@@ -25,34 +25,18 @@ export function Header({
 }: HeaderProps) {
   const {shop, menu} = header;
   return (
-    <>
-      <AnnouncementBar />
-      <header className="header">
-        <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-          <strong>{shop.name}</strong>
-        </NavLink>
-        <HeaderMenu
-          menu={menu}
-          viewport="desktop"
-          primaryDomainUrl={header.shop.primaryDomain.url}
-          publicStoreDomain={publicStoreDomain}
-        />
-        <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
-      </header>
-    </>
-  );
-}
-
-function AnnouncementBar() {
-  return (
-    <div className="wra-announce" role="region" aria-label="Announcements">
-      <span className="wra-announce-msg wra-announce-msg-a">
-        RISE10 — 10% off your first order
-      </span>
-      <span className="wra-announce-msg wra-announce-msg-b" aria-hidden="true">
-        Pressure builds. We rise.
-      </span>
-    </div>
+    <header className="header">
+      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
+        <strong><span aria-hidden="true" style={{color:"#d4af37",marginRight:".45rem"}}>A★</span>We Rise Above</strong>
+      </NavLink>
+      <HeaderMenu
+        menu={menu}
+        viewport="desktop"
+        primaryDomainUrl={header.shop.primaryDomain.url}
+        publicStoreDomain={publicStoreDomain}
+      />
+      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+    </header>
   );
 }
 
