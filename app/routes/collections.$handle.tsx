@@ -70,6 +70,7 @@ export default function Collection() {
 
   return (
     <div className="collection">
+      {/* The paginated Storefront API connection has no reliable totalCount. Do not treat the current page node count as the collection total. */}
       <h1>{collection.title}</h1>
       <p className="collection-description">{collection.description}</p>
       <PaginatedResourceSection<ProductItemFragment>

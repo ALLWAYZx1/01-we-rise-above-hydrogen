@@ -24,7 +24,7 @@
 .daylight-product-rail .product-item img, .daylight-product-grid .product-item img { display: block; width: 100%; max-width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
 /* Product photography is consistently portrait across rails, collection grids, and detail galleries. */
 .daylight-product-rail .product-item, .daylight-product-grid .product-item { min-width: 0; overflow: hidden; }
-.daylight-product-rail .product-item img, .daylight-product-grid .product-item img, .daylight-gallery-main img { aspect-ratio: 4 / 5; object-fit: cover; }
+.daylight-product-rail .product-item img, .daylight-product-grid .product-item img { aspect-ratio: 4 / 5; object-fit: cover; }
 .daylight-product-rail .product-item h4, .daylight-product-grid .product-item h4 { margin: .75rem 0 .3rem; color: var(--wra-ink); }
 .daylight-product-rail .product-item small, .daylight-product-grid .product-item small { color: var(--wra-muted); }
 .daylight-values { display: flex; justify-content: center; flex-wrap: wrap; gap: .8rem 2rem; padding: 1.5rem 1rem; border-block: 1px solid var(--wra-border); color: var(--wra-gold-deep); font-size: .75rem; font-weight: 800; letter-spacing: .13em; }
@@ -46,7 +46,9 @@
 .daylight-empty-state h2 { color: var(--wra-ink); }
 .daylight-empty-state .daylight-button { margin-top: .5rem; }
 .daylight-product-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(18rem, .9fr); align-items: start; gap: clamp(2rem, 6vw, 5rem); padding: 1.5rem 0 4rem; }
-.daylight-gallery-main img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: var(--wra-surface); }
+.daylight-gallery-main { position: relative; aspect-ratio: 1 / 1; overflow: hidden; background: var(--wra-surface); }
+.daylight-gallery-main img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; }
+.daylight-gallery-main .daylight-image-fallback { position: absolute; inset: 0; }
 .daylight-gallery-thumbs { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: .75rem; }
 .daylight-gallery-thumbs button { width: 5rem; padding: .2rem; border: 1px solid var(--wra-border); background: var(--wra-surface); cursor: pointer; }
 .daylight-gallery-thumbs button[aria-pressed="true"] { border-color: var(--wra-gold); box-shadow: var(--wra-shadow); }
