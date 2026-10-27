@@ -10,7 +10,8 @@
     "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern .",
     "typecheck": "react-router typegen && tsc --noEmit",
-    "codegen": "shopify hydrogen codegen && react-router typegen"
+    "codegen": "shopify hydrogen codegen && react-router typegen",
+    "build:handler": "node scripts/build-vercel-handler.mjs"
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
@@ -31,6 +32,7 @@
     "@graphql-codegen/cli": "5.0.2",
     "@react-router/dev": "7.16.0",
     "@react-router/fs-routes": "7.16.0",
+    "@react-router/node": "^7.16.0",
     "@shopify/cli": "3.93.2",
     "@shopify/hydrogen-codegen": "0.3.3",
     "@shopify/mini-oxygen": "4.2.3",
@@ -42,6 +44,7 @@
     "@types/react-dom": "^18.3.7",
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
+    "@vercel/functions": "^3.10.2",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-import-resolver-typescript": "^3.7.0",

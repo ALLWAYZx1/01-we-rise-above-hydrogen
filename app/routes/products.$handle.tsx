@@ -1,232 +1,94 @@
+import {useEffect, useState} from 'react';
 import {redirect, useLoaderData} from 'react-router';
 import type {Route} from './+types/products.$handle';
-import {
-  getSelectedProductOptions,
-  Analytics,
-  useOptimisticVariant,
-  getProductOptions,
-  getAdjacentAndFirstAvailableVariants,
-  useSelectedOptionInUrlParam,
-} from '@shopify/hydrogen';
+import pageStyles from '~/styles/daylight-pages.css?url';
+
+export function links() { return [{rel: 'stylesheet', href: pageStyles}]; }
+import {getSelectedProductOptions, Analytics, useOptimisticVariant, getProductOptions, getAdjacentAndFirstAvailableVariants, useSelectedOptionInUrlParam, Image} from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
-import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
-export const meta: Route.MetaFunction = ({data}) => {
-  return [
-    {title: `Hydrogen | ${data?.product.title ?? ''}`},
-    {
-      rel: 'canonical',
-      href: `/products/${data?.product.handle}`,
-    },
-  ];
-};
+export const meta: Route.MetaFunction = ({data}) => [
+  {title: `WE RISE ABOVE | ${data?.product?.title ?? 'Product'}`},
+  {rel: 'canonical', href: `/products/${data?.product?.handle ?? ''}`},
+  {name: 'description', content: data?.product.seo?.description || data?.product.description || 'WE RISE ABOVE. NO FINAL FORM.'},
+];
 
-export async function loader(args: Route.LoaderArgs) {
-  // Start fetching non-critical data without blocking time to first byte
-  const deferredData = loadDeferredData(args);
-
-  // Await the critical data required to render initial state of the page
-  const criticalData = await loadCriticalData(args);
-
-  return {...deferredData, ...criticalData};
-}
-
-/**
- * Load data necessary for rendering content above the fold. This is the critical data
- * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
- */
-async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
+export async function loader({context, params, request}: Route.LoaderArgs) {
   const {handle} = params;
-  const {storefront} = context;
-
-  if (!handle) {
-    throw new Error('Expected product handle to be defined');
-  }
-
-  const [{product}] = await Promise.all([
-    storefront.query(PRODUCT_QUERY, {
-      variables: {handle, selectedOptions: getSelectedProductOptions(request)},
-    }),
-    // Add other queries here, so that they are loaded in parallel
-  ]);
-
-  if (!product?.id) {
-    throw new Response(null, {status: 404});
-  }
-
-  // The API handle might be localized, so redirect to the localized handle
+  if (!handle) throw new Response('Product not found', {status: 404});
+  const {product} = await context.storefront.query(PRODUCT_QUERY, {
+    variables: {handle, selectedOptions: getSelectedProductOptions(request)},
+  });
+  if (!product?.id) throw new Response('Product not found', {status: 404});
   redirectIfHandleIsLocalized(request, {handle, data: product});
-
-  return {
-    product,
-  };
-}
-
-/**
- * Load data for rendering content below the fold. This data is deferred and will be
- * fetched after the initial page load. If it's unavailable, the page should still 200.
- * Make sure to not throw any errors here, as it will cause the page to 500.
- */
-function loadDeferredData({context, params}: Route.LoaderArgs) {
-  // Put any API calls that is not critical to be available on first page render
-  // For example: product reviews, product recommendations, social feeds.
-
-  return {};
+  return {product};
 }
 
 export default function Product() {
   const {product} = useLoaderData<typeof loader>();
-
-  // Optimistically selects a variant with given available variant information
-  const selectedVariant = useOptimisticVariant(
-    product.selectedOrFirstAvailableVariant,
-    getAdjacentAndFirstAvailableVariants(product),
-  );
-
-  // Sets the search param to the selected variant without navigation
-  // only when no search params are set in the url
+  const selectedVariant = useOptimisticVariant(product.selectedOrFirstAvailableVariant, getAdjacentAndFirstAvailableVariants(product));
   useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
-
-  // Get the product options array
-  const productOptions = getProductOptions({
-    ...product,
-    selectedOrFirstAvailableVariant: selectedVariant,
-  });
-
-  const {title, descriptionHtml} = product;
-
+  const productOptions = getProductOptions({...product, selectedOrFirstAvailableVariant: selectedVariant});
+  const images = product.images.nodes;
+  const [activeImage, setActiveImage] = useState(images.findIndex((image: any) => image.id === selectedVariant?.image?.id));
+  useEffect(() => {
+    const variantImageIndex = images.findIndex((image: any) => image.id === selectedVariant?.image?.id);
+    if (variantImageIndex >= 0) setActiveImage(variantImageIndex);
+  }, [images, selectedVariant?.image?.id]);
+  const shownImage = images[activeImage >= 0 ? activeImage : 0] || selectedVariant?.image;
+  const [quantity, setQuantity] = useState(1);
   return (
-    <div className="product">
-      <ProductImage image={selectedVariant?.image} />
-      <div className="product-main">
-        <h1>{title}</h1>
-        <ProductPrice
-          price={selectedVariant?.price}
-          compareAtPrice={selectedVariant?.compareAtPrice}
-        />
-        <br />
-        <ProductForm
-          productOptions={productOptions}
-          selectedVariant={selectedVariant}
-        />
-        <br />
-        <br />
-        <p>
-          <strong>Description</strong>
-        </p>
-        <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-        <br />
+    <main className="daylight-product-page">
+      <nav className="daylight-breadcrumb" aria-label="Breadcrumb"><a href="/collections/all">Shop</a><span aria-hidden="true">/</span><span>{product.title}</span></nav>
+      <div className="daylight-product-layout">
+        <div className="daylight-gallery">
+          <div className="daylight-gallery-main">{shownImage ? <Image data={shownImage} aspectRatio="1/1" alt={shownImage.altText || product.title} sizes="(min-width: 900px) 55vw, 100vw" /> : <div className="daylight-image-fallback">WE RISE ABOVE</div>}</div>
+          {images.length > 1 ? <div className="daylight-gallery-thumbs" aria-label="Product images">{images.map((image: any, index: number) => <button type="button" key={image.id} aria-label={`View image ${index + 1}`} aria-pressed={index === activeImage} onClick={() => setActiveImage(index)}><Image data={image} alt={image.altText || `${product.title} view ${index + 1}`} sizes="100px" /></button>)}</div> : null}
+        </div>
+        <div className="daylight-product-details">
+          <p className="daylight-eyebrow">WE RISE ABOVE · NO FINAL FORM</p>
+          <h1>{product.title}</h1>
+          <ProductPrice price={selectedVariant?.price} compareAtPrice={selectedVariant?.compareAtPrice} />
+          {product.description ? <p className="daylight-product-description">{product.description}</p> : null}
+          <div className="daylight-quantity">
+            <label htmlFor="product-quantity">Quantity</label>
+            <div><button type="button" aria-label="Decrease quantity" disabled={quantity <= 1} onClick={() => setQuantity((value) => Math.max(1, value - 1))}>−</button><output id="product-quantity">{quantity}</output><button type="button" aria-label="Increase quantity" onClick={() => setQuantity((value) => Math.min(99, value + 1))}>+</button></div>
+          </div>
+          <ProductForm productOptions={productOptions} selectedVariant={selectedVariant} quantity={quantity} />
+          <p className="daylight-checkout-note">Shipping, taxes, and eligible discounts are finalized at checkout.</p>
+          <div className="daylight-values" aria-label="Shopping benefits">
+            <span>Printed to order</span>
+            <span>Ships from the USA</span>
+            <span>RISE10 takes 10% off your first order</span>
+          </div>
+          {product.descriptionHtml ? <div className="daylight-description-html" dangerouslySetInnerHTML={{__html: product.descriptionHtml}} /> : null}
+        </div>
       </div>
-      <Analytics.ProductView
-        data={{
-          products: [
-            {
-              id: product.id,
-              title: product.title,
-              price: selectedVariant?.price.amount || '0',
-              vendor: product.vendor,
-              variantId: selectedVariant?.id || '',
-              variantTitle: selectedVariant?.title || '',
-              quantity: 1,
-            },
-          ],
-        }}
-      />
-    </div>
+      <Analytics.ProductView data={{products: [{id: product.id, title: product.title, price: selectedVariant?.price.amount || '0', vendor: product.vendor, variantId: selectedVariant?.id || '', variantTitle: selectedVariant?.title || '', quantity}]}} />
+    </main>
   );
 }
 
-const PRODUCT_VARIANT_FRAGMENT = `#graphql
-  fragment ProductVariant on ProductVariant {
-    availableForSale
-    compareAtPrice {
-      amount
-      currencyCode
-    }
-    id
-    image {
-      __typename
-      id
-      url
-      altText
-      width
-      height
-    }
-    price {
-      amount
-      currencyCode
-    }
-    product {
-      title
-      handle
-    }
-    selectedOptions {
-      name
-      value
-    }
-    sku
-    title
-    unitPrice {
-      amount
-      currencyCode
-    }
-  }
-` as const;
-
-const PRODUCT_FRAGMENT = `#graphql
-  fragment Product on Product {
-    id
-    title
-    vendor
-    handle
-    descriptionHtml
-    description
-    encodedVariantExistence
-    encodedVariantAvailability
-    options {
-      name
-      optionValues {
-        name
-        firstSelectableVariant {
-          ...ProductVariant
-        }
-        swatch {
-          color
-          image {
-            previewImage {
-              url
-            }
-          }
-        }
-      }
-    }
-    selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
-      ...ProductVariant
-    }
-    adjacentVariants (selectedOptions: $selectedOptions) {
-      ...ProductVariant
-    }
-    seo {
-      description
-      title
-    }
-  }
-  ${PRODUCT_VARIANT_FRAGMENT}
-` as const;
-
 const PRODUCT_QUERY = `#graphql
-  query Product(
-    $country: CountryCode
-    $handle: String!
-    $language: LanguageCode
-    $selectedOptions: [SelectedOptionInput!]!
-  ) @inContext(country: $country, language: $language) {
+  fragment DaylightProductVariant on ProductVariant {
+    availableForSale compareAtPrice { amount currencyCode } id
+    image { id url altText width height }
+    price { amount currencyCode }
+    product { title handle }
+    selectedOptions { name value }
+    sku title unitPrice { amount currencyCode }
+  }
+  query DaylightProduct($country: CountryCode, $handle: String!, $language: LanguageCode, $selectedOptions: [SelectedOptionInput!]!)
+    @inContext(country: $country, language: $language) {
     product(handle: $handle) {
-      ...Product
+      id title vendor handle descriptionHtml description
+      images(first: 10) { nodes { id url altText width height } }
+      options { name optionValues { name firstSelectableVariant { ...DaylightProductVariant } swatch { color image { previewImage { url } } } } }
+      selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) { ...DaylightProductVariant }
+      adjacentVariants(selectedOptions: $selectedOptions) { ...DaylightProductVariant }
+      seo { description title }
     }
   }
-  ${PRODUCT_FRAGMENT}
 ` as const;
