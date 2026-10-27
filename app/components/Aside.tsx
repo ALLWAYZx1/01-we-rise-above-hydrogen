@@ -49,6 +49,14 @@ export function Aside({
         },
         {signal: abortController.signal},
       );
+      // Lock page scroll while a drawer is open so the panel owns the
+      // scroll and the page behind it does not shift.
+      const previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        abortController.abort();
+        document.body.style.overflow = previousOverflow;
+      };
     }
     return () => abortController.abort();
   }, [close, expanded]);
