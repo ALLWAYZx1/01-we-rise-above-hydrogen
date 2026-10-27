@@ -334,88 +334,219 @@ aside input, .predictive-search input { width: 100%; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
 
-/*
-* --------------------------------------------------
-* Visual defect fixes (PREZZURE) — footer nav,
-* homepage product-card text, account pages.
-* --------------------------------------------------
-*/
 
-/* Footer nav — grouped links under the signup block. */
-.footer-nav {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.75rem 2rem;
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 2.5rem 1.5rem .5rem;
-  text-align: left;
-}
-.footer-nav-brand strong {
-  font-size: .95rem;
-  font-weight: 800;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-}
-.footer-nav-brand p {
-  color: rgba(245, 239, 227, .65);
-  font-size: .85rem;
-  line-height: 1.6;
-  margin: .5rem 0 0;
-}
-.footer-nav-group {
+/* --------------------------------------------------
+   SUPER NOVA pass — premium daylight, restrained cosmic energy.
+   Decorative only: no layout dependencies or interaction changes.
+   -------------------------------------------------- */
+.wra-hero {
+  isolation: isolate;
+  min-height: clamp(34rem, 68vh, 48rem);
   display: flex;
   flex-direction: column;
-  gap: .55rem;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(4rem, 9vw, 7.5rem) 1.5rem clamp(3.5rem, 7vw, 6rem);
+  background:
+    radial-gradient(ellipse 34rem 24rem at 50% 16%, rgba(217, 165, 20, .19), transparent 72%),
+    radial-gradient(ellipse 26rem 18rem at 12% 80%, rgba(176, 138, 30, .08), transparent 72%),
+    radial-gradient(ellipse 26rem 18rem at 88% 78%, rgba(232, 93, 4, .055), transparent 72%),
+    var(--wra-daylight);
 }
-.footer-nav-group h3 {
-  color: var(--wra-gold-soft);
-  font-size: .78rem;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  margin: 0 0 .35rem;
+
+.wra-hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 1rem;
+  border: 1px solid rgba(176, 138, 30, .16);
+  pointer-events: none;
 }
-.footer-nav-group a {
-  color: #f5efe3;
-  font-size: .9rem;
+
+.wra-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: min(68vw, 42rem);
+  aspect-ratio: 1;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(176, 138, 30, .11);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2.25rem rgba(176, 138, 30, .025), 0 0 0 5rem rgba(176, 138, 30, .018);
+  pointer-events: none;
+}
+
+.wra-hero-emblem {
+  width: clamp(4.5rem, 8vw, 6.5rem);
+  height: auto;
+  margin: 0 0 1.75rem;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 22px rgba(176, 138, 30, .2));
+  animation: nova-emblem-arrive 850ms cubic-bezier(.2, .75, .25, 1) both;
+}
+
+.wra-hero-eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .8rem;
+  margin-bottom: 1.5rem;
+  font-size: .68rem;
+  font-weight: 750;
+  letter-spacing: .32em;
+}
+
+.wra-hero-eyebrow::before,
+.wra-hero-eyebrow::after {
+  content: "";
+  width: clamp(1.25rem, 4vw, 3rem);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--wra-gold));
+}
+
+.wra-hero-eyebrow::after {
+  transform: scaleX(-1);
+}
+
+.wra-hero-title {
+  max-width: 12ch;
+  font-size: clamp(3.25rem, 9.4vw, 7.8rem);
+  line-height: .88;
+  letter-spacing: -.035em;
+  text-shadow: 0 1px 0 rgba(255,255,255,.7);
+}
+
+.wra-hero-gold {
+  display: inline-block;
+  padding: .08em .05em .12em;
+  background-image: linear-gradient(100deg, #76500b 0%, #c49a2e 34%, #f0d98c 52%, #9b7015 76%, #67470d 100%);
+  background-size: 180% 100%;
+  background-position: 15% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: nova-gold-drift 9s ease-in-out infinite alternate;
+}
+
+.wra-hero-copy {
+  max-width: 36rem;
+  margin-top: 1.8rem;
+  font-size: clamp(.98rem, 1.35vw, 1.12rem);
+  line-height: 1.8;
+}
+
+.wra-hero-ctas {
+  margin-top: 2.35rem;
+}
+
+.wra-hero-cta {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #7d590f;
+  border-radius: 3px;
+  padding: 1rem 2.1rem;
+  background: linear-gradient(115deg, #17140e, #302514);
+  color: #fffaf0;
+  box-shadow: 0 8px 24px rgba(38, 29, 13, .16);
+  letter-spacing: .16em;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.wra-hero-cta:hover {
+  color: #fffaf0;
+  border-color: #c49a2e;
+  box-shadow: 0 12px 32px rgba(138, 101, 8, .22);
+  transform: translateY(-2px);
+}
+
+.featured-collection {
+  overflow: hidden;
+  border: 1px solid var(--wra-line);
+  background: #f1ead9;
   text-decoration: none;
 }
-.footer-nav-group a:hover { color: var(--wra-gold-soft); }
-.footer-legal {
-  border-top: 1px solid rgba(245, 239, 227, .14);
-  margin-top: 1.5rem;
-}
-@media (min-width: 720px) {
-  .footer-nav { grid-template-columns: 1.4fr 1fr 1fr 1fr; }
+
+.featured-collection-image {
+  overflow: hidden;
+  background: linear-gradient(135deg, #e8dcc2, #f8f3e8);
 }
 
-/* Homepage product cards sit on the dark --wra-card surface while
-   --wra-ink is dark in this theme — keep card text ivory. Scoped to
-   the homepage grid so collection cards (light surface) are untouched. */
-.recommended-products .product-item { color: #f5efe3; }
-.recommended-products .product-item h3 { color: #f5efe3; }
-.recommended-products .product-item:hover h3 { color: var(--wra-gold-bright, #e9be44); }
-.recommended-products .product-item small { color: rgba(245, 239, 227, .78); }
-
-/* Account pages — constrain the skeleton layout to a readable measure
-   and give the order filter a finished card surface. */
-.account {
+.featured-collection-image img {
   width: 100%;
-  max-width: 64rem;
-  margin: 0 auto;
-  padding: 1rem 0 3rem;
+  transition: transform 650ms cubic-bezier(.2, .7, .2, 1), filter 650ms ease;
 }
-.account h1 { margin: 0 0 .5rem; }
-.order-search-form { max-width: 46rem; }
-.order-search-fieldset {
-  background: var(--wra-surface);
-  border: 1px solid var(--wra-border);
-  border-radius: var(--wra-radius);
-  box-shadow: var(--wra-shadow);
-  padding: 1.25rem 1.5rem 1.5rem;
+
+.featured-collection:hover .featured-collection-image img {
+  transform: scale(1.025);
+  filter: saturate(1.04);
 }
-.order-search-input {
-  background: var(--wra-surface);
-  border-color: var(--wra-border);
-  color: var(--wra-ink);
+
+.featured-collection h1 {
+  margin: 0;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+  font-size: clamp(1.8rem, 4vw, 3.2rem);
+}
+
+.recommended-products {
+  padding-top: clamp(3rem, 7vw, 6rem);
+  padding-bottom: clamp(3rem, 7vw, 6rem);
+}
+
+.recommended-products h2 {
+  margin-bottom: 1.6rem;
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+}
+
+.recommended-products h2::after {
+  content: "";
+  display: block;
+  width: 3.5rem;
+  height: 3px;
+  margin-top: 1rem;
+  background: linear-gradient(90deg, var(--wra-gold), transparent);
+}
+
+.product-item,
+.recommended-product,
+.collection-item {
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.product-item:hover,
+.recommended-product:hover,
+.collection-item:hover {
+  transform: translateY(-3px);
+}
+
+@keyframes nova-emblem-arrive {
+  from { opacity: 0; transform: translateY(10px) scale(.94); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes nova-gold-drift {
+  from { background-position: 15% 50%; }
+  to { background-position: 85% 50%; }
+}
+
+@media (max-width: 719px) {
+  .wra-hero {
+    min-height: 34rem;
+    padding-inline: 1rem;
+  }
+  .wra-hero::before { inset: .5rem; }
+  .wra-hero::after { width: 88vw; }
+  .wra-hero-title { font-size: clamp(3rem, 14vw, 5rem); }
+  .wra-hero-eyebrow { letter-spacing: .2em; }
+  .wra-hero-copy { max-width: 32rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wra-hero-emblem,
+  .wra-hero-gold { animation: none; }
+  .featured-collection-image img,
+  .product-item,
+  .recommended-product,
+  .collection-item,
+  .wra-hero-cta { transition: none; }
 }
