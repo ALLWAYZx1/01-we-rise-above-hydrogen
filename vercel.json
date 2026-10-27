@@ -3,7 +3,7 @@
   "buildCommand": "npm run build",
   "framework": null,
   "functions": {
-    "api/index.ts": {
+    "api/handler.js": {
       "maxDuration": 30,
       "includeFiles": "{dist/server/**,app/lib/**}"
     }
@@ -11,7 +11,7 @@
   "outputDirectory": "dist/client",
   "rewrites": [
     {
-      "destination": "/api/index",
+      "destination": "/api/handler",
       "source": "/(.*)"
     }
   ]

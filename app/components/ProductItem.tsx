@@ -32,10 +32,10 @@ export function ProductItem({
           aspectRatio="1/1"
           data={image}
           loading={loading}
-          sizes="(min-width: 45em) 400px, 100vw"
+          sizes="(min-width: 45em) 25vw, 50vw"
         />
       )}
-      <h4>{product.title}</h4>
+      <h3>{product.title}</h3>
       <small>
         <Money data={product.priceRange.minVariantPrice} />
       </small>

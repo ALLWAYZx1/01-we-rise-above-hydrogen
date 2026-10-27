@@ -10,11 +10,13 @@
     "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern .",
     "typecheck": "react-router typegen && tsc --noEmit",
-    "codegen": "shopify hydrogen codegen && react-router typegen"
+    "codegen": "shopify hydrogen codegen && react-router typegen",
+    "build:handler": "node scripts/build-vercel-handler.mjs"
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
     "@shopify/hydrogen": "2026.4.7",
+    "@vercel/speed-insights": "^2.0.0",
     "graphql": "^16.10.0",
     "graphql-tag": "^2.12.6",
     "isbot": "^5.1.22",

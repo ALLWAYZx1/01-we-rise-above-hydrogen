@@ -7,7 +7,7 @@ import {ProductItem} from '~/components/ProductItem';
 import type {ProductItemFragment} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
+  return [{title: `${data?.collection.title ?? 'Collection'} | We Rise Above`}];
 };
 
 export async function loader(args: Route.LoaderArgs) {
@@ -70,6 +70,7 @@ export default function Collection() {
 
   return (
     <div className="collection">
+      {/* The paginated Storefront API connection has no reliable totalCount. Do not treat the current page node count as the collection total. */}
       <h1>{collection.title}</h1>
       <p className="collection-description">{collection.description}</p>
       <PaginatedResourceSection<ProductItemFragment>
