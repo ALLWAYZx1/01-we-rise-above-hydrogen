@@ -26,8 +26,20 @@ export function Header({
   const {shop, menu} = header;
   return (
     <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong><span aria-hidden="true" style={{color:"#d4af37",marginRight:".45rem"}}>A★</span>We Rise Above</strong>
+      <NavLink
+        prefetch="intent"
+        to="/"
+        style={activeLinkStyle}
+        end
+        className="header-logo"
+        aria-label="We Rise Above — home"
+      >
+        <img
+          src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/prezzure-rize-logo-v2-transparent.png?v=1792474381&width=320"
+          alt="We Rise Above"
+          width={320}
+          height={320}
+        />
       </NavLink>
       <HeaderMenu
         menu={menu}
