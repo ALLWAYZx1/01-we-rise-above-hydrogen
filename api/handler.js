@@ -9,6 +9,7 @@ import {
   InMemoryCache,
   storefrontRedirect
 } from "@shopify/hydrogen";
+import "@vercel/functions";
 
 // app/lib/session.ts
 import {
@@ -398,7 +399,7 @@ async function wraDiag(request, env) {
     headers: { "content-type": "text/plain" }
   });
 }
-async function handler(request) {
+async function appHandler(request) {
   const t0 = Date.now();
   const mark = (phase) => console.log(`[wra-handler] ${phase} +${Date.now() - t0}ms`);
   try {
@@ -458,6 +459,73 @@ async function handler(request) {
     console.error(error);
     return new Response("An unexpected error occurred", { status: 500 });
   }
+}
+function isFetchRequest(value) {
+  if (typeof Request !== "undefined" && value instanceof Request) {
+    return true;
+  }
+  const candidate = value;
+  return typeof candidate?.url === "string" && /^https?:\/\//.test(candidate.url) && typeof candidate?.headers?.get === "function";
+}
+function nodeHeadersToFetchHeaders(nodeHeaders) {
+  const headers = new Headers();
+  for (const [name, value] of Object.entries(nodeHeaders ?? {})) {
+    if (value === void 0) continue;
+    if (Array.isArray(value)) {
+      for (const v of value) headers.append(name, v);
+    } else {
+      headers.set(name, value);
+    }
+  }
+  return headers;
+}
+async function readNodeBody(req) {
+  const method = (req.method ?? "GET").toUpperCase();
+  if (method === "GET" || method === "HEAD") return void 0;
+  const chunks = [];
+  for await (const chunk of req) {
+    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+  }
+  return chunks.length ? Buffer.concat(chunks) : void 0;
+}
+async function toFetchRequest(req) {
+  const headers = nodeHeadersToFetchHeaders(req.headers ?? {});
+  const proto = headers.get("x-forwarded-proto") ?? "https";
+  const host = headers.get("x-forwarded-host") ?? headers.get("host") ?? "localhost";
+  const url = new URL(req.url ?? "/", `${proto}://${host}`);
+  const method = (req.method ?? "GET").toUpperCase();
+  const body = await readNodeBody(req);
+  return new Request(url, {
+    method,
+    headers,
+    body: method === "GET" || method === "HEAD" ? void 0 : body
+  });
+}
+async function writeFetchResponse(res, response) {
+  res.statusCode = response.status;
+  response.headers.forEach((value, name) => {
+    if (name.toLowerCase() === "set-cookie") return;
+    res.setHeader(name, value);
+  });
+  const setCookies = typeof response.headers.getSetCookie === "function" ? response.headers.getSetCookie() : [];
+  if (setCookies.length) {
+    res.setHeader("Set-Cookie", setCookies);
+  } else {
+    const single = response.headers.get("set-cookie");
+    if (single) res.setHeader("Set-Cookie", single);
+  }
+  const body = Buffer.from(await response.arrayBuffer());
+  res.end(body);
+}
+async function handler(reqOrRequest, res) {
+  const nodeStyle = res !== void 0 || !isFetchRequest(reqOrRequest);
+  const request = nodeStyle ? await toFetchRequest(reqOrRequest) : reqOrRequest;
+  const response = await appHandler(request);
+  if (nodeStyle && res) {
+    await writeFetchResponse(res, response);
+    return void 0;
+  }
+  return response;
 }
 export {
   handler as default
