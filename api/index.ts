@@ -25,8 +25,9 @@ import {
   InMemoryCache,
   storefrontRedirect,
 } from '@shopify/hydrogen';
-import {AppSession} from '../app/lib/session';
-import {CART_QUERY_FRAGMENT} from '../app/lib/fragments';
+import {waitUntil} from '@vercel/functions';
+import {AppSession} from '../app/lib/session.js';
+import {CART_QUERY_FRAGMENT} from '../app/lib/fragments.js';
 
 const cache = new InMemoryCache();
 
