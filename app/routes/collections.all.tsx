@@ -6,7 +6,14 @@ import {ProductItem} from '~/components/ProductItem';
 import type {CollectionItemFragment} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: `Hydrogen | Products`}];
+  return [
+    {title: 'Shop All | We Rise Above'},
+    {
+      name: 'description',
+      content:
+        'Every piece in one place — hoodies, tees, crewnecks, headwear and armor from We Rise Above. Pressure builds. We rise.',
+    },
+  ];
 };
 
 export async function loader(args: Route.LoaderArgs) {

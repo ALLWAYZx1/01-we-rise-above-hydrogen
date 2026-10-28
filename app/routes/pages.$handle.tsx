@@ -5,10 +5,22 @@ import pageStyles from '~/styles/daylight-pages.css?url';
 export function links() { return [{rel: 'stylesheet', href: pageStyles}]; }
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
-export const meta: Route.MetaFunction = ({data}) => [
-  {title: `WE RISE ABOVE | ${data?.page.title ?? 'Our story'}`},
-  {name: 'description', content: data?.page.seo?.description || 'The story behind WE RISE ABOVE. NO FINAL FORM.'},
-];
+export const meta: Route.MetaFunction = ({data}) => {
+  const isAboutPage = ['about', 'our-story', 'brand'].includes(
+    data?.page.handle?.toLowerCase() ?? '',
+  );
+  return [
+    {title: `WE RISE ABOVE | ${data?.page.title ?? 'Our story'}`},
+    {
+      name: 'description',
+      content:
+        data?.page.seo?.description ||
+        (isAboutPage
+          ? 'The story behind WE RISE ABOVE. NO FINAL FORM.'
+          : `${data?.page.title ?? 'We Rise Above'} — WE RISE ABOVE. Pressure builds. We rise.`),
+    },
+  ];
+};
 
 export async function loader({context, request, params}: Route.LoaderArgs) {
   if (!params.handle) throw new Response('Page not found', {status: 404});
