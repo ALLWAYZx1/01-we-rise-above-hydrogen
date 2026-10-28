@@ -10,8 +10,13 @@ import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: Route.MetaFunction = ({data}) => {
+  const description =
+    data?.product.seo?.description ||
+    data?.product.description?.replace(/\s+/g, ' ').trim().slice(0, 160) ||
+    '';
   return [
     {title: `${data?.product.title ?? 'Shop'} | We Rise Above`},
+    {name: 'description', content: description},
     {
       rel: 'canonical',
       href: `/products/${data?.product.handle}`,
@@ -45,7 +50,26 @@ export default function Product() {
   const [quantity, setQuantity] = useState(1);
   return (
     <div className="product">
-      <div className="product-gallery"><p className="eyebrow">We Rise Above · No Final Form</p>{shownImage ? <Image data={shownImage} sizes="(min-width: 45em) 50vw, 100vw" /> : null}<p className="product-gallery-note">Faith in the details. Fire in the form.</p></div>
+      <div className="product-gallery">
+        <p className="eyebrow">We Rise Above · No Final Form</p>
+        {shownImage ? <Image data={shownImage} sizes="(min-width: 45em) 50vw, 100vw" /> : null}
+        {images.length > 1 ? (
+          <div className="product-thumbnails">
+            {images.map((image: any, index: number) => (
+              <button
+                type="button"
+                key={image.id}
+                className={index === activeImage ? 'product-thumb product-thumb-active' : 'product-thumb'}
+                onClick={() => setActiveImage(index)}
+                aria-label={`View image ${index + 1}`}
+              >
+                <Image data={image} sizes="80px" />
+              </button>
+            ))}
+          </div>
+        ) : null}
+        <p className="product-gallery-note">Faith in the details. Fire in the form.</p>
+      </div>
       <div className="product-main">
         <p className="eyebrow">Streetwear armor</p>
         <h1>{product.title}</h1>
@@ -66,6 +90,18 @@ export default function Product() {
         <br />
         <div dangerouslySetInnerHTML={{__html: product.descriptionHtml}} />
         <br />
+        <section className="product-trust">
+          <ul>
+            <li>Printed to order</li>
+            <li>Ships from the USA</li>
+            <li>Secure Shopify checkout</li>
+          </ul>
+          <p>
+            <a href="/policies/shipping-policy">Shipping policy</a>
+            {' · '}
+            <a href="/policies/refund-policy">Refund policy</a>
+          </p>
+        </section>
       </div>
       <Analytics.ProductView data={{products: [{id: product.id, title: product.title, price: selectedVariant?.price.amount || '0', vendor: product.vendor, variantId: selectedVariant?.id || '', variantTitle: selectedVariant?.title || '', quantity}]}} />
     </div>
