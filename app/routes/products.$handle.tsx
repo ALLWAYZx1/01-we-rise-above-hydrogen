@@ -19,16 +19,6 @@ export const meta: Route.MetaFunction = ({data}) => {
   ];
 };
 
-export async function loader(args: Route.LoaderArgs) {
-  // Start fetching non-critical data without blocking time to first byte
-  const deferredData = loadDeferredData(args);
-
-  // Await the critical data required to render initial state of the page
-  const criticalData = await loadCriticalData(args);
-
-  return {...deferredData, ...criticalData};
-}
-
 export async function loader({context, params, request}: Route.LoaderArgs) {
   const {handle} = params;
   if (!handle) throw new Response('Product not found', {status: 404});
@@ -55,10 +45,10 @@ export default function Product() {
   const [quantity, setQuantity] = useState(1);
   return (
     <div className="product">
-      <div className="product-gallery"><p className="eyebrow">We Rise Above · No Final Form</p><ProductImage image={selectedVariant?.image} /><p className="product-gallery-note">Faith in the details. Fire in the form.</p></div>
+      <div className="product-gallery"><p className="eyebrow">We Rise Above · No Final Form</p>{shownImage ? <Image data={shownImage} sizes="(min-width: 45em) 50vw, 100vw" /> : null}<p className="product-gallery-note">Faith in the details. Fire in the form.</p></div>
       <div className="product-main">
         <p className="eyebrow">Streetwear armor</p>
-        <h1>{title}</h1>
+        <h1>{product.title}</h1>
         <ProductPrice
           price={selectedVariant?.price}
           compareAtPrice={selectedVariant?.compareAtPrice}
@@ -74,11 +64,11 @@ export default function Product() {
           <strong>Description</strong>
         </p>
         <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
+        <div dangerouslySetInnerHTML={{__html: product.descriptionHtml}} />
         <br />
       </div>
       <Analytics.ProductView data={{products: [{id: product.id, title: product.title, price: selectedVariant?.price.amount || '0', vendor: product.vendor, variantId: selectedVariant?.id || '', variantTitle: selectedVariant?.title || '', quantity}]}} />
-    </main>
+    </div>
   );
 }
 
