@@ -7,7 +7,15 @@ import {ProductItem} from '~/components/ProductItem';
 import type {ProductItemFragment} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `${data?.collection.title ?? 'Collection'} | We Rise Above`}];
+  return [
+    {title: `${data?.collection.title ?? 'Collection'} | We Rise Above`},
+    {
+      name: 'description',
+      content:
+        data?.collection.description ||
+        `${data?.collection.title ?? 'Collection'} — We Rise Above. Choose your armor. Pressure builds. We rise.`,
+    },
+  ];
 };
 
 export async function loader(args: Route.LoaderArgs) {

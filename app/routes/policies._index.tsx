@@ -2,6 +2,17 @@ import {useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/policies._index';
 import type {PoliciesQuery, PolicyItemFragment} from 'storefrontapi.generated';
 
+export const meta: Route.MetaFunction = () => {
+  return [
+    {title: 'Policies | We Rise Above'},
+    {
+      name: 'description',
+      content:
+        'Privacy, shipping, terms and refunds at We Rise Above — the official word, in plain terms.',
+    },
+  ];
+};
+
 export async function loader({context}: Route.LoaderArgs) {
   const data: PoliciesQuery = await context.storefront.query(POLICIES_QUERY);
 
