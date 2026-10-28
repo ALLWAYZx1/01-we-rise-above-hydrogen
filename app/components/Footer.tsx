@@ -9,11 +9,15 @@ interface FooterProps {
   publicStoreDomain: string;
 }
 
-export function Footer({footer: footerPromise, header}: FooterProps) {
+export function Footer({
+  footer: footerPromise,
+  header,
+  publicStoreDomain,
+}: FooterProps) {
   return (
     <Suspense>
       <Await resolve={footerPromise}>
-        {() => (
+        {(footer) => (
           <footer className="footer">
             <div className="footer-brand"><span>A★</span><strong>WE RISE ABOVE</strong><p>Faith. Discipline. Hard work. Keep rising.</p><small>NO FINAL FORM.</small></div>
             {footer?.menu && header.shop.primaryDomain?.url && (
@@ -23,6 +27,8 @@ export function Footer({footer: footerPromise, header}: FooterProps) {
                 publicStoreDomain={publicStoreDomain}
               />
             )}
+            <KlaviyoSignup />
+            <FooterLegal />
           </footer>
         )}
       </Await>
@@ -30,56 +36,46 @@ export function Footer({footer: footerPromise, header}: FooterProps) {
   );
 }
 
-/**
- * Grouped footer navigation. Rendered statically (not from the deferred
- * Shopify menu query) so the links are always present, and styled by the
- * .footer-nav rules in daylight.css — no inline `color: inherit`, which
- * previously resolved to the body's dark ink on the dark footer and made
- * the old menu links invisible.
- */
-function FooterNav({shopName}: {shopName: string}) {
+function FooterMenu({
+  menu,
+  primaryDomainUrl,
+  publicStoreDomain,
+}: {
+  menu: NonNullable<FooterQuery['menu']>;
+  primaryDomainUrl: string;
+  publicStoreDomain: string;
+}) {
   return (
-    <nav className="footer-nav" aria-label="Footer">
-      <div className="footer-nav-brand">
-        <strong>{shopName}</strong>
-        <p>Pressure builds. We rise. No final form.</p>
-      </div>
-      <div className="footer-nav-group">
-        <h3>Shop</h3>
-        <NavLink prefetch="intent" to="/collections/all">
-          Shop All
-        </NavLink>
-        <NavLink
-          prefetch="intent"
-          to="/collections/all?sort_by=created-descending"
-        >
-          New Arrivals
-        </NavLink>
-        <NavLink prefetch="intent" to="/collections">
-          Shop by Category
-        </NavLink>
-      </div>
-      <div className="footer-nav-group">
-        <h3>Company</h3>
-        <NavLink prefetch="intent" to="/pages/about">
-          Our Story
-        </NavLink>
-        <NavLink prefetch="intent" to="/pages/faq">
-          FAQ
-        </NavLink>
-        <NavLink prefetch="intent" to="/pages/contact">
-          Contact
-        </NavLink>
-      </div>
-      <div className="footer-nav-group">
-        <h3>Account</h3>
-        <NavLink prefetch="intent" to="/account">
-          Account
-        </NavLink>
-        <NavLink prefetch="intent" to="/account/orders">
-          Orders
-        </NavLink>
-      </div>
+    <nav className="footer-menu" role="navigation">
+      {menu.items.map((item) => {
+        if (!item.url) return null;
+        const isInternal =
+          item.url.includes('myshopify.com') ||
+          item.url.includes(publicStoreDomain) ||
+          item.url.includes(primaryDomainUrl);
+        if (isInternal) {
+          return (
+            <NavLink
+              end
+              key={item.id}
+              prefetch="intent"
+              to={new URL(item.url).pathname}
+            >
+              {item.title}
+            </NavLink>
+          );
+        }
+        return (
+          <a
+            href={item.url}
+            key={item.id}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {item.title}
+          </a>
+        );
+      })}
     </nav>
   );
 }
