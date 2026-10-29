@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      react-router-family:
+        patterns:
+          - "react-router"
+          - "react-router-dom"
+          - "@react-router/*"
