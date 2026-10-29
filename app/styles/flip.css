@@ -46,3 +46,8 @@ html,body{background:#080808;color:#f4efe5;font-family:Inter,Arial,sans-serif}a{
 .cart-summary-aside{left:0;right:0;width:auto;box-sizing:border-box;padding:.75rem 1rem 1rem}
 .cart-summary-aside a[href]{display:flex;align-items:center;justify-content:center;min-height:50px;padding:.95rem 1.5rem;background:var(--wra-gold);color:#080808;border:1px solid var(--wra-gold);font-size:.72rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;width:100%;box-sizing:border-box;margin-top:1rem}
 .cart-summary-aside a[href] p{margin:0}
+
+/* Header logo sizing — addendum to the PREZZURE SETTLEMENT block above.
+   Header.tsx renders the logo as a 320x320 <img> inside .header-logo and
+   no stylesheet sized it. flip.css loads last, so this wins the cascade. */
+.header-logo img{display:block;height:2.5rem;width:auto}
