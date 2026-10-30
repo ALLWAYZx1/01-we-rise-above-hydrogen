@@ -82,6 +82,8 @@ function CollectionItem({
   collection: CollectionFragment;
   index: number;
 }) {
+  if (collection.handle === "frontpage") return null;
+
   return (
     <Link
       className="collection-item"
@@ -89,16 +91,20 @@ function CollectionItem({
       to={`/collections/${collection.handle}`}
       prefetch="intent"
     >
-      {collection?.image && (
+      {collection?.image ? (
         <Image
           alt={collection.image.altText || collection.title}
-          aspectRatio="1/1"
+          aspectRatio="4/5"
           data={collection.image}
           loading={index < 3 ? 'eager' : undefined}
           sizes="(min-width: 45em) 400px, 100vw"
         />
+      ) : (
+        <span className="collection-item-placeholder" aria-hidden="true">
+          {collection.title}
+        </span>
       )}
-      <h5>{collection.title}</h5>
+      <h2>{collection.title}</h2>
     </Link>
   );
 }
