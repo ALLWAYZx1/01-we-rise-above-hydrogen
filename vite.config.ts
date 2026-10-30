@@ -2,9 +2,10 @@ import {fileURLToPath} from 'node:url';
 import {defineConfig} from 'vite';
 import {hydrogen} from '@shopify/hydrogen/vite';
 import {reactRouter} from '@react-router/dev/vite';
+import {oxygen} from '@shopify/mini-oxygen/vite';
 
 export default defineConfig({
-  plugins: [hydrogen(), reactRouter()],
+  plugins: [hydrogen(), reactRouter(), oxygen()],
   resolve: {
     alias: {
       // Vite's native tsconfig path resolver does not cover JavaScript
