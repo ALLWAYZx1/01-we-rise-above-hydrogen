@@ -51,3 +51,29 @@ html,body{background:#080808;color:#f4efe5;font-family:Inter,Arial,sans-serif}a{
    Header.tsx renders the logo as a 320x320 <img> inside .header-logo and
    no stylesheet sized it. flip.css loads last, so this wins the cascade. */
 .header-logo img{display:block;height:2.5rem;width:auto}
+
+/* ============================================================
+   MOBILE CONTAINER TOUCH-UP — 2026-10-30 (PREZZURE audit)
+   Measured at a true 390px render of the live store:
+   - .product-gallery / .product-thumbnails / .product-thumb are
+     styled by NO stylesheet (flip.css targeted the scaffold's
+     .product-image; daylight-pages.css targets .daylight-gallery-*).
+     The main product <img> arrives with height=100 in the markup,
+     so it rendered as a 304x100 squashed strip from a 2000x2000
+     source. Rules below style the classes the route actually uses.
+   - ADD TO BAG: daylight-pages.css loads after flip.css and its
+     submit rule left the primary CTA ghost/transparent on the dark
+     ground. The .product-scoped rule below wins on specificity.
+   - Duality tiles measured 320px tall each on mobile with content
+     bottom-anchored — mostly empty gradient. Trimmed at <=699px.
+   - Consecutive .wra-section blocks double their 40px vertical
+     padding into dead bands on mobile. Trimmed at <=699px.
+   ============================================================ */
+.product-gallery>img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;background:#171614}
+.product-thumbnails{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-top:.75rem}
+.product-thumb{padding:0;border:1px solid var(--wra-line);background:#171614;cursor:pointer;line-height:0}
+.product-thumb img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;display:block}
+.product-thumb-active{border-color:var(--wra-gold)}
+.product-gallery-note{color:#aaa39a;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;margin-top:.9rem}
+.product .product-form button[type="submit"]{background:var(--wra-gold);background-image:none;color:#080808;border:1px solid var(--wra-gold)}
+@media(max-width:699px){.wra-duality a{min-height:200px}.wra-section{padding-top:1.75rem;padding-bottom:1.75rem}}
