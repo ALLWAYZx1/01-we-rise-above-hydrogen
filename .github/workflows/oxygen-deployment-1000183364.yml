@@ -1,5 +1,17 @@
 name: Storefront 1000183364
-on: [push]
+
+# Production deploys are manual-only. Never publish to Oxygen on an arbitrary push.
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_production:
+        description: "Explicitly confirm that this run should deploy to Oxygen production"
+        required: true
+        type: choice
+        options:
+          - "no"
+          - "yes"
+        default: "no"
 
 permissions:
   contents: read
@@ -7,6 +19,9 @@ permissions:
 
 jobs:
   deploy:
+    # Only allow a confirmed manual run from main. Selecting another branch or
+    # leaving confirmation at "no" cannot publish to Oxygen.
+    if: github.ref == 'refs/heads/main' && inputs.confirm_production == 'yes'
     name: Deploy to Oxygen
     timeout-minutes: 30
     runs-on: ubuntu-latest
@@ -23,14 +38,13 @@ jobs:
         id: cache-npm
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         env:
-          cache-name: cache-node-modules
+          cache-name: node-modules
         with:
           path: ~/.npm
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
-            ${{ runner.os }}-
 
       - name: Install dependencies
         run: npm ci
