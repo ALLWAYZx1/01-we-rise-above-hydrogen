@@ -10,6 +10,19 @@ import {ProductItem} from '~/components/ProductItem';
 import {MockShopNotice} from '~/components/MockShopNotice';
 import {Reveal} from '~/components/Reveal';
 
+const HERO_IMAGE_BASE =
+  'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/hero-centerpiece-front-2560x1440.jpg?v=1792867452';
+const HERO_SRCSET = `${HERO_IMAGE_BASE}&width=720 720w, ${HERO_IMAGE_BASE}&width=1080 1080w, ${HERO_IMAGE_BASE}&width=1440 1440w, ${HERO_IMAGE_BASE}&width=1920 1920w, ${HERO_IMAGE_BASE}&width=2560 2560w`;
+const HERO_SIZES = '(min-width: 1200px) 1440px, 100vw';
+const ENERGY_FRONT_BASE =
+  'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-temple-black-front-1920x1280.jpg?v=1792950396';
+const ENERGY_REAR_BASE =
+  'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-temple-blackgold-rear-1920x1280.jpg?v=1792950396';
+
+function energySrcSet(base: string) {
+  return `${base}&width=640 640w, ${base}&width=960 960w, ${base}&width=1200 1200w, ${base}&width=1920 1920w`;
+}
+
 export const meta: Route.MetaFunction = () => {
   return [{title: 'We Rise Above | No Final Form'}, {name: 'description', content: 'Streetwear armor for the ones still rising. Faith. Discipline. Hard work. No final form.'}];
 };
@@ -131,7 +144,7 @@ export default function Homepage() {
   );
 }
 
-function FeaturedBanner({
+function FeaturedCollection({
   collection,
 }: {
   collection: FeaturedCollectionFragment;
