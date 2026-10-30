@@ -137,6 +137,7 @@ export default function Homepage() {
         </figure>
       </section>
       <section className="wra-section"><p className="eyebrow">First things first</p><h2>Wear the rise.</h2><p className="collection-intro">Pieces with presence. Built for the days that test you and the nights that define you.</p><FeaturedCollection collection={data.featuredCollection} /></section>
+      <CategoryTiles collections={data.collections} />
       <RecommendedProducts products={data.recommendedProducts} />
       <section className="wra-duality" aria-label="Angel and demon duality"><Link to="/collections/all"><span>Chapter I · The light</span><strong>Angel energy.</strong><p>Move with faith. Protect your peace. Keep your purpose in sight.</p></Link><Link to="/collections/all"><span>Chapter II · The fire</span><strong>Demon mode.</strong><p>Face the pressure. Own your shadow. Turn every limit into fuel.</p></Link></section>
       <section className="wra-creed"><p className="eyebrow">The code we live by</p><h2>The creed.</h2><div className="wra-creed-words">{["FAITH","DISCIPLINE","HARD WORK","NEVER SETTLE","KEEP RISING","STAY TRUE"].map((word) => <span key={word}>{word}</span>)}</div><p className="wra-creed-tagline">NO FINAL FORM.</p></section>
@@ -153,7 +154,7 @@ function FeaturedCollection({
   const image = collection?.image;
   return (
     <section
-      className="wra-feature"
+      className={`wra-feature${image ? " has-image" : " no-image"}`}
       aria-label={`Featured: ${collection.title}`}
     >
       {image && (
