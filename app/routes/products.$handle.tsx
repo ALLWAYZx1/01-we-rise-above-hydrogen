@@ -3,8 +3,18 @@ import {redirect, useLoaderData} from 'react-router';
 import type {Route} from './+types/products.$handle';
 import pageStyles from '~/styles/daylight-pages.css?url';
 
-export function links() { return [{rel: 'stylesheet', href: pageStyles}]; }
-import {getSelectedProductOptions, Analytics, useOptimisticVariant, getProductOptions, getAdjacentAndFirstAvailableVariants, useSelectedOptionInUrlParam, Image} from '@shopify/hydrogen';
+export function links() {
+  return [{rel: 'stylesheet', href: pageStyles}];
+}
+import {
+  getSelectedProductOptions,
+  Analytics,
+  useOptimisticVariant,
+  getProductOptions,
+  getAdjacentAndFirstAvailableVariants,
+  useSelectedOptionInUrlParam,
+  Image,
+} from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
@@ -37,29 +47,49 @@ export async function loader({context, params, request}: Route.LoaderArgs) {
 
 export default function Product() {
   const {product} = useLoaderData<typeof loader>();
-  const selectedVariant = useOptimisticVariant(product.selectedOrFirstAvailableVariant, getAdjacentAndFirstAvailableVariants(product));
+  const selectedVariant = useOptimisticVariant(
+    product.selectedOrFirstAvailableVariant,
+    getAdjacentAndFirstAvailableVariants(product),
+  );
   useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
-  const productOptions = getProductOptions({...product, selectedOrFirstAvailableVariant: selectedVariant});
+  // getProductOptions() returns [] unless encodedVariantExistence and
+  // encodedVariantAvailability are on the product. Without them the size
+  // and color pickers never render, even when the catalog has variants.
+  const productOptions = getProductOptions({
+    ...product,
+    selectedOrFirstAvailableVariant: selectedVariant,
+  });
   const images = product.images.nodes;
-  const [activeImage, setActiveImage] = useState(images.findIndex((image: any) => image.id === selectedVariant?.image?.id));
+  const [activeImage, setActiveImage] = useState(
+    images.findIndex((image: any) => image.id === selectedVariant?.image?.id),
+  );
   useEffect(() => {
-    const variantImageIndex = images.findIndex((image: any) => image.id === selectedVariant?.image?.id);
+    const variantImageIndex = images.findIndex(
+      (image: any) => image.id === selectedVariant?.image?.id,
+    );
     if (variantImageIndex >= 0) setActiveImage(variantImageIndex);
   }, [images, selectedVariant?.image?.id]);
-  const shownImage = images[activeImage >= 0 ? activeImage : 0] || selectedVariant?.image;
+  const shownImage =
+    images[activeImage >= 0 ? activeImage : 0] || selectedVariant?.image;
   const [quantity, setQuantity] = useState(1);
   return (
     <div className="product">
       <div className="product-gallery">
         <p className="eyebrow">We Rise Above · No Final Form</p>
-        {shownImage ? <Image data={shownImage} sizes="(min-width: 45em) 50vw, 100vw" /> : null}
+        {shownImage ? (
+          <Image data={shownImage} sizes="(min-width: 45em) 50vw, 100vw" />
+        ) : null}
         {images.length > 1 ? (
           <div className="product-thumbnails">
             {images.map((image: any, index: number) => (
               <button
                 type="button"
                 key={image.id}
-                className={index === activeImage ? 'product-thumb product-thumb-active' : 'product-thumb'}
+                className={
+                  index === activeImage
+                    ? 'product-thumb product-thumb-active'
+                    : 'product-thumb'
+                }
                 onClick={() => setActiveImage(index)}
                 aria-label={`View image ${index + 1}`}
               >
@@ -68,7 +98,9 @@ export default function Product() {
             ))}
           </div>
         ) : null}
-        <p className="product-gallery-note">Faith in the details. Fire in the form.</p>
+        <p className="product-gallery-note">
+          Faith in the details. Fire in the form.
+        </p>
       </div>
       <div className="product-main">
         <p className="eyebrow">Streetwear armor</p>
@@ -77,10 +109,11 @@ export default function Product() {
           price={selectedVariant?.price}
           compareAtPrice={selectedVariant?.compareAtPrice}
         />
-        <br />
         <ProductForm
           productOptions={productOptions}
           selectedVariant={selectedVariant}
+          quantity={quantity}
+          onQuantityChange={setQuantity}
         />
         <br />
         <br />
@@ -103,7 +136,21 @@ export default function Product() {
           </p>
         </section>
       </div>
-      <Analytics.ProductView data={{products: [{id: product.id, title: product.title, price: selectedVariant?.price.amount || '0', vendor: product.vendor, variantId: selectedVariant?.id || '', variantTitle: selectedVariant?.title || '', quantity}]}} />
+      <Analytics.ProductView
+        data={{
+          products: [
+            {
+              id: product.id,
+              title: product.title,
+              price: selectedVariant?.price.amount || '0',
+              vendor: product.vendor,
+              variantId: selectedVariant?.id || '',
+              variantTitle: selectedVariant?.title || '',
+              quantity,
+            },
+          ],
+        }}
+      />
     </div>
   );
 }
@@ -121,6 +168,8 @@ const PRODUCT_QUERY = `#graphql
     @inContext(country: $country, language: $language) {
     product(handle: $handle) {
       id title vendor handle descriptionHtml description
+      encodedVariantExistence
+      encodedVariantAvailability
       images(first: 10) { nodes { id url altText width height } }
       options { name optionValues { name firstSelectableVariant { ...DaylightProductVariant } swatch { color image { previewImage { url } } } } }
       selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) { ...DaylightProductVariant }

@@ -101,3 +101,21 @@ html,body{background:#080808;color:#f4efe5;font-family:Inter,Arial,sans-serif}a{
 .collection-item h2 { margin: 0; padding: 1rem; color: #f4efe5; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; }
 @media (min-width: 1000px) { .collections-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @media (max-width: 699px) { .wra-tiles-grid, .collections-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .wra-tile { min-height: 190px; } .wra-feature.no-image .wra-feature-body { padding: 2rem 1rem; } }
+
+/* PRODUCT OPTION PICKER — 2026-10-31
+   daylight-pages.css loads after this file and paints option chips with
+   daylight tokens (near-black ink, unset surface) on the dark ground.
+   These selectors are more specific so Color and Size stay readable. */
+.product .daylight-product-form legend{color:#e9c766;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.product .daylight-product-form .product-options-grid{display:flex;flex-wrap:wrap;gap:.55rem}
+.product .daylight-product-form .product-options-item,
+.product .daylight-product-form .product-options-item:disabled{background:#151412;color:#f4efe5;border:1px solid var(--wra-line);border-radius:0;min-width:2.75rem;min-height:2.75rem;padding:.5rem .75rem;cursor:pointer}
+.product .daylight-product-form .product-options-item[aria-pressed="true"],
+.product .daylight-product-form .product-options-item[aria-current="true"]{background:var(--wra-gold);color:#080808;border-color:var(--wra-gold);box-shadow:none}
+.product .daylight-product-form .product-options-item:disabled{opacity:.4;cursor:not-allowed}
+.product-quantity{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:1.25rem 0 .25rem;max-width:100%}
+.product-quantity>span{color:#e9c766;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.product-quantity>div{display:flex;align-items:center;border:1px solid var(--wra-line)}
+.product-quantity button{min-width:44px;min-height:44px;border:0;background:#151412;color:#f4efe5;cursor:pointer;font-size:1.1rem}
+.product-quantity button:disabled{opacity:.4;cursor:not-allowed}
+.product-quantity output{min-width:2.25rem;text-align:center;color:#f4efe5}
