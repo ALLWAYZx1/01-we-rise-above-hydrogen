@@ -1,4 +1,5 @@
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
+import type {MoneyV2} from '@shopify/hydrogen/storefront-api-types';
 import type {CartLayout} from '~/components/CartMain';
 import {CartForm, Money, type OptimisticCart} from '@shopify/hydrogen';
 import {useEffect, useId, useRef, useState} from 'react';
@@ -18,17 +19,38 @@ export function CartSummary({cart, layout}: CartSummaryProps) {
   const giftCardHeadingId = useId();
   const giftCardInputId = useId();
 
+  // The optimistic cart can briefly lack cost.subtotalAmount (right after
+  // add-to-cart or a quantity change), which used to flash a bare "-" in
+  // the totals while items were sitting in the cart. When every line is
+  // priced, fall back to the summed line totals so the subtotal never
+  // disappears mid-update.
+  const lineNodes = cart?.lines?.nodes ?? [];
+  const fallbackSubtotal: MoneyV2 | null =
+    lineNodes.length > 0 &&
+    lineNodes.every((line) => line?.cost?.totalAmount?.amount)
+      ? {
+          amount: lineNodes
+            .reduce(
+              (sum, line) =>
+                sum + parseFloat(line?.cost?.totalAmount?.amount ?? '0'),
+              0,
+            )
+            .toFixed(2),
+          currencyCode:
+            lineNodes[0]?.cost?.totalAmount?.currencyCode ?? 'USD',
+        }
+      : null;
+  const shownSubtotal = cart?.cost?.subtotalAmount?.amount
+    ? cart.cost.subtotalAmount
+    : fallbackSubtotal;
+
   return (
     <div aria-labelledby={summaryId} className={className}>
       <h4 id={summaryId}>Totals</h4>
       <dl role="group" className="cart-subtotal">
         <dt>Subtotal</dt>
         <dd>
-          {cart?.cost?.subtotalAmount?.amount ? (
-            <Money data={cart?.cost?.subtotalAmount} />
-          ) : (
-            '-'
-          )}
+          {shownSubtotal ? <Money data={shownSubtotal} /> : '-'}
         </dd>
       </dl>
       <CartDiscounts
