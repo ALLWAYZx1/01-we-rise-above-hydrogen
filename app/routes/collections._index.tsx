@@ -82,7 +82,15 @@ function CollectionItem({
   collection: CollectionFragment;
   index: number;
 }) {
-  if (collection.handle === "frontpage") return null;
+  if (collection.handle === 'frontpage') return null;
+
+  // Most collections have no dedicated collection image set in admin, which
+  // used to leave the tile as an empty placeholder box. Fall back to the
+  // first product's photo so every tile navigates with real imagery.
+  const tileImage =
+    collection.image ??
+    collection.products?.nodes?.[0]?.featuredImage ??
+    null;
 
   return (
     <Link
@@ -91,11 +99,11 @@ function CollectionItem({
       to={`/collections/${collection.handle}`}
       prefetch="intent"
     >
-      {collection?.image ? (
+      {tileImage ? (
         <Image
-          alt={collection.image.altText || collection.title}
+          alt={tileImage.altText || collection.title}
           aspectRatio="4/5"
-          data={collection.image}
+          data={tileImage}
           loading={index < 3 ? 'eager' : undefined}
           sizes="(min-width: 45em) 400px, 100vw"
         />
@@ -121,6 +129,17 @@ const COLLECTIONS_QUERY = `#graphql
       width
       height
     }
+    products(first: 1) {
+      nodes {
+        featuredImage {
+          id
+          url
+          altText
+          width
+          height
+        }
+      }
+    }
   }
   query StoreCollections(
     $country: CountryCode
@@ -131,9 +150,9 @@ const COLLECTIONS_QUERY = `#graphql
     $startCursor: String
   ) @inContext(country: $country, language: $language) {
     collections(
-      first: $first,
-      last: $last,
-      before: $startCursor,
+      first: $first
+      last: $last
+      before: $startCursor
       after: $endCursor
     ) {
       nodes {
