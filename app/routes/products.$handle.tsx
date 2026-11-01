@@ -22,6 +22,7 @@ import {
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductForm} from '~/components/ProductForm';
+import {KlaviyoStarRating, KlaviyoProductReviews} from '~/components/KlaviyoReviews';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
@@ -123,6 +124,7 @@ export default function Product() {
         <div className="product-main">
           <p className="eyebrow">Streetwear armor</p>
           <h1>{product.title}</h1>
+          <KlaviyoStarRating product={product} />
           <ProductPrice
             price={selectedVariant?.price}
             compareAtPrice={selectedVariant?.compareAtPrice}
@@ -198,6 +200,9 @@ export default function Product() {
           </div>
         </section>
       ) : null}
+      <section className="wra-reviews" aria-label="Reviews">
+        <KlaviyoProductReviews productId={product.id} />
+      </section>
       {selectedVariant ? (
         <div className="wra-sticky-buy">
           <div className="wra-sticky-buy-info">
@@ -237,7 +242,7 @@ const PRODUCT_QUERY = `#graphql
   query DaylightProduct($country: CountryCode, $handle: String!, $language: LanguageCode, $selectedOptions: [SelectedOptionInput!]!)
     @inContext(country: $country, language: $language) {
     product(handle: $handle) {
-      id title vendor handle descriptionHtml description
+      id title vendor handle descriptionHtml description productType
       encodedVariantExistence
       encodedVariantAvailability
       images(first: 10) { nodes { id url altText width height } }
