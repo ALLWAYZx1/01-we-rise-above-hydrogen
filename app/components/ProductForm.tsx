@@ -21,6 +21,11 @@ export function ProductForm({
 }) {
   const navigate = useNavigate();
   const {open} = useAside();
+  // Buy Now rides Shopify's cart permalink route (/cart/<id>:<qty>), which
+  // builds a cart from the selected variant and redirects straight to
+  // checkout. The variant id arrives as a gid; the permalink wants the
+  // numeric tail.
+  const buyNowVariantId = selectedVariant?.id?.split('/').pop();
   return (
     <div className="product-form daylight-product-form">
       {productOptions.map((option) => {
@@ -122,6 +127,14 @@ export function ProductForm({
       >
         {selectedVariant?.availableForSale ? 'Add to bag' : 'Sold out'}
       </AddToCartButton>
+      {selectedVariant?.availableForSale && buyNowVariantId ? (
+        <a
+          className="wra-buy-now"
+          href={`/cart/${buyNowVariantId}:${quantity}`}
+        >
+          Buy Now
+        </a>
+      ) : null}
     </div>
   );
 }
