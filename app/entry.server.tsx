@@ -42,6 +42,13 @@ export default async function handleRequest(
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
+    // Shopify Inbox chat (see app/components/ShopifyInbox.tsx): the
+    // widget talks to Shopify's chat services and renders its
+    // conversation UI in an iframe served from them. The loader script
+    // itself comes from cdn.shopify.com, which the default policy
+    // already allows.
+    connectSrc: ['https://*.shopifysvc.com'],
+    frameSrc: ['https://*.shopifysvc.com'],
   });
 
   const body = await renderToReadableStream(

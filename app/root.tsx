@@ -19,6 +19,7 @@ import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import flipStyles from '~/styles/flip.css?url';
 import {PageLayout} from './components/PageLayout';
+import {ShopifyInbox} from './components/ShopifyInbox';
 
 export type RootLoader = typeof loader;
 
@@ -198,6 +199,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
         <VercelAnalytics />
+        <ShopifyInbox />
       </body>
     </html>
   );
