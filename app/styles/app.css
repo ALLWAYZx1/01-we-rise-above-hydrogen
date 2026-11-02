@@ -1659,6 +1659,33 @@ a:hover {
   transform: scale(1.05);
 }
 
+/* Hover swap — ProductItem stacks the garment's back shot over the front */
+.product-item-media {
+  display: block;
+  position: relative;
+}
+
+.product-item img.product-item-img--back {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  opacity: 0;
+  position: absolute;
+  transition:
+    opacity 0.35s ease,
+    transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.product-item:hover img.product-item-img--back {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-item img.product-item-img--back {
+    transition: none;
+  }
+}
+
 /* gradient section titles */
 @supports (
   (background-clip: text) or (-webkit-background-clip: text)
