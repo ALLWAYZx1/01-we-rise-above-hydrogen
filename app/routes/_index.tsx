@@ -1,6 +1,7 @@
 import {Await, useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/_index';
 import {Suspense} from 'react';
+import type {CSSProperties} from 'react';
 import {Image} from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
@@ -136,12 +137,106 @@ export default function Homepage() {
           />
         </figure>
       </section>
+      <PressStrip />
       <section className="wra-section"><p className="eyebrow">First things first</p><h2>Wear the rise.</h2><p className="collection-intro">Pieces with presence. Built for the days that test you and the nights that define you.</p><FeaturedCollection collection={data.featuredCollection} /></section>
       <CategoryTiles collections={data.collections} />
       <RecommendedProducts products={data.recommendedProducts} />
       <section className="wra-duality" aria-label="Angel and demon duality"><Link to="/collections/all"><span>Chapter I · The light</span><strong>Angel energy.</strong><p>Move with faith. Protect your peace. Keep your purpose in sight.</p></Link><Link to="/collections/all"><span>Chapter II · The fire</span><strong>Demon mode.</strong><p>Face the pressure. Own your shadow. Turn every limit into fuel.</p></Link></section>
       <section className="wra-creed"><p className="eyebrow">The code we live by</p><h2>The creed.</h2><div className="wra-creed-words">{["FAITH","DISCIPLINE","HARD WORK","NEVER SETTLE","KEEP RISING","STAY TRUE"].map((word) => <span key={word}>{word}</span>)}</div><p className="wra-creed-tagline">NO FINAL FORM.</p></section>
+      <TrustStrip />
     </div>
+  );
+}
+
+function PressStrip() {
+  const itemStyle: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.25rem',
+    minWidth: '200px',
+    flex: '1 1 200px',
+  };
+  const labelStyle: CSSProperties = {
+    fontWeight: 700,
+    letterSpacing: '0.04em',
+    textTransform: 'uppercase',
+    fontSize: '0.85rem',
+  };
+  const subStyle: CSSProperties = {opacity: 0.75, fontSize: '0.9rem'};
+  const linkStyle: CSSProperties = {
+    color: '#d4af37',
+    fontWeight: 700,
+    textDecoration: 'none',
+  };
+  return (
+    <section
+      aria-label="As seen and heard"
+      style={{
+        background: '#0b0b14',
+        color: '#f5f0e6',
+        borderTop: '1px solid rgba(212,175,55,0.35)',
+        borderBottom: '1px solid rgba(212,175,55,0.35)',
+        padding: '1.75rem 1.25rem',
+        textAlign: 'center',
+      }}
+    >
+      <p
+        style={{
+          color: '#d4af37',
+          letterSpacing: '0.22em',
+          textTransform: 'uppercase',
+          fontSize: '0.75rem',
+          margin: '0 0 1.1rem',
+        }}
+      >
+        The artist behind the armor
+      </p>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '1.25rem 2.5rem',
+          justifyContent: 'center',
+          maxWidth: '1000px',
+          margin: '0 auto',
+        }}
+      >
+        <div style={itemStyle}>
+          <span style={labelStyle}>\uD83D\uDCFA Heard on TAXI TV</span>
+          <span style={subStyle}>
+            &ldquo;Make It Through (Clean)&rdquo; aired Nov 2, 2026
+          </span>
+        </div>
+        <div style={itemStyle}>
+          <span style={labelStyle}>\u2B50 Next Music Star &mdash; Round 2</span>
+          <span style={subStyle}>
+            Advanced out of Round 1 &mdash; top 5 move on.{' '}
+            <a
+              style={linkStyle}
+              href="https://thenextmusicstar.com/2026/allwayz"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Vote for ALLWAYZ &rarr;
+            </a>
+          </span>
+        </div>
+        <div style={itemStyle}>
+          <span style={labelStyle}>\uD83C\uDFA7 Streaming everywhere</span>
+          <span style={subStyle}>
+            Spotify &middot; Apple Music &middot;{' '}
+            <a
+              style={linkStyle}
+              href="https://play.anghami.com/album/1090332643"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Anghami
+            </a>
+          </span>
+        </div>
+      </div>
+    </section>
   );
 }
 
