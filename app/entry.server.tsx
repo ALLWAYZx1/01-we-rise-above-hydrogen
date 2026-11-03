@@ -42,13 +42,47 @@ export default async function handleRequest(
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
-    // Shopify Inbox chat (see app/components/ShopifyInbox.tsx): the
-    // widget talks to Shopify's chat services and renders its
-    // conversation UI in an iframe served from them. The loader script
-    // itself comes from cdn.shopify.com, which the default policy
-    // already allows.
-    connectSrc: ['https://*.shopifysvc.com'],
-    frameSrc: ['https://*.shopifysvc.com'],
+    // First-party measurement + marketing origins the storefront loads
+    // from app/root.tsx (see the GTM and Meta Pixel blocks there).
+    // Without these, the browser refused to load gtm.js / fbevents.js
+    // at all — the loaders were inline (nonce-approved) but the
+    // external scripts, their beacons, and the GTM noscript iframe
+    // fell outside the default policy, so no page views reached GA4
+    // or the Meta dataset from the Hydrogen storefront.
+    scriptSrc: [
+      'https://www.googletagmanager.com',
+      'https://connect.facebook.net',
+    ],
+    connectSrc: [
+      // Shopify Inbox chat services (see app/components/ShopifyInbox.tsx).
+      'https://*.shopifysvc.com',
+      // GA4 collection + Google Ads signals fired through GTM.
+      'https://www.google-analytics.com',
+      'https://*.google-analytics.com',
+      'https://www.googletagmanager.com',
+      'https://www.google.com',
+      // Meta Pixel event posts.
+      'https://connect.facebook.net',
+      'https://www.facebook.com',
+      // Footer email capture POSTs to the Klaviyo client API
+      // (see app/components/KlaviyoSignup.tsx).
+      'https://a.klaviyo.com',
+    ],
+    frameSrc: [
+      // Shopify Inbox chat renders its conversation UI in an iframe
+      // served from Shopify's chat services.
+      'https://*.shopifysvc.com',
+      // GTM noscript fallback iframe (app/root.tsx).
+      'https://www.googletagmanager.com',
+    ],
+    imgSrc: [
+      // Meta Pixel noscript fallback beacon (app/root.tsx).
+      'https://www.facebook.com',
+      // GA4 / Google Ads tracking pixels loaded as images by tags.
+      'https://www.google-analytics.com',
+      'https://www.google.com',
+      'https://www.googletagmanager.com',
+    ],
   });
 
   const body = await renderToReadableStream(

@@ -1,5 +1,4 @@
 import {Analytics as ShopifyAnalytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
-import {Analytics as VercelAnalytics} from '@vercel/analytics/react';
 import {
   Outlet,
   useRouteError,
@@ -11,7 +10,6 @@ import {
   ScrollRestoration,
   useRouteLoaderData,
 } from 'react-router';
-import {SpeedInsights} from '@vercel/speed-insights/react';
 import type {Route} from './+types/root';
 import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
@@ -49,10 +47,10 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
  * The main and reset stylesheets are added in the Layout component
  * to prevent a bug in development HMR updates.
  *
- * This avoids the "failed to execute 'insertBefore' on 'Node'" error
+ * It avoids the "failed to execute 'insertBefore' on 'Node'" error
  * that occurs after editing and navigating to another page.
  *
- * It's a temporary fix until the issue is resolved.
+ * It's a temporary fix until React Router ships a fix.
  * https://github.com/remix-run/remix/issues/9242
  */
 export function links() {
@@ -119,7 +117,7 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
 
 /**
  * Load data for rendering content below the fold. This data is deferred and will be
- * fetched after the initial page load. If it's unavailable, the page should still 200.
+ * fetched after the initial page load. If it's unavailable, the whole page should 200 or 500 error.
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
 function loadDeferredData({context}: Route.LoaderArgs) {
@@ -130,11 +128,11 @@ function loadDeferredData({context}: Route.LoaderArgs) {
     .query(FOOTER_QUERY, {
       cache: storefront.CacheLong(),
       variables: {
-        footerMenuHandle: 'footer', // Adjust to your footer menu handle
+        footerMenuHandle: 'footer', // Adjust to your header menu handle
       },
     })
     .catch((error: Error) => {
-      // Log query errors, but don't throw them so the page can still render
+      // Log query errors, but don't throw so the page can still render
       console.error(error);
       return null;
     });
@@ -195,10 +193,8 @@ export function Layout({children}: {children?: React.ReactNode}) {
           />
         </noscript>
         {children}
-        <SpeedInsights />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        <VercelAnalytics />
         <ShopifyInbox />
       </body>
     </html>
