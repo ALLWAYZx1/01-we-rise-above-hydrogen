@@ -82,6 +82,11 @@ export function HeaderMenu({
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url) return null;
 
+        // 'Shop Hydrogen' is the Liquid storefront's switch link. It lives
+        // in the shared main menu so the Liquid theme can render it, but
+        // Hydrogen must not show customers a link to itself.
+        if (item.title.trim().toUpperCase() === 'SHOP HYDROGEN') return null;
+
         // if the url is internal, we strip the domain
         const url =
           item.url.includes('myshopify.com') ||
@@ -103,6 +108,14 @@ export function HeaderMenu({
           </NavLink>
         );
       })}
+      <a
+        className="header-menu-item"
+        href="https://weriseabovee.myshopify.com/"
+        onClick={close}
+        style={{color: 'inherit'}}
+      >
+        Shop Classic
+      </a>
     </nav>
   );
 }
