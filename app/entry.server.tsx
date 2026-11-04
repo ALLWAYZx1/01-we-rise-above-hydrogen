@@ -49,9 +49,25 @@ export default async function handleRequest(
     // external scripts, their beacons, and the GTM noscript iframe
     // fell outside the default policy, so no page views reached GA4
     // or the Meta dataset from the Hydrogen storefront.
+    //
+    // IMPORTANT: for scriptSrc and imgSrc, an array passed here
+    // REPLACES the directive's defaults instead of extending them.
+    // The platform hosts ('self', data:, blob:, cdn.shopify.com) must
+    // be restated explicitly. PR #75 listed only the tracking origins,
+    // which silently dropped cdn.shopify.com from img-src — every
+    // product and hero image on the storefront was CSP-blocked — and
+    // from script-src, which blocked the Shopify Inbox chat script
+    // and the Klaviyo widgets (both load from the CDN / Klaviyo
+    // without a nonce).
     scriptSrc: [
+      "'self'",
+      'https://cdn.shopify.com',
       'https://www.googletagmanager.com',
       'https://connect.facebook.net',
+      // Klaviyo onsite + Reviews widgets
+      // (see app/components/KlaviyoReviews.tsx).
+      'https://static.klaviyo.com',
+      'https://a.klaviyo.com',
     ],
     connectSrc: [
       // Shopify Inbox chat services (see app/components/ShopifyInbox.tsx).
@@ -65,8 +81,10 @@ export default async function handleRequest(
       'https://connect.facebook.net',
       'https://www.facebook.com',
       // Footer email capture POSTs to the Klaviyo client API
-      // (see app/components/KlaviyoSignup.tsx).
+      // (see app/components/KlaviyoSignup.tsx); onsite beacons go to
+      // the Klaviyo static host.
       'https://a.klaviyo.com',
+      'https://static.klaviyo.com',
     ],
     frameSrc: [
       // Shopify Inbox chat renders its conversation UI in an iframe
@@ -76,12 +94,20 @@ export default async function handleRequest(
       'https://www.googletagmanager.com',
     ],
     imgSrc: [
+      // Platform image hosts (restated — see the note above). All
+      // product, hero, and logo imagery is served from the Shopify CDN.
+      "'self'",
+      'data:',
+      'blob:',
+      'https://cdn.shopify.com',
       // Meta Pixel noscript fallback beacon (app/root.tsx).
       'https://www.facebook.com',
       // GA4 / Google Ads tracking pixels loaded as images by tags.
       'https://www.google-analytics.com',
       'https://www.google.com',
       'https://www.googletagmanager.com',
+      // Klaviyo review media CDN.
+      'https://d3k81ch9hvuctc.cloudfront.net',
     ],
   });
 
