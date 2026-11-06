@@ -2135,10 +2135,25 @@ a:hover {
   color: var(--wra-ink);
 }
 
-.account-panel input {
+.account-panel input:not([type='checkbox']):not([type='radio']) {
   width: 100%;
   min-height: 2.85rem;
   padding: 0.7rem 0.85rem;
+}
+
+.account-panel input[type='checkbox'],
+.account-panel input[type='radio'] {
+  width: auto;
+  min-height: 0;
+  padding: 0;
+  accent-color: var(--wra-ink);
+}
+
+.account-panel input[type='checkbox'] + label,
+.account-panel input[type='radio'] + label {
+  display: inline;
+  margin: 0 0 0 0.5rem;
+  vertical-align: middle;
 }
 
 .account-panel button[type='submit'],
