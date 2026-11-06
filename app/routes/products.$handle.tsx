@@ -63,7 +63,7 @@ export async function loader({context, params, request}: Route.LoaderArgs) {
 
 export default function Product() {
   const {product, recommended} = useLoaderData<typeof loader>();
-  const {open} = useAside();
+  const {open, type: asideType} = useAside();
   const selectedVariant = useOptimisticVariant(
     product.selectedOrFirstAvailableVariant,
     getAdjacentAndFirstAvailableVariants(product),
@@ -198,7 +198,7 @@ export default function Product() {
           </div>
         </section>
       ) : null}
-      {selectedVariant ? (
+      {selectedVariant && asideType === 'closed' ? (
         <div className="wra-sticky-buy">
           <div className="wra-sticky-buy-info">
             <span className="wra-sticky-buy-title">{product.title}</span>
