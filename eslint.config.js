@@ -26,6 +26,7 @@ export default [
     ignores: [
       '**/node_modules/',
       '**/build/',
+      'api/handler.js',
       '**/dist/',
       '**/*.graphql.d.ts',
       '**/*.graphql.ts',
