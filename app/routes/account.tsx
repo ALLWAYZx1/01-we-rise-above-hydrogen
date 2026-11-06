@@ -37,61 +37,61 @@ export async function loader({context}: Route.LoaderArgs) {
 export default function AccountLayout() {
   const {customer} = useLoaderData<typeof loader>();
 
-  const heading = customer
-    ? customer.firstName
-      ? `Welcome, ${customer.firstName}`
-      : `Welcome to your account.`
-    : 'Account Details';
+  const heading = customer?.firstName
+    ? `Welcome, ${customer.firstName}`
+    : 'Your account';
 
   return (
     <div className="account">
-      <h1>{heading}</h1>
-      <br />
-      <AccountMenu />
-      <br />
-      <br />
-      <Outlet context={{customer}} />
+      <header className="account-heading">
+        <p className="account-eyebrow">WE RISE ABOVE</p>
+        <h1>{heading}</h1>
+        <p className="account-intro">
+          View your orders, manage your details, and keep your information up to date.
+        </p>
+      </header>
+
+      <nav className="account-nav" aria-label="Account navigation">
+        <NavLink
+          to="/account/orders"
+          className={({isActive}) =>
+            isActive ? 'account-nav-link is-active' : 'account-nav-link'
+          }
+        >
+          Orders
+        </NavLink>
+        <NavLink
+          to="/account/profile"
+          className={({isActive}) =>
+            isActive ? 'account-nav-link is-active' : 'account-nav-link'
+          }
+        >
+          Profile
+        </NavLink>
+        <NavLink
+          to="/account/addresses"
+          className={({isActive}) =>
+            isActive ? 'account-nav-link is-active' : 'account-nav-link'
+          }
+        >
+          Addresses
+        </NavLink>
+        <Logout />
+      </nav>
+
+      <section className="account-panel" aria-label="Account details">
+        <Outlet context={{customer}} />
+      </section>
     </div>
-  );
-}
-
-function AccountMenu() {
-  function isActiveStyle({
-    isActive,
-    isPending,
-  }: {
-    isActive: boolean;
-    isPending: boolean;
-  }) {
-    return {
-      fontWeight: isActive ? 'bold' : undefined,
-      color: isPending ? 'grey' : 'black',
-    };
-  }
-
-  return (
-    <nav role="navigation">
-      <NavLink to="/account/orders" style={isActiveStyle}>
-        Orders &nbsp;
-      </NavLink>
-      &nbsp;|&nbsp;
-      <NavLink to="/account/profile" style={isActiveStyle}>
-        &nbsp; Profile &nbsp;
-      </NavLink>
-      &nbsp;|&nbsp;
-      <NavLink to="/account/addresses" style={isActiveStyle}>
-        &nbsp; Addresses &nbsp;
-      </NavLink>
-      &nbsp;|&nbsp;
-      <Logout />
-    </nav>
   );
 }
 
 function Logout() {
   return (
     <Form className="account-logout" method="POST" action="/account/logout">
-      &nbsp;<button type="submit">Sign out</button>
+      <button className="account-nav-link account-signout" type="submit">
+        Sign out
+      </button>
     </Form>
   );
 }
