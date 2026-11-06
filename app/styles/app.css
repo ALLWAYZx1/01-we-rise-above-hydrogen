@@ -1913,3 +1913,58 @@ a:hover {
   margin-top: 1.75rem;
 }
 
+/* --------------------------------------------------
+* Cart drawer layout fix (fix/cart-drawer-mobile-checkout)
+* The scaffold layout GUESSES the summary height
+* (--cart-aside-summary-height: 250px / 300px with discount)
+* and pins .cart-summary-aside absolutely over the scroll area.
+* The real summary (totals + discount + gift card + checkout)
+* is ~430px tall on phones, so line items slid UNDER it and
+* portrait scrolling broke. Measured flex layout instead:
+* the summary takes its real height in flow at the bottom,
+* line items scroll in the space actually left, and the
+* drawer uses dvh so mobile browser chrome cannot push the
+* checkout button off-screen. Scoped to .overlay — the /cart
+* page layout is untouched.
+* -------------------------------------------------- */
+.overlay aside {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.overlay aside main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.overlay .cart-main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  height: auto;
+  max-height: none;
+  min-height: 0;
+  overflow: visible;
+}
+
+.overlay .cart-details {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.overlay .cart-details > div {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.overlay .cart-summary-aside {
+  flex-shrink: 0;
+  position: static;
+  width: auto;
+}
