@@ -69,75 +69,6 @@ function withTimeout<T>(p: Promise<T>, ms: number, label: string): Promise<T> {
   ]);
 }
 
-async function wraDiag(request: Request, env: ReturnType<typeof getEnv>) {
-  const lines: string[] = [];
-  const step = (s: string) => lines.push(s);
-  step(
-    `env: SESSION_SECRET=${env.SESSION_SECRET ? 'set' : 'MISSING'} DOMAIN=${env.PUBLIC_STORE_DOMAIN} PUBTOK=${env.PUBLIC_STOREFRONT_API_TOKEN ? 'set' : 'MISSING'} PRIVTOK=${env.PRIVATE_STOREFRONT_API_TOKEN ? 'set' : 'MISSING'}`,
-  );
-  let session: AppSession | null = null;
-  try {
-    session = await withTimeout(
-      AppSession.init(request, [env.SESSION_SECRET]),
-      6_000,
-      'session',
-    );
-    step('session: OK');
-  } catch (e) {
-    step(`session: FAIL ${(e as Error).message}`);
-    return new Response(lines.join('\n'), {
-      headers: {'content-type': 'text/plain'},
-    });
-  }
-  let hydrogenContext: ReturnType<typeof createHydrogenContext> | null = null;
-  try {
-    hydrogenContext = createHydrogenContext({
-      env,
-      request,
-      cache,
-      waitUntil: safeWaitUntil,
-      session,
-      i18n: {language: 'EN', country: 'US'},
-      cart: {queryFragment: CART_QUERY_FRAGMENT},
-    });
-    step('context: OK');
-  } catch (e) {
-    step(`context: FAIL ${(e as Error).message}`);
-    return new Response(lines.join('\n'), {
-      headers: {'content-type': 'text/plain'},
-    });
-  }
-  try {
-    const data = await withTimeout(
-      hydrogenContext.storefront.query('{ shop { name } }'),
-      8_000,
-      'storefront',
-    );
-    step(`storefront: OK ${JSON.stringify(data)}`);
-  } catch (e) {
-    step(`storefront: FAIL ${(e as Error).message}`);
-  }
-  try {
-    const handleRequest = createRequestHandler({
-      build: serverBuild,
-      mode: process.env.NODE_ENV,
-      getLoadContext: () => hydrogenContext,
-    });
-    const res = await withTimeout(
-      handleRequest(new Request(new URL('/', request.url))),
-      15_000,
-      'handleRequest',
-    );
-    const body = await res.text();
-    step(`handleRequest /: ${res.status} bytes=${body.length}`);
-  } catch (e) {
-    step(`handleRequest: FAIL ${(e as Error).message}`);
-  }
-  return new Response(lines.join('\n'), {
-    headers: {'content-type': 'text/plain'},
-  });
-}
-
 async function appHandler(request: Request): Promise<Response> {
   const t0 = Date.now();
   const mark = (phase: string) =>
@@ -147,10 +78,6 @@ async function appHandler(request: Request): Promise<Response> {
     const env = getEnv();
     if (!env.SESSION_SECRET) {
       throw new Error('SESSION_SECRET environment variable is not set');
-    }
-
-    if (new URL(request.url).pathname === '/__wra_diag') {
-      return await wraDiag(request, env);
     }
 
     const session = await withTimeout(
