@@ -24,7 +24,9 @@ import * as serverBuild from '../dist/server/index.js';
 // route (works locally, hangs on Vercel). Prefer IPv4.
 try {
   dns.setDefaultResultOrder('ipv4first');
-} catch {}
+} catch {
+  // Best-effort DNS preference; unsupported runtimes can safely ignore it.
+}
 import {
   createRequestHandler,
   createHydrogenContext,
