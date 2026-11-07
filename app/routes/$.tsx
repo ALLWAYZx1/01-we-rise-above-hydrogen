@@ -13,13 +13,16 @@ export async function loader({request}: Route.LoaderArgs) {
 
   // The French market URL prefix is no longer served. Keep the same English
   // path and query string instead of sending every old URL to the homepage.
-  if (/^\\/fr(?:\\/|$)/.test(pathname)) {
-    const englishPath = pathname.replace(/^\\/fr(?=\\/|$)/, '') || '/';
+  if (pathname === '/fr' || pathname.startsWith('/fr/')) {
+    const englishPath = pathname.slice(3) || '/';
     throw redirect(`${englishPath}${search}`, {status: 301});
   }
 
   // Shopify's legacy split sitemaps are consolidated into Hydrogen's sitemap.
-  if (/^\\/sitemap_[^/]+\\.xml$/i.test(pathname) || pathname === '/sitemap_index.xml') {
+  if (
+    (pathname.startsWith('/sitemap_') && pathname.endsWith('.xml')) ||
+    pathname === '/sitemap_index.xml'
+  ) {
     throw redirect('/sitemap.xml', {status: 301});
   }
 
