@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   validate:
-    name: Install, lint, typecheck, and build
+    name: Install, build, lint, and typecheck
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
