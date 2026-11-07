@@ -8,7 +8,7 @@ export const meta: Route.MetaFunction = () => {
     {
       name: 'description',
       content:
-        'Privacy, shipping, terms and refunds at We Rise Above — the official word, in plain terms.',
+        'Contact information, privacy, shipping, terms and refunds at We Rise Above — the official word, in plain terms.',
     },
   ];
 };
@@ -19,6 +19,7 @@ export async function loader({context}: Route.LoaderArgs) {
   const shopPolicies = data.shop;
   const policies: PolicyItemFragment[] = [
     shopPolicies?.privacyPolicy,
+    shopPolicies?.contactInformation,
     shopPolicies?.shippingPolicy,
     shopPolicies?.termsOfService,
     shopPolicies?.refundPolicy,
@@ -58,6 +59,9 @@ const POLICIES_QUERY = `#graphql
   query Policies ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
     shop {
+      contactInformation {
+        ...PolicyItem
+      }
       privacyPolicy {
         ...PolicyItem
       }
