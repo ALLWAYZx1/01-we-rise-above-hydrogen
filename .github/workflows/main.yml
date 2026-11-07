@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main, fix/codegen-unique-new-arrivals-fragment]
   push:
-    branches: [main]
+    branches: [main, fix/ci-build-before-lint]
   workflow_dispatch:
 
 permissions:
