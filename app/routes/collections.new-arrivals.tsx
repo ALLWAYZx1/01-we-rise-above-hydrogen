@@ -81,7 +81,7 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
     amount
     currencyCode
   }
-  fragment ProductItem on Product {
+  fragment NewArrivalProductItem on Product {
     id
     handle
     title
@@ -135,7 +135,7 @@ const NEW_ARRIVALS_QUERY = `#graphql
         after: $endCursor
       ) {
         nodes {
-          ...ProductItem
+          ...NewArrivalProductItem
         }
         pageInfo {
           hasPreviousPage
