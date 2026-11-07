@@ -27,17 +27,28 @@ import {useAside} from '~/components/Aside';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: Route.MetaFunction = ({data}) => {
+  const title = `${data?.product.title ?? 'Shop'} | We Rise Above`;
   const description =
     data?.product.seo?.description ||
-    data?.product.description?.replace(/\s+/g, ' ').trim().slice(0, 160) ||
+    data?.product.description?.replace(/\\s+/g, ' ').trim().slice(0, 160) ||
     '';
+  const image = data?.product.images?.nodes?.[0]?.url || '';
+  const url = data?.product.handle
+    ? `https://weriseabove.life/products/${data.product.handle}`
+    : 'https://weriseabove.life/';
   return [
-    {title: `${data?.product.title ?? 'Shop'} | We Rise Above`},
+    {title},
     {name: 'description', content: description},
-    {
-      rel: 'canonical',
-      href: `/products/${data?.product.handle}`,
-    },
+    {rel: 'canonical', href: url},
+    {property: 'og:type', content: 'product'},
+    {property: 'og:title', content: title},
+    {property: 'og:description', content: description},
+    {property: 'og:url', content: url},
+    ...(image ? [{property: 'og:image', content: image}] : []),
+    {name: 'twitter:card', content: 'summary_large_image'},
+    {name: 'twitter:title', content: title},
+    {name: 'twitter:description', content: description},
+    ...(image ? [{name: 'twitter:image', content: image}] : []),
   ];
 };
 
@@ -77,6 +88,26 @@ export default function Product() {
     selectedOrFirstAvailableVariant: selectedVariant,
   });
   const images = product.images.nodes;
+  const productStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.title,
+    image: images.map((image: any) => image.url),
+    description: product.description?.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim(),
+    brand: {'@type': 'Brand', name: 'We Rise Above'},
+    url: `https://weriseabove.life/products/${product.handle}`,
+    offers: selectedVariant
+      ? {
+          '@type': 'Offer',
+          url: `https://weriseabove.life/products/${product.handle}`,
+          priceCurrency: selectedVariant.price.currencyCode,
+          price: selectedVariant.price.amount,
+          availability: selectedVariant.availableForSale
+            ? 'https://schema.org/InStock'
+            : 'https://schema.org/OutOfStock',
+        }
+      : undefined,
+  };
   const [activeImage, setActiveImage] = useState(
     images.findIndex((image: any) => image.id === selectedVariant?.image?.id),
   );
@@ -91,6 +122,12 @@ export default function Product() {
   const [quantity, setQuantity] = useState(1);
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(productStructuredData).replace(/</g, '\\u003c'),
+        }}
+      />
       <div className="product">
         <div className="product-gallery">
           <p className="eyebrow">We Rise Above · No Final Form</p>
