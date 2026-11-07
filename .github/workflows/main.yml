@@ -2,7 +2,7 @@ name: Hydrogen CI
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, fix/codegen-unique-new-arrivals-fragment]
   push:
     branches: [main]
   workflow_dispatch:
