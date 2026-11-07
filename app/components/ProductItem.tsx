@@ -89,7 +89,7 @@ export function ProductItem({
         </span>
       )}
       <span className="product-card-kicker">We Rise Above · Essential</span>
-      <h4>{product.title}</h4>
+      <h3>{product.title}</h3>
       <small>
         <Money data={product.priceRange.minVariantPrice} />
       </small>

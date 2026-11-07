@@ -997,9 +997,12 @@ a:hover {
 }
 
 .wra-hero-cta-ghost {
-  background: transparent;
+  /* Gold-deep text on the near-transparent pill failed WCAG contrast
+     over the hero photograph (Lighthouse, 2026-11-07). A deep ink fill
+     keeps the ghost outline while the gold text clears 4.5:1. */
+  background: rgba(26, 20, 8, 0.88);
   border: 1px solid var(--wra-gold-deep);
-  color: var(--wra-gold-deep);
+  color: var(--wra-gold-bright);
 }
 
 .wra-hero-cta-ghost:hover {

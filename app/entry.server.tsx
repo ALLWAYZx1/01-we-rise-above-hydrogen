@@ -73,13 +73,27 @@ export default async function handleRequest(
       // Shopify Inbox chat services (see app/components/ShopifyInbox.tsx).
       'https://*.shopifysvc.com',
       // GA4 collection + Google Ads signals fired through GTM.
+      // Lighthouse console errors (2026-11-07) showed three blocked
+      // collection hosts the previous list missed:
+      // - GA4's fetch collector lives on analytics.google.com, not
+      //   www.google-analytics.com (both are listed — the www host
+      //   serves gtag/collect beacons, analytics.google.com serves
+      //   the fetch API used by GTM's GA4 tag).
+      // - Ads conversion signals post to stats.g.doubleclick.net.
+      // - Meta's server-event relays run on *.run.app and AWS
+      //   (*.on.aws) endpoints chosen per event; without them every
+      //   CAPI relay from fbevents.js was refused.
       'https://www.google-analytics.com',
       'https://*.google-analytics.com',
+      'https://analytics.google.com',
+      'https://stats.g.doubleclick.net',
       'https://www.googletagmanager.com',
       'https://www.google.com',
-      // Meta Pixel event posts.
+      // Meta Pixel event posts + server-event relays.
       'https://connect.facebook.net',
       'https://www.facebook.com',
+      'https://*.run.app',
+      'https://*.on.aws',
       // Footer email capture POSTs to the Klaviyo client API
       // (see app/components/KlaviyoSignup.tsx); onsite beacons go to
       // the Klaviyo static host.

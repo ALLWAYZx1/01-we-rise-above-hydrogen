@@ -35,7 +35,7 @@ export function Header({
         aria-label="We Rise Above — home"
       >
         <img
-          src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/prezzure-rize-logo-v2-transparent.png?v=1792474381&width=320"
+          src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/prezzure-rize-logo-v2-transparent.png?v=1792474381&width=140"
           alt="We Rise Above"
           width={320}
           height={320}
