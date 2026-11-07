@@ -25,7 +25,23 @@ function energySrcSet(base: string) {
 }
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'We Rise Above | No Final Form'}, {name: 'description', content: 'Streetwear armor for the ones still rising. Faith. Discipline. Hard work. No final form.'}];
+  const title = 'We Rise Above | No Final Form';
+  const description =
+    'Streetwear armor for the ones still rising. Faith. Discipline. Hard work. No final form.';
+  const image = `${HERO_IMAGE_BASE}&width=1200`;
+  return [
+    {title},
+    {name: 'description', content: description},
+    {property: 'og:type', content: 'website'},
+    {property: 'og:title', content: title},
+    {property: 'og:description', content: description},
+    {property: 'og:url', content: 'https://weriseabove.life/'},
+    {property: 'og:image', content: image},
+    {name: 'twitter:card', content: 'summary_large_image'},
+    {name: 'twitter:title', content: title},
+    {name: 'twitter:description', content: description},
+    {name: 'twitter:image', content: image},
+  ];
 };
 
 export async function loader(args: Route.LoaderArgs) {
@@ -80,8 +96,34 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': 'https://weriseabove.life/#organization',
+        name: 'We Rise Above',
+        url: 'https://weriseabove.life/',
+        logo: 'https://weriseabove.life/favicon-64.png',
+      },
+      {
+        '@type': 'WebSite',
+        '@id': 'https://weriseabove.life/#website',
+        name: 'We Rise Above',
+        url: 'https://weriseabove.life/',
+        publisher: {'@id': 'https://weriseabove.life/#organization'},
+      },
+    ],
+  };
   return (
-    <div className="home">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData).replace(/</g, '\\u003c'),
+        }}
+      />
+      <div className="home">
       {data.isShopLinked ? null : <MockShopNotice />}
       <section className="wra-hero">
         <div className="wra-embers" aria-hidden="true">
@@ -144,7 +186,8 @@ export default function Homepage() {
       <section className="wra-duality" aria-label="Angel and demon duality"><Link to="/collections/all"><span>Chapter I · The light</span><strong>Angel energy.</strong><p>Move with faith. Protect your peace. Keep your purpose in sight.</p></Link><Link to="/collections/all"><span>Chapter II · The fire</span><strong>Demon mode.</strong><p>Face the pressure. Own your shadow. Turn every limit into fuel.</p></Link></section>
       <section className="wra-creed"><p className="eyebrow">The code we live by</p><h2>The creed.</h2><div className="wra-creed-words">{["FAITH","DISCIPLINE","HARD WORK","NEVER SETTLE","KEEP RISING","STAY TRUE"].map((word) => <span key={word}>{word}</span>)}</div><p className="wra-creed-tagline">NO FINAL FORM.</p></section>
       <TrustStrip />
-    </div>
+      </div>
+    </>
   );
 }
 
