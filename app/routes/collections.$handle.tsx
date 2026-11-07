@@ -7,14 +7,28 @@ import {ProductItem} from '~/components/ProductItem';
 import type {ProductItemFragment} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = ({data}) => {
+  const title = `${data?.collection.title ?? 'Collection'} | We Rise Above`;
+  const description =
+    data?.collection.description ||
+    `${data?.collection.title ?? 'Collection'} — We Rise Above. Choose your armor. Pressure builds. We rise.`;
+  const image =
+    data?.collection.products?.nodes?.[0]?.featuredImage?.url ||
+    'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/hero-centerpiece-front-2560x1440.jpg?v=1792867452&width=1200';
+  const url = data?.collection.handle
+    ? `https://weriseabove.life/collections/${data.collection.handle}`
+    : 'https://weriseabove.life/collections';
   return [
-    {title: `${data?.collection.title ?? 'Collection'} | We Rise Above`},
-    {
-      name: 'description',
-      content:
-        data?.collection.description ||
-        `${data?.collection.title ?? 'Collection'} — We Rise Above. Choose your armor. Pressure builds. We rise.`,
-    },
+    {title},
+    {name: 'description', content: description},
+    {property: 'og:type', content: 'website'},
+    {property: 'og:title', content: title},
+    {property: 'og:description', content: description},
+    {property: 'og:url', content: url},
+    {property: 'og:image', content: image},
+    {name: 'twitter:card', content: 'summary_large_image'},
+    {name: 'twitter:title', content: title},
+    {name: 'twitter:description', content: description},
+    {name: 'twitter:image', content: image},
   ];
 };
 
