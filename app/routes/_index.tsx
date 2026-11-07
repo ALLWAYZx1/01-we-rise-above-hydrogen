@@ -12,8 +12,8 @@ import {MockShopNotice} from '~/components/MockShopNotice';
 import {Reveal} from '~/components/Reveal';
 
 const HERO_IMAGE_BASE =
-  'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/hero-centerpiece-front-2560x1440.jpg?v=1792867452';
-const HERO_SRCSET = `${HERO_IMAGE_BASE}&width=480 480w, ${HERO_IMAGE_BASE}&width=720 720w, ${HERO_IMAGE_BASE}&width=1080 1080w, ${HERO_IMAGE_BASE}&width=1440 1440w, ${HERO_IMAGE_BASE}&width=1920 1920w, ${HERO_IMAGE_BASE}&width=2560 2560w`;
+  'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/zordon-key-art-clean.jpg?v=1794047529';
+const HERO_SRCSET = `${HERO_IMAGE_BASE}&width=480 480w, ${HERO_IMAGE_BASE}&width=720 720w, ${HERO_IMAGE_BASE}&width=1080 1080w, ${HERO_IMAGE_BASE}&width=1440 1440w, ${HERO_IMAGE_BASE}&width=1920 1920w`;
 const HERO_SIZES = '(min-width: 1200px) 1440px, 100vw';
 const ENERGY_FRONT_BASE =
   'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-temple-black-front-1920x1280.jpg?v=1792950396';
@@ -129,9 +129,9 @@ export default function Homepage() {
             src={`${HERO_IMAGE_BASE}&width=1080`}
             srcSet={HERO_SRCSET}
             sizes={HERO_SIZES}
-            alt="ALLWAYZ between the angel and the demon under the eclipse — Never Settle hoodie, We Rise Above Season 00"
-            width="2560"
-            height="1440"
+            alt="ALLWAYZ standing center under the eclipse in the Never Settle hoodie — PREZZUREVERSE key art, We Rise Above"
+            width="2000"
+            height="1120"
             fetchPriority="high"
             decoding="async"
           />
