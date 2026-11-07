@@ -32,11 +32,13 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
+      # api/index.ts imports the generated dist/server/index.js bundle.
+      # Build first so lint and typecheck resolve the actual generated entry.
+      - name: Build Hydrogen storefront
+        run: npm run build
+
       - name: Lint
         run: npm run lint
 
       - name: Typecheck
         run: npm run typecheck
-
-      - name: Build Hydrogen storefront
-        run: npm run build
