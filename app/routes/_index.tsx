@@ -104,7 +104,6 @@ export default function Homepage() {
         '@id': 'https://weriseabove.life/#organization',
         name: 'We Rise Above',
         url: 'https://weriseabove.life/',
-        logo: 'https://weriseabove.life/favicon-64.png',
       },
       {
         '@type': 'WebSite',
