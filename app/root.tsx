@@ -11,7 +11,10 @@ import {
   useRouteLoaderData,
 } from 'react-router';
 import type {Route} from './+types/root';
-import favicon from '~/assets/favicon.svg';
+import favicon64 from '~/../public/favicon-64.png';
+import favicon32 from '~/../public/favicon-32.png';
+import faviconIco from '~/../public/favicon.ico';
+import appleTouchIcon from '~/../public/apple-touch-icon.png';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
@@ -63,7 +66,13 @@ export function links() {
       rel: 'preconnect',
       href: 'https://shop.app',
     },
-    {rel: 'icon', type: 'image/svg+xml', href: favicon},
+    // WRA Luminous Gold P Emblem (declared brand mark, 2026-10-31).
+    // Small sizes use the P-monogram core crop so the mark stays
+    // legible at tab size; the touch icon carries the full crest.
+    {rel: 'icon', type: 'image/x-icon', href: faviconIco},
+    {rel: 'icon', type: 'image/png', sizes: '64x64', href: favicon64},
+    {rel: 'icon', type: 'image/png', sizes: '32x32', href: favicon32},
+    {rel: 'apple-touch-icon', sizes: '180x180', href: appleTouchIcon},
   ];
 }
 
