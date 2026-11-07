@@ -6,7 +6,7 @@ import type {
 } from '@shopify/hydrogen/storefront-api-types';
 import {AddToCartButton} from './AddToCartButton';
 import {useAside} from './Aside';
-import type {ProductFragment} from 'storefrontapi.generated';
+import type {DaylightProductQuery} from 'storefrontapi.generated';
 
 export function ProductForm({
   productOptions,
@@ -15,7 +15,7 @@ export function ProductForm({
   onQuantityChange,
 }: {
   productOptions: MappedProductOptions[];
-  selectedVariant: ProductFragment['selectedOrFirstAvailableVariant'];
+  selectedVariant: NonNullable<DaylightProductQuery['product']>['selectedOrFirstAvailableVariant'];
   quantity?: number;
   onQuantityChange?: (quantity: number) => void;
 }) {
