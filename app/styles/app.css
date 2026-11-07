@@ -2238,3 +2238,30 @@ a:hover {
     transition: none;
   }
 }
+
+/*
+* --------------------------------------------------
+* CENTERED PAGE FRAME (PREZZURE) — every route's root
+* wrapper shares one centered column so content pages,
+* search, cart, blogs and account stop sitting flush-left
+* while themed pages keep their own inner alignment.
+* --------------------------------------------------
+*/
+.page,
+.search,
+.cart,
+.collection,
+.collections,
+.product,
+.blog,
+.article,
+.account,
+.policy,
+.policies,
+.order {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  box-sizing: border-box;
+  width: 100%;
+}
