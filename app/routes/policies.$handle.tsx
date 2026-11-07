@@ -4,7 +4,7 @@ import {type Shop} from '@shopify/hydrogen/storefront-api-types';
 
 type SelectedPolicies = keyof Pick<
   Shop,
-  'privacyPolicy' | 'shippingPolicy' | 'termsOfService' | 'refundPolicy'
+  'privacyPolicy' | 'shippingPolicy' | 'termsOfService' | 'refundPolicy' | 'contactInformation'
 >;
 
 export const meta: Route.MetaFunction = ({data}) => {
@@ -33,6 +33,7 @@ export async function loader({params, context}: Route.LoaderArgs) {
       shippingPolicy: false,
       termsOfService: false,
       refundPolicy: false,
+      contactInformation: false,
       [policyName]: true,
       language: context.storefront.i18n?.language,
     },
@@ -80,6 +81,7 @@ const POLICY_CONTENT_QUERY = `#graphql
     $refundPolicy: Boolean!
     $shippingPolicy: Boolean!
     $termsOfService: Boolean!
+    $contactInformation: Boolean!
   ) @inContext(language: $language, country: $country) {
     shop {
       privacyPolicy @include(if: $privacyPolicy) {
@@ -92,6 +94,9 @@ const POLICY_CONTENT_QUERY = `#graphql
         ...Policy
       }
       refundPolicy @include(if: $refundPolicy) {
+        ...Policy
+      }
+      contactInformation @include(if: $contactInformation) {
         ...Policy
       }
     }
