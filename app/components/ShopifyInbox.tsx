@@ -19,10 +19,14 @@ const INBOX_LOADER_URL =
 
 export function ShopifyInbox() {
   useEffect(() => {
-    if (document.querySelector('script[data-shopify-inbox]')) return;
+    let cancelled = false;
+    let timer = 0;
 
-    const load = () => {
-      if (document.querySelector('script[data-shopify-inbox]')) return;
+    const isLoaded = () =>
+      Boolean(document.querySelector('script[data-shopify-inbox]'));
+
+    const inject = () => {
+      if (cancelled || isLoaded()) return;
       const script = document.createElement('script');
       script.src = INBOX_LOADER_URL;
       script.async = true;
@@ -30,14 +34,35 @@ export function ShopifyInbox() {
       document.body.appendChild(script);
     };
 
-    // Load after the page settles so the chat never competes with the
-    // storefront's own first paint, and only ever load it once.
-    if (document.readyState === 'complete') {
-      load();
-      return;
+    // Load on mount instead of waiting for the window 'load' event.
+    // The previous version armed a one-time 'load' listener; when the
+    // component mounted after 'load' had already fired (or the event
+    // raced hydration), the listener never ran and the chat silently
+    // never loaded — the launcher appeared only intermittently, and
+    // vanished for good on SPA navigation. If the document is still
+    // parsing, wait for DOMContentLoaded; otherwise load now.
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', inject, {once: true});
+    } else {
+      inject();
     }
-    window.addEventListener('load', load, {once: true});
-    return () => window.removeEventListener('load', load);
+
+    // Watchdog: if the loader still hasn't produced the chat iframe
+    // after 8s (blocked request, CSP refusal, network drop), retry the
+    // injection once. A failed script element is removed first so the
+    // retry is a real second attempt, not a no-op.
+    timer = window.setTimeout(() => {
+      if (cancelled) return;
+      if (document.querySelector('iframe[title*="Shopify"]')) return;
+      document.querySelector('script[data-shopify-inbox]')?.remove();
+      inject();
+    }, 8000);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      document.removeEventListener('DOMContentLoaded', inject);
+    };
   }, []);
 
   return null;
