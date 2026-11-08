@@ -19,7 +19,6 @@ export async function loader({context}: Route.LoaderArgs) {
   const shopPolicies = data.shop;
   const policies: PolicyItemFragment[] = [
     shopPolicies?.privacyPolicy,
-    shopPolicies?.contactInformation,
     shopPolicies?.shippingPolicy,
     shopPolicies?.termsOfService,
     shopPolicies?.refundPolicy,
@@ -59,9 +58,6 @@ const POLICIES_QUERY = `#graphql
   query Policies ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
     shop {
-      contactInformation {
-        ...PolicyItem
-      }
       privacyPolicy {
         ...PolicyItem
       }
