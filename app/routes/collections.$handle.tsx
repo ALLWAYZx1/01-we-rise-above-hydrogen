@@ -90,8 +90,39 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 export default function Collection() {
   const {collection} = useLoaderData<typeof loader>();
 
+  const collectionStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: collection.title,
+    itemListElement: collection.products.nodes.map((product, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Product',
+        name: product.title,
+        url: `https://weriseabove.life/products/${product.handle}`,
+        ...(product.featuredImage?.url ? {image: product.featuredImage.url} : {}),
+        ...(product.priceRange?.minVariantPrice
+          ? {
+              offers: {
+                '@type': 'Offer',
+                price: product.priceRange.minVariantPrice.amount,
+                priceCurrency: product.priceRange.minVariantPrice.currencyCode,
+              },
+            }
+          : {}),
+      },
+    })),
+  };
+
   return (
     <div className="collection">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionStructuredData).replace(/</g, '\\u003c'),
+        }}
+      />
       <p className="eyebrow">We Rise Above · Collection</p>
       <h1>{collection.title}</h1>
       <p className="collection-intro">Every piece carries the code. Choose your armor.</p>

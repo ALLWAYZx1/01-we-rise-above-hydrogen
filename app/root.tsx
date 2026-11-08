@@ -22,6 +22,29 @@ import flipStyles from '~/styles/flip.css?url';
 import {PageLayout} from './components/PageLayout';
 import {ShopifyInbox} from './components/ShopifyInbox';
 
+export const meta: Route.MetaFunction = () => [
+  {title: 'We Rise Above | Streetwear, Music & Creative Culture'},
+  {
+    name: 'description',
+    content: 'Pressure builds. We rise. Streetwear, music and creative culture. No final form.',
+  },
+  {tagName: 'link', rel: 'canonical', href: 'https://weriseabove.life/'},
+  {property: 'og:type', content: 'website'},
+  {property: 'og:site_name', content: 'We Rise Above'},
+  {property: 'og:title', content: 'We Rise Above | Streetwear, Music & Creative Culture'},
+  {
+    property: 'og:description',
+    content: 'Pressure builds. We rise. Streetwear, music and creative culture. No final form.',
+  },
+  {property: 'og:url', content: 'https://weriseabove.life/'},
+  {name: 'twitter:card', content: 'summary'},
+  {name: 'twitter:title', content: 'We Rise Above | Streetwear, Music & Creative Culture'},
+  {
+    name: 'twitter:description',
+    content: 'Pressure builds. We rise. Streetwear, music and creative culture. No final form.',
+  },
+];
+
 export type RootLoader = typeof loader;
 
 /**
