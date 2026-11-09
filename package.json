@@ -59,7 +59,7 @@
     "graphql-config": "^5.0.3",
     "prettier": "^3.4.2",
     "typescript": "^5.9.2",
-    "vite": "7.1.9"
+    "vite": "7.3.7"
   },
   "engines": {
     "node": "^22 || ^24"
