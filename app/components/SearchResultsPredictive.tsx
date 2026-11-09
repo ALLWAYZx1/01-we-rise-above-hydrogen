@@ -280,22 +280,17 @@ function SearchResultsPredictiveEmpty({term}: {term: string}) {
  **/
 function usePredictiveSearch(): UsePredictiveSearchReturn {
   const fetcher = useFetcher<PredictiveSearchReturn>({key: 'search'});
-  const term = useRef<string>('');
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
-  if (fetcher?.state === 'loading') {
-    term = String(fetcher.formData?.get('q') || '');
-  }
-
-  // capture the search input element as a ref
-  useEffect(() => {
-    if (!inputRef.current) {
-      inputRef.current = document.querySelector('input[type="search"]');
-    }
+  const term =
+    fetcher.state === 'loading'
+      ? String(fetcher.formData?.get('q') || '')
+      : fetcher.data?.term ?? '';
+  const inputElementRef = useRef<HTMLInputElement | null>(null);
+  const inputRef = useCallback((element: HTMLInputElement | null) => {
+    inputElementRef.current = element;
   }, []);
 
   const {items, total} =
     fetcher?.data?.result ?? getEmptyPredictiveSearchResult();
 
-  return {items, total, inputRef, term, fetcher};
+  return {items, total, inputRef, inputElementRef, term, fetcher};
 }
