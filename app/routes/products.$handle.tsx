@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {Link, redirect, useLoaderData} from 'react-router';
 import type {Route} from './+types/products.$handle';
 import pageStyles from '~/styles/daylight-pages.css?url';
@@ -108,15 +108,23 @@ export default function Product() {
         }
       : undefined,
   };
-  const [activeImage, setActiveImage] = useState(
-    images.findIndex((image: any) => image.id === selectedVariant?.image?.id),
+  const variantImageIndex = images.findIndex(
+    (image: any) => image.id === selectedVariant?.image?.id,
   );
-  useEffect(() => {
-    const variantImageIndex = images.findIndex(
-      (image: any) => image.id === selectedVariant?.image?.id,
-    );
-    if (variantImageIndex >= 0) setActiveImage(variantImageIndex);
-  }, [images, selectedVariant?.image?.id]);
+  const [activeImageSelection, setActiveImageSelection] = useState<{
+    variantId: string | null;
+    index: number;
+  } | null>(null);
+  const activeImage =
+    activeImageSelection?.variantId === (selectedVariant?.id ?? null)
+      ? activeImageSelection.index
+      : variantImageIndex;
+  const setActiveImage = (index: number) => {
+    setActiveImageSelection({
+      variantId: selectedVariant?.id ?? null,
+      index,
+    });
+  };
   const shownImage =
     images[activeImage >= 0 ? activeImage : 0] || selectedVariant?.image;
   const [quantity, setQuantity] = useState(1);
