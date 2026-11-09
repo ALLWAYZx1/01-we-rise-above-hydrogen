@@ -5,20 +5,17 @@
   "version": "2026.4.8",
   "type": "module",
   "scripts": {
-    "build": "shopify hydrogen build --codegen && npm run build:handler",
+    "build": "shopify hydrogen build --codegen",
     "dev": "shopify hydrogen dev --codegen",
     "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern .",
     "typecheck": "react-router typegen && tsc --noEmit",
     "codegen": "shopify hydrogen codegen && react-router typegen",
-    "build:handler": "node scripts/build-vercel-handler.mjs",
     "start": "node server.mjs"
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
     "@shopify/hydrogen": "~2026.4.0",
-    "@vercel/analytics": "^2.0.1",
-    "@vercel/speed-insights": "^2.0.0",
     "graphql": "16.13.2",
     "graphql-tag": "^2.12.6",
     "isbot": "^5.1.22",

@@ -94,7 +94,8 @@ export default function Collection() {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: collection.title,
-    itemListElement: collection.products.nodes.map((product, index) => ({
+    itemListElement: collection.products.nodes.map(
+      (product: ProductItemFragment, index: number) => ({
       '@type': 'ListItem',
       position: index + 1,
       item: {
@@ -111,8 +112,9 @@ export default function Collection() {
               },
             }
           : {}),
-      },
-    })),
+        },
+      }),
+    ),
   };
 
   return (

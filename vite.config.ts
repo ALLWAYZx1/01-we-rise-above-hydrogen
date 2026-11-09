@@ -9,7 +9,6 @@ export default defineConfig({
     alias: {
       '~': fileURLToPath(new URL('./app', import.meta.url)),
     },
-    tsconfigPaths: true,
   },
   build: {
     assetsInlineLimit: 0,
