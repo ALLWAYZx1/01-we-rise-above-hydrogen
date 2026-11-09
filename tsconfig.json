@@ -8,8 +8,7 @@
     "*.tsx",
     "*.d.ts",
     ".graphqlrc.ts",
-    ".react-router/types/**/*",
-    "api/**/*.ts"
+    ".react-router/types/**/*"
   ],
   "exclude": [
     "node_modules",
