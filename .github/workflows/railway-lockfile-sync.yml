@@ -10,6 +10,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: wra-railway-lock-sync
+  cancel-in-progress: true
+
 jobs:
   sync:
     if: github.head_ref == 'starscream/railway-node-runtime-20261109' || github.ref == 'refs/heads/starscream/railway-node-runtime-20261109'
