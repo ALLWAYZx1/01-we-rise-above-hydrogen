@@ -1,6 +1,6 @@
 import {Link, useFetcher, type Fetcher} from 'react-router';
 import {Image, Money} from '@shopify/hydrogen';
-import React, {useRef, useEffect} from 'react';
+import React, {useCallback, useRef} from 'react';
 import {
   getEmptyPredictiveSearchResult,
   urlWithTrackingParams,
@@ -11,9 +11,10 @@ import {useAside} from './Aside';
 type PredictiveSearchItems = PredictiveSearchReturn['result']['items'];
 
 type UsePredictiveSearchReturn = {
-  term: React.MutableRefObject<string>;
+  term: string;
   total: number;
-  inputRef: React.MutableRefObject<HTMLInputElement | null>;
+  inputRef: React.RefCallback<HTMLInputElement>;
+  inputElementRef: React.MutableRefObject<HTMLInputElement | null>;
   items: PredictiveSearchItems;
   fetcher: Fetcher<PredictiveSearchReturn>;
 };
@@ -43,15 +44,15 @@ export function SearchResultsPredictive({
   children,
 }: SearchResultsPredictiveProps) {
   const aside = useAside();
-  const {term, inputRef, fetcher, total, items} = usePredictiveSearch();
+  const {term, inputRef, inputElementRef, fetcher, total, items} = usePredictiveSearch();
 
   /*
    * Utility that resets the search input
    */
   function resetInput() {
-    if (inputRef.current) {
-      inputRef.current.blur();
-      inputRef.current.value = '';
+    if (inputElementRef.current) {
+      inputElementRef.current.blur();
+      inputElementRef.current.value = '';
     }
   }
 
@@ -95,7 +96,7 @@ function SearchResultsPredictiveArticles({
           const articleUrl = urlWithTrackingParams({
             baseUrl: `/blogs/${article.blog.handle}/${article.handle}`,
             trackingParams: article.trackingParameters,
-            term: term.current ?? '',
+            term: term,
           });
 
           return (
@@ -136,7 +137,7 @@ function SearchResultsPredictiveCollections({
           const collectionUrl = urlWithTrackingParams({
             baseUrl: `/collections/${collection.handle}`,
             trackingParams: collection.trackingParameters,
-            term: term.current,
+            term: term,
           });
 
           return (
@@ -177,7 +178,7 @@ function SearchResultsPredictivePages({
           const pageUrl = urlWithTrackingParams({
             baseUrl: `/pages/${page.handle}`,
             trackingParams: page.trackingParameters,
-            term: term.current,
+            term: term,
           });
 
           return (
@@ -210,7 +211,7 @@ function SearchResultsPredictiveProducts({
           const productUrl = urlWithTrackingParams({
             baseUrl: `/products/${product.handle}`,
             trackingParams: product.trackingParameters,
-            term: term.current,
+            term: term,
           });
 
           const price = product?.selectedOrFirstAvailableVariant?.price;
@@ -258,18 +259,14 @@ function SearchResultsPredictiveQueries({
   );
 }
 
-function SearchResultsPredictiveEmpty({
-  term,
-}: {
-  term: React.MutableRefObject<string>;
-}) {
-  if (!term.current) {
+function SearchResultsPredictiveEmpty({term}: {term: string}) {
+  if (!term) {
     return null;
   }
 
   return (
     <p>
-      No results found for <q>{term.current}</q>
+      No results found for <q>{term}</q>
     </p>
   );
 }
@@ -287,7 +284,7 @@ function usePredictiveSearch(): UsePredictiveSearchReturn {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   if (fetcher?.state === 'loading') {
-    term.current = String(fetcher.formData?.get('q') || '');
+    term = String(fetcher.formData?.get('q') || '');
   }
 
   // capture the search input element as a ref
