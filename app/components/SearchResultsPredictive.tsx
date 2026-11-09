@@ -137,7 +137,7 @@ function SearchResultsPredictiveCollections({
           const collectionUrl = urlWithTrackingParams({
             baseUrl: `/collections/${collection.handle}`,
             trackingParams: collection.trackingParameters,
-            term: term,
+            term,
           });
 
           return (
@@ -178,7 +178,7 @@ function SearchResultsPredictivePages({
           const pageUrl = urlWithTrackingParams({
             baseUrl: `/pages/${page.handle}`,
             trackingParams: page.trackingParameters,
-            term: term,
+            term,
           });
 
           return (
@@ -211,7 +211,7 @@ function SearchResultsPredictiveProducts({
           const productUrl = urlWithTrackingParams({
             baseUrl: `/products/${product.handle}`,
             trackingParams: product.trackingParameters,
-            term: term,
+            term,
           });
 
           const price = product?.selectedOrFirstAvailableVariant?.price;
