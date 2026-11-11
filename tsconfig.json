@@ -3,6 +3,7 @@
     "env.d.ts",
     "app/**/*.ts",
     "app/**/*.tsx",
+    "api/**/*.ts",
     "app/**/*.d.ts",
     "*.ts",
     "*.tsx",
