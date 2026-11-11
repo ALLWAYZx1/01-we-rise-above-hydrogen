@@ -5,7 +5,8 @@
   "version": "2026.4.8",
   "type": "module",
   "scripts": {
-    "build": "shopify hydrogen build --codegen",
+    "build": "shopify hydrogen build --codegen && npm run build:node-handler",
+    "build:node-handler": "node scripts/build-node-handler.mjs",
     "dev": "shopify hydrogen dev --codegen",
     "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern .",
@@ -45,6 +46,7 @@
     "@typescript-eslint/parser": "^8.21.0",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
+    "esbuild": "0.27.4",
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-import": "^2.31.0",
