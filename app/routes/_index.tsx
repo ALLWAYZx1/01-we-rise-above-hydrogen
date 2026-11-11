@@ -14,7 +14,7 @@ import {Reveal} from '~/components/Reveal';
 const HERO_IMAGE_BASE =
   'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/zordon-key-art-clean.jpg?v=1794047529';
 const HERO_SRCSET = `${HERO_IMAGE_BASE}&width=480 480w, ${HERO_IMAGE_BASE}&width=720 720w, ${HERO_IMAGE_BASE}&width=1080 1080w, ${HERO_IMAGE_BASE}&width=1440 1440w, ${HERO_IMAGE_BASE}&width=1920 1920w`;
-const HERO_SIZES = '(min-width: 1200px) 1440px, 100vw';
+const HERO_SIZES = '(min-width: 1200px) 1200px, (min-width: 768px) 90vw, 100vw';
 const ENERGY_FRONT_BASE =
   'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/energy-temple-black-front-1920x1280.jpg?v=1792950396';
 const ENERGY_REAR_BASE =
@@ -22,6 +22,18 @@ const ENERGY_REAR_BASE =
 
 function energySrcSet(base: string) {
   return `${base}&width=640 640w, ${base}&width=960 960w, ${base}&width=1200 1200w, ${base}&width=1920 1920w`;
+}
+
+export function links() {
+  return [
+    {
+      rel: 'preload',
+      as: 'image',
+      imageSrcSet: HERO_SRCSET,
+      imageSizes: HERO_SIZES,
+      fetchPriority: 'high',
+    },
+  ];
 }
 
 export const meta: Route.MetaFunction = () => {
@@ -167,7 +179,7 @@ export default function Homepage() {
         </div>
         <figure className="wra-hero-centerpiece">
           <img
-            src={`${HERO_IMAGE_BASE}&width=1080`}
+            src={`${HERO_IMAGE_BASE}&width=720`}
             srcSet={HERO_SRCSET}
             sizes={HERO_SIZES}
             alt="ALLWAYZ standing center under the eclipse in the Never Settle hoodie — PREZZUREVERSE key art, We Rise Above"
