@@ -313,7 +313,16 @@ function PressStrip() {
             >
               Spotify
             </a>{' '}
-            &middot; Apple Music &middot;{' '}
+            &middot;{' '}
+            <a
+              style={linkStyle}
+              href="https://music.apple.com/us/artist/allwayz/1894744939"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Apple Music
+            </a>{' '}
+            &middot;{' '}
             <a
               style={linkStyle}
               href="https://play.anghami.com/album/1090332643"
