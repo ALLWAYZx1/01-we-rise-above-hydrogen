@@ -35,11 +35,13 @@ export function Header({
         aria-label="We Rise Above — home"
       >
         <img
-          src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/prezzure-rize-logo-v2-transparent.png?v=1792474381&width=140"
-          alt="We Rise Above"
-          width={320}
-          height={320}
+          src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/Luminous_Gold_P_Emblem.png?v=1792758842&width=180"
+          alt=""
+          aria-hidden="true"
+          width={40}
+          height={40}
         />
+        <span>WE RISE ABOVE</span>
       </NavLink>
       <HeaderMenu
         menu={menu}
