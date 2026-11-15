@@ -1,0 +1,37 @@
+name: Oxygen Worker build check
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "app/**"
+      - "server.ts"
+      - "vite.config.ts"
+      - "react-router.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/oxygen-build-check.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Hydrogen Worker
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Oxygen Worker and client assets
+        run: npm run build
