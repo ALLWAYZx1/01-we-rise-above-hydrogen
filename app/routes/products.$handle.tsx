@@ -19,6 +19,7 @@ import {
   useSelectedOptionInUrlParam,
   Image,
   Money,
+  CacheNone,
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductForm} from '~/components/ProductForm';
@@ -55,10 +56,34 @@ export const meta: Route.MetaFunction = ({data}) => {
 export async function loader({context, params, request}: Route.LoaderArgs) {
   const {handle} = params;
   if (!handle) throw new Response('Product not found', {status: 404});
-  const {product} = await context.storefront.query(PRODUCT_QUERY, {
-    variables: {handle, selectedOptions: getSelectedProductOptions(request)},
+  const productVariables = {
+    handle,
+    selectedOptions: getSelectedProductOptions(request),
+  };
+  let {product} = await context.storefront.query(PRODUCT_QUERY, {
+    variables: productVariables,
   });
-  if (!product?.id) throw new Response('Product not found', {status: 404});
+  if (!product?.id) {
+    // A null product here is not proof the product is gone: on 2026-11-15
+    // four live, fully published products 404'd on this route while the
+    // same handles served 200 on classic Shopify and appeared in this
+    // site's own sitemap, then recovered with no deploy and no data
+    // change. A transient Storefront API null (or a stale cached null)
+    // must not become a hard 404 — recheck once, bypassing the
+    // storefront cache, before giving up.
+    ({product} = await context.storefront.query(PRODUCT_QUERY, {
+      variables: productVariables,
+      cache: CacheNone(),
+    }));
+  }
+  if (!product?.id) {
+    // Keep a genuine 404 out of every cache so a missing product that
+    // gets published later is never masked by a stored 404.
+    throw new Response('Product not found', {
+      status: 404,
+      headers: {'Cache-Control': 'no-store'},
+    });
+  }
   redirectIfHandleIsLocalized(request, {handle, data: product});
   // Related products power the "Complete the Look" rail at the bottom of
   // the page. Recommendations are a guidance nicety, never a page failure:
