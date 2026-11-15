@@ -1,0 +1,490 @@
+/* We Rise Above — Luxury Season 00
+   Editorial ivory, champagne gold and charcoal.
+   Presentation-only layer: preserve Hydrogen data, routes and commerce behavior. */
+
+:root {
+  color-scheme: light;
+  --wra-daylight: #faf6ef;
+  --wra-cream: #f1eadc;
+  --wra-card: #fff;
+  --wra-page: #faf6ef;
+  --wra-surface: #fff;
+  --wra-ink: #211f1a;
+  --wra-ink-soft: rgba(33, 31, 26, .72);
+  --wra-muted: #6f695e;
+  --wra-gold: #8a641b;
+  --wra-gold-deep: #67470d;
+  --wra-gold-bright: #c7a76c;
+  --wra-gold-soft: #eadfc8;
+  --wra-ember: #8a641b;
+  --wra-line: rgba(33, 31, 26, .14);
+  --wra-border: #ded6c8;
+  --wra-gold-line: rgba(138, 100, 27, .28);
+  --wra-cta-gradient: linear-gradient(115deg, #8a641b 0%, #67470d 100%);
+  --wra-shadow: 0 16px 40px rgba(33, 31, 26, .07);
+  --wra-shadow-hover: 0 22px 48px rgba(33, 31, 26, .12);
+  --wra-radius: 2px;
+}
+
+html, body {
+  background: var(--wra-daylight);
+  color: var(--wra-ink);
+}
+
+body {
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5,
+.wra-hero-title,
+.daylight-product-details h1 {
+  font-family: "Iowan Old Style", "Baskerville", "Times New Roman", Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -.035em;
+}
+
+img { border-radius: 0; }
+
+:focus-visible {
+  outline: 2px solid var(--wra-gold);
+  outline-offset: 4px;
+}
+
+/* Fashion-house header: mark + wordmark, quiet navigation. */
+.header {
+  min-height: 76px;
+  height: auto;
+  padding: .8rem clamp(1rem, 4vw, 3.5rem);
+  background: rgba(250, 246, 239, .96);
+  border-bottom: 1px solid var(--wra-border);
+  color: var(--wra-ink);
+  backdrop-filter: blur(14px);
+}
+.header-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  color: var(--wra-ink);
+  text-decoration: none;
+}
+.header-logo img {
+  display: block;
+  width: 2.35rem;
+  height: 2.35rem;
+  object-fit: contain;
+}
+.header-logo span {
+  color: var(--wra-ink);
+  font-size: .76rem;
+  font-weight: 750;
+  letter-spacing: .19em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.header-menu-desktop {
+  align-items: center;
+  gap: clamp(.8rem, 1.7vw, 1.6rem);
+  margin-left: auto;
+}
+.header-menu-item, .header-ctas a, .header-ctas button {
+  color: var(--wra-ink);
+  font-size: .7rem;
+  font-weight: 650;
+  letter-spacing: .12em;
+}
+.header-ctas { gap: clamp(.5rem, 1.3vw, 1.1rem); }
+.header a:hover, .header button:hover { color: var(--wra-gold-deep); }
+
+/* The hero keeps the Celestial Fire emblem, with the volume turned down. */
+.wra-hero {
+  min-height: auto;
+  padding: clamp(4.5rem, 8vw, 7.5rem) clamp(1rem, 4vw, 3rem) clamp(3.5rem, 6vw, 5rem);
+  background:
+    radial-gradient(ellipse 42rem 26rem at 50% 0%, rgba(199, 167, 108, .16), transparent 72%),
+    var(--wra-daylight);
+  color: var(--wra-ink);
+}
+.wra-embers { display: none; }
+.wra-hero-emblem {
+  width: clamp(4.5rem, 7vw, 6rem);
+  height: auto;
+  margin-bottom: 1.5rem;
+  animation: none;
+  filter: drop-shadow(0 5px 14px rgba(138, 100, 27, .14));
+}
+.wra-hero-eyebrow {
+  color: var(--wra-gold-deep);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .25em;
+}
+.wra-hero-title {
+  max-width: 11ch;
+  margin: .65rem auto 0;
+  color: var(--wra-ink);
+  font-size: clamp(3.6rem, 9vw, 8rem);
+  font-weight: 500;
+  letter-spacing: -.055em;
+  line-height: .9;
+}
+.wra-hero-gold {
+  background: linear-gradient(100deg, #67470d 0%, #b18a43 48%, #8a641b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.wra-hero-copy {
+  max-width: 38rem;
+  margin: 1.5rem auto 0;
+  color: var(--wra-muted);
+  font-size: clamp(.98rem, 1.35vw, 1.12rem);
+  line-height: 1.8;
+}
+.wra-hero-ctas {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-top: 2rem;
+}
+.wra-hero-cta {
+  min-height: 48px;
+  padding: .9rem 1.65rem;
+  border: 1px solid var(--wra-ink);
+  border-radius: 0;
+  background: var(--wra-ink);
+  color: #faf6ef;
+  box-shadow: none;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+.wra-hero-cta:hover {
+  transform: translateY(-2px);
+  background: var(--wra-gold-deep);
+  border-color: var(--wra-gold-deep);
+  color: #fff;
+}
+.wra-hero-cta-ghost {
+  border-color: var(--wra-border);
+  background: transparent;
+  color: var(--wra-ink);
+}
+.wra-hero-cta-ghost:hover {
+  color: #fff;
+  border-color: var(--wra-gold-deep);
+}
+.wra-hero-centerpiece {
+  width: min(1240px, 100%);
+  margin: clamp(2.5rem, 5vw, 4.5rem) auto 0;
+  border: 1px solid var(--wra-border);
+  box-shadow: 0 24px 70px rgba(33, 31, 26, .12);
+}
+.wra-hero-centerpiece img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Editorial section rhythm and product merchandising. */
+.wra-section, .recommended-products, .wra-tiles, .wra-energy {
+  color: var(--wra-ink);
+  background: var(--wra-daylight);
+}
+.wra-section {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 6rem) clamp(1rem, 4vw, 3rem);
+}
+.wra-section h2, .recommended-products h2, .wra-tiles h2 {
+  color: var(--wra-ink);
+  font-size: clamp(2.3rem, 5vw, 4.5rem);
+  font-weight: 500;
+  letter-spacing: -.04em;
+}
+.wra-section .eyebrow, .wra-section > .eyebrow {
+  color: var(--wra-gold-deep);
+  font-size: .68rem;
+  font-weight: 750;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+.collection-intro { color: var(--wra-muted); }
+.product-item, .recommended-product, .collection-item {
+  border: 1px solid var(--wra-border);
+  border-radius: 0;
+  background: var(--wra-card);
+  box-shadow: none;
+}
+.product-item img, .recommended-product img, .collection-item img {
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 0;
+  box-shadow: none;
+}
+.product-item h3, .recommended-product h4, .collection-item h4 {
+  color: var(--wra-ink);
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-size: .88rem;
+  font-weight: 650;
+  letter-spacing: .01em;
+}
+.product-item:hover, .recommended-product:hover, .collection-item:hover {
+  border-color: var(--wra-gold);
+}
+.product-item:hover img, .recommended-product:hover img, .collection-item:hover img {
+  box-shadow: none;
+}
+
+/* Editorial artist strip: keep the story, lose the black promo-bar treatment. */
+section[aria-label="As seen and heard"] {
+  background: var(--wra-cream) !important;
+  color: var(--wra-ink) !important;
+  border-block: 1px solid var(--wra-border) !important;
+}
+section[aria-label="As seen and heard"] p,
+section[aria-label="As seen and heard"] span {
+  color: var(--wra-ink) !important;
+}
+section[aria-label="As seen and heard"] a {
+  color: var(--wra-gold-deep) !important;
+}
+
+/* Duality becomes an editorial diptych, not two competing promo cards. */
+.wra-duality {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: clamp(1rem, 4vw, 3rem);
+  background: var(--wra-border);
+}
+.wra-duality a {
+  min-height: 19rem;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+  background: var(--wra-cream);
+  color: var(--wra-ink);
+  text-decoration: none;
+}
+.wra-duality a:first-child { background: #fff; }
+.wra-duality a span {
+  color: var(--wra-gold-deep);
+  font-size: .65rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.wra-duality a strong {
+  display: block;
+  margin-top: 1.3rem;
+  color: var(--wra-ink);
+  font: 500 clamp(2.4rem, 5vw, 4.8rem)/.98 "Iowan Old Style", Baskerville, Georgia, serif;
+}
+.wra-duality a p { max-width: 26rem; color: var(--wra-muted); line-height: 1.7; }
+
+/* Creed and footer: charcoal is the deliberate counterpoint to ivory. */
+.wra-creed {
+  margin: 0;
+  padding: clamp(3rem, 7vw, 6rem) 1.25rem;
+  background: #211f1a;
+  color: #faf6ef;
+  text-align: center;
+}
+.wra-creed .eyebrow { color: #c7a76c; }
+.wra-creed h2, .wra-creed-tagline {
+  color: #faf6ef;
+  font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+  font-weight: 500;
+}
+.wra-creed-words {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .6rem 1.4rem;
+  max-width: 58rem;
+  margin: 2rem auto;
+}
+.wra-creed-words span {
+  color: #e6d7b9;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+}
+.wra-creed-tagline { font-size: clamp(1.6rem, 4vw, 2.5rem); letter-spacing: .16em; }
+.footer {
+  background: #171612;
+  border-top: 1px solid rgba(199, 167, 108, .45);
+  color: #faf6ef;
+}
+.footer-menu a { color: #f1eadc; }
+.footer-menu a:hover { color: #c7a76c; }
+
+/* Product detail pages: editorial gallery, calm buy module, legible evidence. */
+.product {
+  align-items: start;
+  gap: clamp(2rem, 5vw, 5rem);
+  padding-top: clamp(1.5rem, 4vw, 3rem);
+}
+.product-gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--wra-border);
+  box-shadow: var(--wra-shadow);
+}
+.product-main h1 {
+  color: var(--wra-ink);
+  font: 500 clamp(2.3rem, 5vw, 4.3rem)/.98 "Iowan Old Style", Baskerville, Georgia, serif;
+  letter-spacing: -.04em;
+}
+.product-main .eyebrow {
+  color: var(--wra-gold-deep);
+  font-size: .68rem;
+  font-weight: 750;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.product-main, .product-main p, .product-main li { color: var(--wra-ink); }
+.product-main > div { color: var(--wra-muted); line-height: 1.75; }
+.product-main .product-trust {
+  padding-top: 1rem;
+  border-top: 1px solid var(--wra-border);
+  color: var(--wra-muted);
+}
+.product-main .product-trust a { color: var(--wra-gold-deep); }
+.product-form button[type="submit"],
+.product-main button[type="submit"] {
+  border-radius: 0;
+  background: var(--wra-ink);
+  color: #faf6ef;
+}
+.product-form button[type="submit"]:hover,
+.product-main button[type="submit"]:hover {
+  background: var(--wra-gold-deep);
+}
+.wra-sticky-buy {
+  background: rgba(250, 246, 239, .97);
+  border-top: 1px solid var(--wra-border);
+  box-shadow: 0 -8px 30px rgba(33, 31, 26, .08);
+  backdrop-filter: blur(12px);
+}
+.wra-sticky-buy button[type="submit"] {
+  border-radius: 0;
+  background: var(--wra-ink);
+  color: #faf6ef;
+}
+.wra-related { padding: 2rem clamp(1rem, 4vw, 3rem); }
+.wra-related h2 {
+  color: var(--wra-ink);
+  font: 500 clamp(2rem, 4vw, 3.5rem)/1 "Iowan Old Style", Baskerville, Georgia, serif;
+}
+.wra-related-grid .product-item {
+  padding: .5rem;
+  border: 1px solid var(--wra-border);
+  border-radius: 0;
+  background: #fff;
+}
+
+/* Avoid accidental horizontal scroll and preserve motion preferences. */
+@media (max-width: 760px) {
+  .header { min-height: 64px; padding-inline: .8rem; }
+  .header-logo img { width: 1.9rem; height: 1.9rem; }
+  .header-logo span { font-size: .6rem; letter-spacing: .13em; }
+  .wra-hero { padding-top: 3.5rem; }
+  .wra-hero-title { font-size: clamp(3rem, 13vw, 5rem); }
+  .wra-hero-centerpiece { margin-top: 2rem; }
+  .wra-duality { grid-template-columns: 1fr; }
+  .wra-duality a { min-height: 14rem; }
+  .product { grid-template-columns: minmax(0, 1fr); }
+  .product-main { position: static; }
+  .wra-sticky-buy { gap: .6rem; padding-inline: .75rem; }
+  .wra-sticky-buy button[type="submit"] { padding-inline: .9rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wra-hero-emblem, .wra-hero > * { animation: none !important; }
+  .wra-hero-cta, .product-item img { transition: none !important; }
+}
+
+
+/* Season 00 flagship feature: one hero product, given room to speak. */
+.wra-flagship {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(18rem, .95fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 6rem);
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: clamp(2rem, 6vw, 5.5rem) clamp(1rem, 4vw, 3rem);
+  background: var(--wra-cream);
+}
+.wra-flagship-media { min-width: 0; }
+.wra-flagship-media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  background: #e8e1d5;
+  box-shadow: 0 22px 60px rgba(33, 31, 26, .12);
+}
+.wra-flagship-copy { max-width: 34rem; }
+.wra-flagship-copy .eyebrow {
+  color: var(--wra-gold-deep);
+  font-size: .67rem;
+  font-weight: 750;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+.wra-flagship-copy h2 {
+  margin: .8rem 0 1.1rem;
+  color: var(--wra-ink);
+  font: 500 clamp(2.7rem, 5.5vw, 5.2rem)/.95 "Iowan Old Style", Baskerville, Georgia, serif;
+  letter-spacing: -.045em;
+}
+.wra-flagship-copy > p:not(.eyebrow):not(.wra-flagship-spec) {
+  max-width: 31rem;
+  color: var(--wra-muted);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+.wra-flagship-spec {
+  margin: 1.6rem 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--wra-border);
+  color: var(--wra-gold-deep);
+  font-size: .65rem;
+  font-weight: 750;
+  letter-spacing: .17em;
+}
+.wra-flagship-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: .85rem 1.4rem;
+  border: 1px solid var(--wra-ink);
+  background: var(--wra-ink);
+  color: #faf6ef;
+  font-size: .67rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.wra-flagship-link:hover {
+  border-color: var(--wra-gold-deep);
+  background: var(--wra-gold-deep);
+  color: #fff;
+}
+@media (max-width: 760px) {
+  .wra-flagship {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    padding: 2rem 1rem 2.5rem;
+  }
+  .wra-flagship-media img { aspect-ratio: 4 / 5; }
+  .wra-flagship-copy h2 { font-size: clamp(2.6rem, 12vw, 4rem); }
+}
