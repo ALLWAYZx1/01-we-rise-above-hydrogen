@@ -19,6 +19,8 @@ import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import flipStyles from '~/styles/flip.css?url';
+import daylightStyles from '~/styles/daylight.css?url';
+import luxuryStyles from '~/styles/luxury.css?url';
 import {PageLayout} from './components/PageLayout';
 import {ShopifyInbox} from './components/ShopifyInbox';
 
@@ -200,6 +202,8 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <link rel="stylesheet" href={resetStyles}></link>
         <link rel="stylesheet" href={appStyles}></link>
         <link rel="stylesheet" href={flipStyles}></link>
+        <link rel="stylesheet" href={daylightStyles}></link>
+        <link rel="stylesheet" href={luxuryStyles}></link>
         <Meta />
         <Links />
       </head>
