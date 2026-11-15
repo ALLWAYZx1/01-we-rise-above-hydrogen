@@ -48,7 +48,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build and Publish to Oxygen
+      - name: Build Worker and client assets
+        run: npm run build
+
+      - name: Publish to Oxygen
         run: npx shopify hydrogen deploy --assets-dir dist/client --worker-dir dist/server
         env:
           SHOPIFY_HYDROGEN_DEPLOYMENT_TOKEN: ${{ secrets.OXYGEN_DEPLOYMENT_TOKEN_1000183364 }}
