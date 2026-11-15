@@ -408,3 +408,83 @@ section[aria-label="As seen and heard"] a {
   .wra-hero-emblem, .wra-hero > * { animation: none !important; }
   .wra-hero-cta, .product-item img { transition: none !important; }
 }
+
+
+/* Season 00 flagship feature: one hero product, given room to speak. */
+.wra-flagship {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(18rem, .95fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 6rem);
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: clamp(2rem, 6vw, 5.5rem) clamp(1rem, 4vw, 3rem);
+  background: var(--wra-cream);
+}
+.wra-flagship-media { min-width: 0; }
+.wra-flagship-media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  background: #e8e1d5;
+  box-shadow: 0 22px 60px rgba(33, 31, 26, .12);
+}
+.wra-flagship-copy { max-width: 34rem; }
+.wra-flagship-copy .eyebrow {
+  color: var(--wra-gold-deep);
+  font-size: .67rem;
+  font-weight: 750;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+.wra-flagship-copy h2 {
+  margin: .8rem 0 1.1rem;
+  color: var(--wra-ink);
+  font: 500 clamp(2.7rem, 5.5vw, 5.2rem)/.95 "Iowan Old Style", Baskerville, Georgia, serif;
+  letter-spacing: -.045em;
+}
+.wra-flagship-copy > p:not(.eyebrow):not(.wra-flagship-spec) {
+  max-width: 31rem;
+  color: var(--wra-muted);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+.wra-flagship-spec {
+  margin: 1.6rem 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--wra-border);
+  color: var(--wra-gold-deep);
+  font-size: .65rem;
+  font-weight: 750;
+  letter-spacing: .17em;
+}
+.wra-flagship-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: .85rem 1.4rem;
+  border: 1px solid var(--wra-ink);
+  background: var(--wra-ink);
+  color: #faf6ef;
+  font-size: .67rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.wra-flagship-link:hover {
+  border-color: var(--wra-gold-deep);
+  background: var(--wra-gold-deep);
+  color: #fff;
+}
+@media (max-width: 760px) {
+  .wra-flagship {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    padding: 2rem 1rem 2.5rem;
+  }
+  .wra-flagship-media img { aspect-ratio: 4 / 5; }
+  .wra-flagship-copy h2 { font-size: clamp(2.6rem, 12vw, 4rem); }
+}
