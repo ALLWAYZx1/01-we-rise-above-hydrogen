@@ -162,19 +162,18 @@ export default function Homepage() {
           <span className="wra-hero-gold">the <span className="wra-hero-gold">pressure.</span></span>
         </h1>
         <p className="wra-hero-copy">
-          Heavyweight streetwear forged under pressure. Cut heavy, printed
-          with intent, made for the late nights and the days that carry
-          weight. No final form. Still rising.
+          Pressure builds. We rise. A collection of expressive streetwear for
+          the ones still becoming. Faith, discipline, hard work. No final form.
         </p>
         <div className="wra-hero-ctas">
           <Link className="wra-hero-cta" to="/collections/all">
-            Shop everything
+            Explore the collection
           </Link>
           <Link
             className="wra-hero-cta wra-hero-cta-ghost"
             to="/collections/hoodies"
           >
-            Shop hoodies
+            Discover hoodies
           </Link>
         </div>
         <figure className="wra-hero-centerpiece">
@@ -191,6 +190,34 @@ export default function Homepage() {
         </figure>
       </section>
       <PressStrip />
+      <section className="wra-flagship" aria-labelledby="wra-flagship-title">
+        <div className="wra-flagship-media">
+          <img
+            src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/unisex-sculpted-heavyweight-hoodie-black-front-6ae8cf4d5a063.jpg?v=1793642347&width=1200"
+            alt="Black Sculpted Heavyweight hoodie, front view"
+            width="1200"
+            height="1500"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div className="wra-flagship-copy">
+          <p className="eyebrow">The signature piece · Season 00</p>
+          <h2 id="wra-flagship-title">Built with weight. Made to rise.</h2>
+          <p>
+            The Ascension artwork on a 15 oz brushed-fleece silhouette.
+            Organic combed ring-spun cotton and recycled polyester, finished
+            with a double-layer hood.
+          </p>
+          <p className="wra-flagship-spec">15 OZ · BRUSHED FLEECE · MADE TO ORDER</p>
+          <Link
+            className="wra-flagship-link"
+            to="/products/prezzure-rize-like-the-matrix-ascension-hoodie-sculpted-heavyweight"
+          >
+            Discover the Sculpted Heavyweight
+          </Link>
+        </div>
+      </section>
       <section className="wra-section"><p className="eyebrow">First things first</p><h2>Wear the rise.</h2><p className="collection-intro">Pieces with presence. Built for the days that test you and the nights that define you.</p><FeaturedCollection collection={data.featuredCollection} /></section>
       <CategoryTiles collections={data.collections} />
       <RecommendedProducts products={data.recommendedProducts} />
