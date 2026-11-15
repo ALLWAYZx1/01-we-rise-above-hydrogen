@@ -283,13 +283,13 @@ function PressStrip() {
         }}
       >
         <div style={itemStyle}>
-          <span style={labelStyle}>\uD83D\uDCFA Heard on TAXI TV</span>
+          <span style={labelStyle}>📺 Heard on TAXI TV</span>
           <span style={subStyle}>
             &ldquo;Make It Through (Clean)&rdquo; aired Nov 2, 2026
           </span>
         </div>
         <div style={itemStyle}>
-          <span style={labelStyle}>\u2B50 Next Music Star &mdash; Round 2</span>
+          <span style={labelStyle}>⭐ Next Music Star &mdash; Round 2</span>
           <span style={subStyle}>
             Advanced out of Round 1 &mdash; top 5 move on.{' '}
             <a
@@ -303,9 +303,17 @@ function PressStrip() {
           </span>
         </div>
         <div style={itemStyle}>
-          <span style={labelStyle}>\uD83C\uDFA7 Streaming everywhere</span>
+          <span style={labelStyle}>🎧 Streaming everywhere</span>
           <span style={subStyle}>
-            Spotify &middot; Apple Music &middot;{' '}
+            <a
+              style={linkStyle}
+              href="https://open.spotify.com/artist/7lu8CK1gQztFv3rlB0hqsb"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Spotify
+            </a>{' '}
+            &middot; Apple Music &middot;{' '}
             <a
               style={linkStyle}
               href="https://play.anghami.com/album/1090332643"
