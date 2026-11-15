@@ -1,12 +1,11 @@
 import {fileURLToPath} from 'node:url';
 import {defineConfig} from 'vite';
 import {oxygen} from '@shopify/mini-oxygen/vite';
-import {hydrogen} from '@shopify/hydrogen/vite';
 import {reactRouter} from '@react-router/dev/vite';
 
 export default defineConfig({
   // Build and preview the same Worker runtime that Oxygen executes.
-  plugins: [oxygen(), hydrogen(), reactRouter()],
+  plugins: [...oxygen(), reactRouter()],
   resolve: {
     alias: {
       '~': fileURLToPath(new URL('./app', import.meta.url)),
