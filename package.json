@@ -5,13 +5,13 @@
   "version": "2026.4.8",
   "type": "module",
   "scripts": {
-    "build": "shopify hydrogen build --codegen && npm run build:node-handler",
-    "build:node-handler": "node scripts/build-node-handler.mjs",
+    "build": "shopify hydrogen build --codegen",
     "dev": "shopify hydrogen dev --codegen",
     "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern .",
     "typecheck": "react-router typegen && tsc --noEmit",
     "codegen": "shopify hydrogen codegen && react-router typegen",
+    "build:node-handler": "node scripts/build-node-handler.mjs",
     "start": "node server.mjs"
   },
   "prettier": "@shopify/prettier-config",
