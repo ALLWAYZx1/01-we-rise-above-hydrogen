@@ -5,7 +5,7 @@ import {reactRouter} from '@react-router/dev/vite';
 
 export default defineConfig({
   // Build and preview the same Worker runtime that Oxygen executes.
-  plugins: [...oxygen(), reactRouter()],
+  plugins: [...oxygen({entry: './server.ts'}), reactRouter()],
   resolve: {
     alias: {
       '~': fileURLToPath(new URL('./app', import.meta.url)),
