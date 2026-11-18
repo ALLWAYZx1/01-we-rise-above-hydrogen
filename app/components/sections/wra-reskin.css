@@ -1,0 +1,302 @@
+/**
+ * WRA RESKIN v1 — global skin layer for the ported Forward sections.
+ *
+ * Source: RESKIN-SPEC-V1-VIBES-2026-11-18 (GLOBAL TOKENS are law).
+ * Palette is LOCKED to five colors; everything else is an alpha of one
+ * of them. No image assets, no external URLs — the starfield and nebula
+ * are pure CSS gradients (black-and-gold only, low opacity per spec).
+ *
+ * FONT SUBSTITUTION (noted for the build report): the spec wants one
+ * high-contrast display serif. No display serif is bundled with the
+ * scaffold and the dependency line is frozen, so `--wra-display` is the
+ * system serif stack (Georgia first — the highest-contrast serif in the
+ * stack). Swap this one variable when a licensed display face exists.
+ *
+ * Imported by the bench route; every class is `wra-` namespaced so the
+ * layer is inert anywhere else.
+ */
+
+:root {
+  --wra-void: #0a0908;
+  --wra-panel: #12100d;
+  --wra-gold: #d4af37;
+  --wra-champagne: #e8d5a3;
+  --wra-ivory: #f5efe2;
+  --wra-ivory-80: rgba(245, 239, 226, 0.8);
+  --wra-ivory-70: rgba(245, 239, 226, 0.7);
+  --wra-ivory-25: rgba(245, 239, 226, 0.25);
+  --wra-gold-line: rgba(212, 175, 55, 0.45);
+  --wra-gold-faint: rgba(212, 175, 55, 0.2);
+  --wra-display: Georgia, 'Times New Roman', Times, serif;
+  --wra-ease: cubic-bezier(0.22, 0.61, 0.21, 1);
+}
+
+/* Display face (see substitution note above). */
+.wra-display {
+  font-family: var(--wra-display);
+}
+
+/* Champagne bloom / nebula wash — sits BEHIND type, never on it. */
+.wra-nebula-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 55% 45% at 28% 38%,
+      rgba(232, 213, 163, 0.12),
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 45% 55% at 76% 68%,
+      rgba(212, 175, 55, 0.08),
+      transparent 62%
+    ),
+    radial-gradient(
+      ellipse 30% 24% at 62% 18%,
+      rgba(245, 239, 226, 0.05),
+      transparent 70%
+    );
+}
+
+/* Softer single wash, used behind sequence numerals (spec: 10%). */
+.wra-nebula-soft {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.1;
+  background: radial-gradient(
+    ellipse 70% 90% at 50% 50%,
+    rgba(232, 213, 163, 0.9),
+    transparent 70%
+  );
+}
+
+/* Starfield — two tiled dot layers, ivory + gold, drifting slowly. */
+.wra-starfield {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image:
+    radial-gradient(rgba(245, 239, 226, 0.55) 1px, transparent 1.4px),
+    radial-gradient(rgba(212, 175, 55, 0.45) 1px, transparent 1.4px);
+  background-size:
+    140px 140px,
+    230px 230px;
+  background-position:
+    0 0,
+    70px 100px;
+  animation: wra-drift 70s linear infinite alternate;
+}
+
+/* Statement-band bloom — breathes 8% → 14% on a 6s loop (spec §5). */
+.wra-bloom {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 58% 46% at 50% 46%,
+    rgba(232, 213, 163, 0.55),
+    rgba(212, 175, 55, 0.18) 55%,
+    transparent 72%
+  );
+  animation: wra-breathe 6s ease-in-out infinite;
+}
+
+/* Hero lines rise into place (stagger via inline animation-delay). */
+.wra-rise {
+  animation: wra-rise 800ms var(--wra-ease) both;
+}
+
+/* Gold rule draws left-to-right. */
+.wra-draw-x {
+  transform-origin: left center;
+  animation: wra-draw-x 900ms var(--wra-ease) 0.45s both;
+}
+
+/* Text CTA — thin gold underline draws in on hover (spec §1). */
+.wra-cta {
+  position: relative;
+}
+.wra-cta::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 1px;
+  background: var(--wra-gold);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 700ms var(--wra-ease);
+}
+.wra-cta:hover::after,
+.wra-cta:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Hold frames — champagne light sweep crosses once on hover (spec §4,
+   400ms). The frame itself holds still; nothing zooms, nothing tilts. */
+.wra-hold {
+  position: relative;
+  overflow: hidden;
+}
+.wra-hold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 42%,
+    rgba(232, 213, 163, 0.13) 50%,
+    transparent 58%
+  );
+  transform: translateX(-110%);
+  transition: transform 400ms var(--wra-ease);
+}
+.wra-hold:hover::after {
+  transform: translateX(110%);
+}
+
+/* Tile title — gold hairline underline on card hover (spec §4). */
+.wra-tile-title {
+  background-image: linear-gradient(var(--wra-gold), var(--wra-gold));
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 700ms var(--wra-ease);
+}
+.wra-tile:hover .wra-tile-title,
+.wra-tile:focus-visible .wra-tile-title {
+  background-size: 100% 1px;
+}
+
+/* Sequence ghost numerals — rest at 25%, ignite to 60% in view. */
+.wra-seq-num {
+  opacity: 0.25;
+  transition: opacity 800ms var(--wra-ease);
+}
+.wra-seq-num.is-lit {
+  opacity: 0.6;
+}
+
+/* Sequence thread — faint full line, gold fill drawn by scroll (JS
+   sets the fill's transform; without JS the faint line still reads). */
+.wra-thread {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--wra-gold-faint);
+  pointer-events: none;
+}
+.wra-thread-fill {
+  width: 100%;
+  height: 100%;
+  background: var(--wra-gold);
+  transform: scaleY(0);
+  transform-origin: top center;
+}
+
+/* Spotlight buy button — the scaffold's AddToCartButton renders an
+   unstyled submit inside a CartForm <form>; the skin reaches it here
+   so the proven cart wiring stays untouched. */
+.wra-spotlight form {
+  display: flex;
+  flex: 1 1 auto;
+}
+.wra-spotlight form button[type='submit'] {
+  flex: 1 1 auto;
+  background: var(--wra-gold);
+  color: var(--wra-void);
+  border: 0;
+  padding: 0.8rem 1.6rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 700ms var(--wra-ease);
+}
+.wra-spotlight form button[type='submit']:hover:not(:disabled) {
+  background: var(--wra-champagne);
+}
+.wra-spotlight form button[type='submit']:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@keyframes wra-breathe {
+  0%,
+  100% {
+    opacity: 0.08;
+  }
+  50% {
+    opacity: 0.14;
+  }
+}
+
+@keyframes wra-rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wra-draw-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes wra-drift {
+  from {
+    background-position:
+      0 0,
+      70px 100px;
+  }
+  to {
+    background-position:
+      -140px 46px,
+      -90px 190px;
+  }
+}
+
+/* Reduced motion: all drift and parallax collapse to static (spec).
+   Contrast never drops — the bloom rests at the spec's static 10%. */
+@media (prefers-reduced-motion: reduce) {
+  .wra-rise,
+  .wra-draw-x {
+    animation: none;
+  }
+  .wra-bloom {
+    animation: none;
+    opacity: 0.1;
+  }
+  .wra-starfield {
+    animation: none;
+  }
+  .wra-hold::after {
+    content: none;
+  }
+  .wra-cta::after,
+  .wra-tile-title,
+  .wra-seq-num {
+    transition: none;
+  }
+  .wra-thread-fill {
+    transform: scaleY(1);
+  }
+  .wra-spotlight form button[type='submit'] {
+    transition: none;
+  }
+}

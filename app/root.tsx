@@ -1,4 +1,4 @@
-import {Analytics as ShopifyAnalytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
+import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
 import {
   Outlet,
   useRouteError,
@@ -11,41 +11,12 @@ import {
   useRouteLoaderData,
 } from 'react-router';
 import type {Route} from './+types/root';
-import favicon64 from '~/../public/favicon-64.png';
-import favicon32 from '~/../public/favicon-32.png';
-import faviconIco from '~/../public/favicon.ico';
-import appleTouchIcon from '~/../public/apple-touch-icon.png';
+import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
-import flipStyles from '~/styles/flip.css?url';
-import daylightStyles from '~/styles/daylight.css?url';
-import luxuryStyles from '~/styles/luxury.css?url';
+import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
-import {ShopifyInbox} from './components/ShopifyInbox';
-
-export const meta: Route.MetaFunction = () => [
-  {title: 'We Rise Above | Streetwear, Music & Creative Culture'},
-  {
-    name: 'description',
-    content: 'Pressure builds. We rise. Streetwear, music and creative culture. No final form.',
-  },
-  {tagName: 'link', rel: 'canonical', href: 'https://weriseabove.life/'},
-  {property: 'og:type', content: 'website'},
-  {property: 'og:site_name', content: 'We Rise Above'},
-  {property: 'og:title', content: 'We Rise Above | Streetwear, Music & Creative Culture'},
-  {
-    property: 'og:description',
-    content: 'Pressure builds. We rise. Streetwear, music and creative culture. No final form.',
-  },
-  {property: 'og:url', content: 'https://weriseabove.life/'},
-  {name: 'twitter:card', content: 'summary'},
-  {name: 'twitter:title', content: 'We Rise Above | Streetwear, Music & Creative Culture'},
-  {
-    name: 'twitter:description',
-    content: 'Pressure builds. We rise. Streetwear, music and creative culture. No final form.',
-  },
-];
 
 export type RootLoader = typeof loader;
 
@@ -75,10 +46,10 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
  * The main and reset stylesheets are added in the Layout component
  * to prevent a bug in development HMR updates.
  *
- * It avoids the "failed to execute 'insertBefore' on 'Node'" error
+ * This avoids the "failed to execute 'insertBefore' on 'Node'" error
  * that occurs after editing and navigating to another page.
  *
- * It's a temporary fix until React Router ships a fix.
+ * It's a temporary fix until the issue is resolved.
  * https://github.com/remix-run/remix/issues/9242
  */
 export function links() {
@@ -91,13 +62,7 @@ export function links() {
       rel: 'preconnect',
       href: 'https://shop.app',
     },
-    // WRA Luminous Gold P Emblem (declared brand mark, 2026-10-31).
-    // Small sizes use the P-monogram core crop so the mark stays
-    // legible at tab size; the touch icon carries the full crest.
-    {rel: 'icon', type: 'image/x-icon', href: faviconIco},
-    {rel: 'icon', type: 'image/png', sizes: '64x64', href: favicon64},
-    {rel: 'icon', type: 'image/png', sizes: '32x32', href: favicon32},
-    {rel: 'apple-touch-icon', sizes: '180x180', href: appleTouchIcon},
+    {rel: 'icon', type: 'image/svg+xml', href: favicon},
   ];
 }
 
@@ -151,7 +116,7 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
 
 /**
  * Load data for rendering content below the fold. This data is deferred and will be
- * fetched after the initial page load. If it's unavailable, the whole page should 200 or 500 error.
+ * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
 function loadDeferredData({context}: Route.LoaderArgs) {
@@ -162,11 +127,11 @@ function loadDeferredData({context}: Route.LoaderArgs) {
     .query(FOOTER_QUERY, {
       cache: storefront.CacheLong(),
       variables: {
-        footerMenuHandle: 'footer', // Adjust to your header menu handle
+        footerMenuHandle: 'footer', // Adjust to your footer menu handle
       },
     })
     .catch((error: Error) => {
-      // Log query errors, but don't throw so the page can still render
+      // Log query errors, but don't throw them so the page can still render
       console.error(error);
       return null;
     });
@@ -185,53 +150,16 @@ export function Layout({children}: {children?: React.ReactNode}) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        {/* Google Tag Manager - WRA container (fresh stack) */}
-        <script
-          nonce={nonce}
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-TW29LW4X');`,
-          }}
-        />
-        {/* Meta Pixel - WRA RIZE dataset (fresh stack) */}
-        <script
-          nonce={nonce}
-          dangerouslySetInnerHTML={{
-            __html: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','2793791147688986');fbq('track','PageView');`,
-          }}
-        />
+        <link rel="stylesheet" href={tailwindCss}></link>
         <link rel="stylesheet" href={resetStyles}></link>
         <link rel="stylesheet" href={appStyles}></link>
-        <link rel="stylesheet" href={flipStyles}></link>
-        <link rel="stylesheet" href={daylightStyles}></link>
-        <link rel="stylesheet" href={luxuryStyles}></link>
         <Meta />
         <Links />
       </head>
       <body>
-        {/* Google Tag Manager (noscript) */}
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-TW29LW4X"
-            height="0"
-            width="0"
-            style={{display: 'none', visibility: 'hidden'}}
-            title="Google Tag Manager"
-          />
-        </noscript>
-        {/* Meta Pixel (noscript) */}
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{display: 'none'}}
-            src="https://www.facebook.com/tr?id=2793791147688986&ev=PageView&noscript=1"
-            alt=""
-          />
-        </noscript>
         {children}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        <ShopifyInbox />
       </body>
     </html>
   );
@@ -245,7 +173,7 @@ export default function App() {
   }
 
   return (
-    <ShopifyAnalytics.Provider
+    <Analytics.Provider
       cart={data.cart}
       shop={data.shop}
       consent={data.consent}
@@ -253,7 +181,7 @@ export default function App() {
       <PageLayout {...data}>
         <Outlet />
       </PageLayout>
-    </ShopifyAnalytics.Provider>
+    </Analytics.Provider>
   );
 }
 
@@ -267,23 +195,6 @@ export function ErrorBoundary() {
     errorStatus = error.status;
   } else if (error instanceof Error) {
     errorMessage = error.message;
-  }
-
-  if (errorStatus === 404) {
-    return (
-      <main className="daylight-page">
-        <section className="daylight-hero" aria-labelledby="not-found-title">
-          <p className="daylight-eyebrow">WE RISE ABOVE · NO FINAL FORM</p>
-          <div className="daylight-astar" aria-hidden="true">✦</div>
-          <h1 id="not-found-title">YOU DRIFTED.</h1>
-          <p className="daylight-hero-copy">This page is in another phase.</p>
-          <div className="daylight-actions">
-            <a className="daylight-button" href="/">Back home</a>
-            <a className="daylight-text-link" href="/collections/hoodies">Shop hoodies</a>
-          </div>
-        </section>
-      </main>
-    );
   }
 
   return (

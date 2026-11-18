@@ -97,7 +97,7 @@ function SearchAside() {
           {({items, total, term, state, closeSearch}) => {
             const {articles, collections, pages, products, queries} = items;
 
-            if (state === 'loading' && term) {
+            if (state === 'loading' && term.current) {
               return <div>Loading...</div>;
             }
 
@@ -131,13 +131,13 @@ function SearchAside() {
                   closeSearch={closeSearch}
                   term={term}
                 />
-                {term && total ? (
+                {term.current && total ? (
                   <Link
                     onClick={closeSearch}
-                    to={`${SEARCH_ENDPOINT}?q=${term}`}
+                    to={`${SEARCH_ENDPOINT}?q=${term.current}`}
                   >
                     <p>
-                      View all results for <q>{term}</q>
+                      View all results for <q>{term.current}</q>
                       &nbsp; →
                     </p>
                   </Link>
