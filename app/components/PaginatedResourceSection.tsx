@@ -11,7 +11,11 @@ export function PaginatedResourceSection<NodesType>({
   resourcesClassName,
 }: {
   connection: React.ComponentProps<typeof Pagination<NodesType>>['connection'];
-  children: React.FunctionComponent<{node: NodesType; index: number}>;
+  // A plain render function, not React.FunctionComponent: under the React 19
+  // types FunctionComponent may return Promise<ReactNode> (async components),
+  // but this section renders the result synchronously as markup, so the
+  // contract is a synchronous ReactNode.
+  children: (args: {node: NodesType; index: number}) => React.ReactNode;
   ariaLabel?: string;
   resourcesClassName?: string;
 }) {
