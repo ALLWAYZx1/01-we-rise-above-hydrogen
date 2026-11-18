@@ -20,7 +20,7 @@
     "graphql": "16.13.2",
     "graphql-tag": "^2.12.6",
     "isbot": "^5.1.22",
-    "react": "^18.3.1",
+    "react": "^19.3.1",
     "react-dom": "^18.3.1",
     "react-router": "8.5.1",
     "react-router-dom": "7.18.5"
@@ -40,7 +40,7 @@
     "@shopify/prettier-config": "^1.1.2",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/eslint": "^9.6.1",
-    "@types/react": "^18.3.28",
+    "@types/react": "^19.3.0",
     "@types/react-dom": "^18.3.7",
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
