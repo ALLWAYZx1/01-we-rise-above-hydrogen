@@ -1,6 +1,6 @@
 import {Link, useFetcher, type Fetcher} from 'react-router';
 import {Image, Money} from '@shopify/hydrogen';
-import type React from 'react';
+import React, {useRef, useEffect} from 'react';
 import {
   getEmptyPredictiveSearchResult,
   urlWithTrackingParams,
@@ -11,15 +11,16 @@ import {useAside} from './Aside';
 type PredictiveSearchItems = PredictiveSearchReturn['result']['items'];
 
 type UsePredictiveSearchReturn = {
-  term: string;
+  term: React.MutableRefObject<string>;
   total: number;
+  inputRef: React.MutableRefObject<HTMLInputElement | null>;
   items: PredictiveSearchItems;
   fetcher: Fetcher<PredictiveSearchReturn>;
 };
 
 type SearchResultsPredictiveArgs = Pick<
   UsePredictiveSearchReturn,
-  'term' | 'total' | 'items'
+  'term' | 'total' | 'inputRef' | 'items'
 > & {
   state: Fetcher['state'];
   closeSearch: () => void;
@@ -42,19 +43,16 @@ export function SearchResultsPredictive({
   children,
 }: SearchResultsPredictiveProps) {
   const aside = useAside();
-  const {term, fetcher, total, items} = usePredictiveSearch();
+  const {term, inputRef, fetcher, total, items} = usePredictiveSearch();
 
   /*
    * Utility that resets the search input
    */
   function resetInput() {
-    const inputs = document.querySelectorAll<HTMLInputElement>(
-      '.predictive-search-form input[type="search"]',
-    );
-    inputs.forEach((input) => {
-      input.blur();
-      input.value = '';
-    });
+    if (inputRef.current) {
+      inputRef.current.blur();
+      inputRef.current.value = '';
+    }
   }
 
   /**
@@ -68,6 +66,7 @@ export function SearchResultsPredictive({
   return children({
     items,
     closeSearch,
+    inputRef,
     state: fetcher.state,
     term,
     total,
@@ -96,7 +95,7 @@ function SearchResultsPredictiveArticles({
           const articleUrl = urlWithTrackingParams({
             baseUrl: `/blogs/${article.blog.handle}/${article.handle}`,
             trackingParams: article.trackingParameters,
-            term,
+            term: term.current ?? '',
           });
 
           return (
@@ -137,7 +136,7 @@ function SearchResultsPredictiveCollections({
           const collectionUrl = urlWithTrackingParams({
             baseUrl: `/collections/${collection.handle}`,
             trackingParams: collection.trackingParameters,
-            term,
+            term: term.current,
           });
 
           return (
@@ -178,7 +177,7 @@ function SearchResultsPredictivePages({
           const pageUrl = urlWithTrackingParams({
             baseUrl: `/pages/${page.handle}`,
             trackingParams: page.trackingParameters,
-            term,
+            term: term.current,
           });
 
           return (
@@ -211,7 +210,7 @@ function SearchResultsPredictiveProducts({
           const productUrl = urlWithTrackingParams({
             baseUrl: `/products/${product.handle}`,
             trackingParams: product.trackingParameters,
-            term,
+            term: term.current,
           });
 
           const price = product?.selectedOrFirstAvailableVariant?.price;
@@ -259,14 +258,18 @@ function SearchResultsPredictiveQueries({
   );
 }
 
-function SearchResultsPredictiveEmpty({term}: {term: string}) {
-  if (!term) {
+function SearchResultsPredictiveEmpty({
+  term,
+}: {
+  term: React.MutableRefObject<string>;
+}) {
+  if (!term.current) {
     return null;
   }
 
   return (
     <p>
-      No results found for <q>{term}</q>
+      No results found for <q>{term.current}</q>
     </p>
   );
 }
@@ -280,12 +283,22 @@ function SearchResultsPredictiveEmpty({term}: {term: string}) {
  **/
 function usePredictiveSearch(): UsePredictiveSearchReturn {
   const fetcher = useFetcher<PredictiveSearchReturn>({key: 'search'});
-  const term =
-    fetcher.state === 'loading'
-      ? String(fetcher.formData?.get('q') || '')
-      : fetcher.data?.term ?? '';
+  const term = useRef<string>('');
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  if (fetcher?.state === 'loading') {
+    term.current = String(fetcher.formData?.get('q') || '');
+  }
+
+  // capture the search input element as a ref
+  useEffect(() => {
+    if (!inputRef.current) {
+      inputRef.current = document.querySelector('input[type="search"]');
+    }
+  }, []);
+
   const {items, total} =
     fetcher?.data?.result ?? getEmptyPredictiveSearchResult();
 
-  return {items, total, term, fetcher};
+  return {items, total, inputRef, term, fetcher};
 }

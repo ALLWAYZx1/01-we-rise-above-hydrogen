@@ -26,22 +26,8 @@ export function Header({
   const {shop, menu} = header;
   return (
     <header className="header">
-      <NavLink
-        prefetch="intent"
-        to="/"
-        style={activeLinkStyle}
-        end
-        className="header-logo"
-        aria-label="We Rise Above — home"
-      >
-        <img
-          src="https://cdn.shopify.com/s/files/1/1002/6896/6179/files/Luminous_Gold_P_Emblem.png?v=1792758842&width=180"
-          alt=""
-          aria-hidden="true"
-          width={40}
-          height={40}
-        />
-        <span>WE RISE ABOVE</span>
+      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
+        <strong>{shop.name}</strong>
       </NavLink>
       <HeaderMenu
         menu={menu}
@@ -84,11 +70,6 @@ export function HeaderMenu({
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url) return null;
 
-        // 'Shop Hydrogen' is the Liquid storefront's switch link. It lives
-        // in the shared main menu so the Liquid theme can render it, but
-        // Hydrogen must not show customers a link to itself.
-        if (item.title.trim().toUpperCase() === 'SHOP HYDROGEN') return null;
-
         // if the url is internal, we strip the domain
         const url =
           item.url.includes('myshopify.com') ||
@@ -110,14 +91,6 @@ export function HeaderMenu({
           </NavLink>
         );
       })}
-      <a
-        className="header-menu-item"
-        href="https://weriseabovee.myshopify.com/"
-        onClick={close}
-        style={{color: 'inherit'}}
-      >
-        Shop Classic
-      </a>
     </nav>
   );
 }
@@ -253,7 +226,6 @@ function activeLinkStyle({
 }) {
   return {
     fontWeight: isActive ? 'bold' : undefined,
-    color: 'inherit',
-    opacity: isPending ? 0.55 : undefined,
+    color: isPending ? 'grey' : 'black',
   };
 }
