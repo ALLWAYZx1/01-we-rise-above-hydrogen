@@ -1,16 +1,62 @@
-import {Await, useLoaderData, Link} from 'react-router';
+import {useLoaderData} from 'react-router';
 import type {Route} from './+types/_index';
-import {Suspense} from 'react';
-import {Image} from '@shopify/hydrogen';
-import type {
-  FeaturedCollectionFragment,
-  RecommendedProductsQuery,
-} from 'storefrontapi.generated';
-import {ProductItem} from '~/components/ProductItem';
+import '~/components/sections/wra-reskin.css';
+import type {HomepageProductsQuery} from 'storefrontapi.generated';
 import {MockShopNotice} from '~/components/MockShopNotice';
+import {EditorialHero} from '~/components/sections/EditorialHero';
+import {StatBand} from '~/components/sections/StatBand';
+import {NumberedSequence} from '~/components/sections/NumberedSequence';
+import {FeaturedProducts} from '~/components/sections/FeaturedProducts';
+import {ProductTiles, type ProductTile} from '~/components/sections/ProductTiles';
+import {ArtistStrip} from '~/components/sections/ArtistStrip';
+import {StandardStatement} from '~/components/sections/StandardStatement';
+
+/**
+ * Homepage — SALVAGE WIRING (2026-11-18, branch salvage-homepage-wiring).
+ *
+ * PR #144 landed the fresh template + Forward port + WRA reskin on
+ * main, but the reskin sections only ever rendered on the bench route
+ * `($locale).bench-sections.tsx`; this route stayed the stock template
+ * homepage. This file wires the reskin into the real homepage, in the
+ * bench route's own order: type-only WE RISE ABOVE hero, StatBand,
+ * the universe steps, the AWAITING ART featured row + tiles, the
+ * Celestial Flame interstitial, the artist strip, and the statement
+ * band. The bench route is untouched and still renders the same
+ * sections plus its edge-case zone.
+ *
+ * SEO wording is recovered verbatim from the pre-PR#144 homepage
+ * (old `app/routes/_index.tsx`, read at PR #141's branch tip
+ * 9e61abf): title 'We Rise Above | No Final Form' and its description.
+ * Deploying this must NOT regress the homepage title to the stock
+ * 'Hydrogen | Home'. Root defaults live in `app/root.tsx`.
+ *
+ * TODO(analytics): GA G-F7SLHQZBWV / GTM GTM-TW29LW4X / Meta Pixel
+ * 2793791147688986 are NOT added here. Live firing is unverified —
+ * adding the tags in code before a real-browser firing check risks
+ * double-firing against whatever the current deployment already
+ * sends. Add them only after that check, in root.tsx.
+ */
+
+const OG_IMAGE =
+  'https://cdn.shopify.com/s/files/1/1002/6896/6179/files/zordon-key-art-clean.jpg?v=1794047529&width=1200';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'Hydrogen | Home'}];
+  const title = 'We Rise Above | No Final Form';
+  const description =
+    'Streetwear armor for the ones still rising. Faith. Discipline. Hard work. No final form.';
+  return [
+    {title},
+    {name: 'description', content: description},
+    {property: 'og:type', content: 'website'},
+    {property: 'og:title', content: title},
+    {property: 'og:description', content: description},
+    {property: 'og:url', content: 'https://weriseabove.life/'},
+    {property: 'og:image', content: OG_IMAGE},
+    {name: 'twitter:card', content: 'summary_large_image'},
+    {name: 'twitter:title', content: title},
+    {name: 'twitter:description', content: description},
+    {name: 'twitter:image', content: OG_IMAGE},
+  ];
 };
 
 export async function loader(args: Route.LoaderArgs) {
@@ -28,14 +74,32 @@ export async function loader(args: Route.LoaderArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context}: Route.LoaderArgs) {
-  const [{collections}] = await Promise.all([
-    context.storefront.query(FEATURED_COLLECTION_QUERY),
+  const [{products}] = await Promise.all([
+    context.storefront.query(HOMEPAGE_PRODUCTS_QUERY),
     // Add other queries here, so that they are loaded in parallel
   ]);
 
+  type HomepageProduct = HomepageProductsQuery['products']['nodes'][number];
+  const featured = products.nodes.slice(0, 4);
+  // Same product-tiles rule as the bench route: a product with no
+  // usable image is omitted from the tiles rather than rendered as
+  // an empty frame.
+  const tiles: ProductTile[] = products.nodes
+    .filter((product: HomepageProduct) => product.featuredImage != null)
+    .slice(0, 3)
+    .map((product: HomepageProduct) => ({
+      product: {
+        handle: product.handle,
+        title: product.title,
+        category: product.productType || undefined,
+      },
+      image: product.featuredImage!,
+    }));
+
   return {
     isShopLinked: Boolean(context.env.PUBLIC_STORE_DOMAIN),
-    featuredCollection: collections.nodes[0],
+    featured,
+    tiles,
   };
 }
 
@@ -45,17 +109,8 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
 function loadDeferredData({context}: Route.LoaderArgs) {
-  const recommendedProducts = context.storefront
-    .query(RECOMMENDED_PRODUCTS_QUERY)
-    .catch((error: Error) => {
-      // Log query errors, but don't throw them so the page can still render
-      console.error(error);
-      return null;
-    });
-
-  return {
-    recommendedProducts,
-  };
+  void context;
+  return {};
 }
 
 export default function Homepage() {
@@ -63,114 +118,124 @@ export default function Homepage() {
   return (
     <div className="home">
       {data.isShopLinked ? null : <MockShopNotice />}
-      <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
+
+      {/* Reskin §1 — the hero. TYPE-ONLY per the spec fallback: no
+          Simulation Ascension campaign shot exists, and a catalog
+          thumbnail must never be faked into this slot. */}
+      <EditorialHero
+        heading="We Rise Above"
+        lines={['WE', 'RISE', 'ABOVE']}
+        cta={{label: 'JOIN THE RISE', href: '/collections/all'}}
+      />
+
+      {/* Reskin §2 — confirmed real numbers (audited live catalog,
+          2026-11-18: 68 products, 12 collections, shop 100268966179). */}
+      <StatBand
+        stats={[
+          {value: '2026', label: 'EST.'},
+          {value: '68', label: 'PIECES'},
+          {value: '12', label: 'COLLECTIONS'},
+          {value: '01', label: 'UNIVERSE'},
+        ]}
+      />
+
+      {/* Reskin §3 — the universe steps, the spec's exact copy. */}
+      <NumberedSequence
+        heading="The universe steps"
+        steps={[
+          {
+            number: '01',
+            title: 'PRESSURE',
+            copy: 'The weight builds. Everyone feels it. Most fold under it.',
+          },
+          {
+            number: '02',
+            title: 'ASCENSION',
+            copy: 'PREZZURE takes it. RIZE turns it. The Simulation Hoodie carries the story out of the dark.',
+          },
+          {
+            number: '03',
+            title: 'THE RISE',
+            copy: "We Rise Above. No final form. The universe doesn't cap — it compounds.",
+          },
+        ]}
+      />
+
+      {/* Reskin §4 — AWAITING ART hold frames: real titles, real
+          prices, no catalog photos, no add-to-cart. */}
+      <FeaturedProducts
+        eyebrow="RIZE PIECES"
+        heading="Featured products"
+        products={data.featured}
+        collectionCta={{label: 'Shop all', href: '/collections/all'}}
+      />
+
+      <ProductTiles tiles={data.tiles} />
+
+      {/* Reskin §4 interstitial — Celestial Flame atmosphere frame.
+          The 21:9 campaign banner does not exist, so this is pure
+          atmosphere: nebula + starfield CSS, the headline, no photo,
+          no CTA. */}
+      <section
+        data-section="flame-interstitial"
+        className="relative overflow-hidden bg-[var(--wra-void)] text-[var(--wra-ivory)]"
+      >
+        <div className="wra-starfield" aria-hidden="true" />
+        <div className="wra-nebula-layer" aria-hidden="true" />
+        <div className="relative flex aspect-[21/9] items-center justify-center px-5">
+          <h2 className="wra-display m-0 text-center text-[8vw] leading-none font-bold tracking-tight uppercase">
+            The fire is family
+          </h2>
+        </div>
+      </section>
+
+      {/* The artist strip, restored from the pre-PR#144 homepage —
+          Spotify · Apple Music · Anghami, every name a real link. */}
+      <ArtistStrip />
+
+      {/* Reskin §5 — the statement band. The manifesto line is VIBES'
+          PROPOSAL (SOUNDWAVE crowns); the subline is brand canon,
+          verbatim. */}
+      <StandardStatement
+        heading="RISE LIKE YOU MEANT IT ALL ALONG."
+        subline="Pressure builds. We rise. No final form."
+        columns={[]}
+      />
     </div>
   );
 }
 
-function FeaturedCollection({
-  collection,
-}: {
-  collection: FeaturedCollectionFragment;
-}) {
-  if (!collection) return null;
-  const image = collection?.image;
-  return (
-    <Link
-      className="featured-collection"
-      to={`/collections/${collection.handle}`}
-    >
-      {image && (
-        <div className="featured-collection-image">
-          <Image
-            data={image}
-            sizes="100vw"
-            alt={image.altText || collection.title}
-          />
-        </div>
-      )}
-      <h1>{collection.title}</h1>
-    </Link>
-  );
-}
-
-function RecommendedProducts({
-  products,
-}: {
-  products: Promise<RecommendedProductsQuery | null>;
-}) {
-  return (
-    <section
-      className="recommended-products"
-      aria-labelledby="recommended-products"
-    >
-      <h2 id="recommended-products">Recommended Products</h2>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Await resolve={products}>
-          {(response) => (
-            <div className="recommended-products-grid">
-              {response
-                ? response.products.nodes.map((product) => (
-                    <ProductItem key={product.id} product={product} />
-                  ))
-                : null}
-            </div>
-          )}
-        </Await>
-      </Suspense>
-      <br />
-    </section>
-  );
-}
-
-const FEATURED_COLLECTION_QUERY = `#graphql
-  fragment FeaturedCollection on Collection {
-    id
-    title
-    image {
-      id
-      url
-      altText
-      width
-      height
-    }
-    handle
+const HOMEPAGE_PRODUCTS_QUERY = `#graphql
+  fragment MoneyProductItem on MoneyV2 {
+    amount
+    currencyCode
   }
-  query FeaturedCollection($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    collections(first: 1, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...FeaturedCollection
-      }
-    }
-  }
-` as const;
-
-const RECOMMENDED_PRODUCTS_QUERY = `#graphql
-  fragment RecommendedProduct on Product {
+  fragment HomepageProductItem on Product {
     id
-    title
     handle
-    priceRange {
-      minVariantPrice {
-        amount
-        currencyCode
-      }
-    }
+    title
+    productType
     featuredImage {
       id
-      url
       altText
+      url
       width
       height
     }
+    priceRange {
+      minVariantPrice {
+        ...MoneyProductItem
+      }
+      maxVariantPrice {
+        ...MoneyProductItem
+      }
+    }
   }
-  query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
+  query HomepageProducts($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
+    products(first: 8, sortKey: UPDATED_AT, reverse: true) {
       nodes {
-        ...RecommendedProduct
+        ...HomepageProductItem
       }
     }
   }
