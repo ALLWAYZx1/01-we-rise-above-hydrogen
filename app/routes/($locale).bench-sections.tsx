@@ -272,12 +272,12 @@ export default function BenchSections() {
         </div>
       </section>
 
-      {/* Spec §5 — the statement band. The manifesto line is VIBES'
-          PROPOSAL (SOUNDWAVE crowns); the subline is brand canon,
-          verbatim. */}
+      {/* Spec §5 — the statement band, synced with the homepage
+          (ENERGY PASS + DENSITY SPEC): canon line primary,
+          campaign line secondary beneath it. */}
       <StandardStatement
-        heading="RISE LIKE YOU MEANT IT ALL ALONG."
-        subline="Pressure builds. We rise. No final form."
+        heading="Pressure builds. We rise. No final form."
+        subline="RISE LIKE YOU MEANT IT ALL ALONG."
         columns={[]}
       />
 

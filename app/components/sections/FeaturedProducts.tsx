@@ -58,10 +58,10 @@ export function FeaturedProducts({
     <section
       data-section="featured-products"
       aria-labelledby="featured-products-title"
-      className="bg-[var(--wra-void)] px-5 py-14 text-[var(--wra-ivory)] md:px-10 md:py-20"
+      className="bg-[var(--wra-void)] px-5 py-10 text-[var(--wra-ivory)] md:px-10 md:py-12"
     >
       <div className="mx-auto max-w-[1400px]">
-        <header className="mb-10 text-center">
+        <header className="mb-6 text-center">
           {eyebrow ? (
             <p className="mb-3 text-xs font-semibold tracking-[0.3em] text-[var(--wra-gold)] uppercase">
               {eyebrow}
@@ -69,18 +69,21 @@ export function FeaturedProducts({
           ) : null}
           <h2
             id="featured-products-title"
-            className="wra-display text-3xl font-bold tracking-tight uppercase md:text-4xl"
+            className="wra-display text-4xl font-bold tracking-tight uppercase md:text-5xl"
           >
             {heading}
           </h2>
         </header>
         {products.length > 0 ? (
-          <div className="border-y border-[var(--wra-gold-line)] py-10 md:py-12">
-            <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-10">
+          <div className="border-y border-[var(--wra-gold-line)] py-6 md:py-8">
+            {/* ENERGY PASS — a horizontal snap rail on small screens,
+                the four-across grid on desktop. Same real products,
+                same AWAITING ART hold frames. */}
+            <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-4 md:gap-6 md:overflow-visible md:pb-0">
               {products.map((product, index) => (
                 <article
                   key={product.id}
-                  className={`wra-tile ${
+                  className={`wra-tile min-w-[70%] snap-start sm:min-w-[44%] md:min-w-0 ${
                     index === 1 || index === 2
                       ? 'transition-[transform,box-shadow] duration-700 ease-out md:hover:-translate-y-1 md:hover:shadow-[0_0_44px_rgba(212,175,55,0.14)]'
                       : ''
@@ -114,7 +117,7 @@ export function FeaturedProducts({
           </p>
         )}
         {collectionCta ? (
-          <div className="mt-10 text-center">
+          <div className="mt-6 text-center">
             <Link
               className="wra-cta inline-block text-sm font-semibold tracking-[0.3em] text-[var(--wra-gold)] uppercase"
               to={collectionCta.href}

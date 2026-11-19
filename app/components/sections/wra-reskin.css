@@ -228,6 +228,21 @@
   cursor: not-allowed;
 }
 
+/* Marquee ticker (ENERGY PASS) — a 20s linear loop; the track holds
+   two identical runs, so translating -50% lands exactly on the seam. */
+.wra-marquee-track {
+  animation: wra-marquee 20s linear infinite;
+}
+
+@keyframes wra-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @keyframes wra-breathe {
   0%,
   100% {
@@ -275,7 +290,8 @@
    Contrast never drops — the bloom rests at the spec's static 10%. */
 @media (prefers-reduced-motion: reduce) {
   .wra-rise,
-  .wra-draw-x {
+  .wra-draw-x,
+  .wra-marquee-track {
     animation: none;
   }
   .wra-bloom {

@@ -42,11 +42,11 @@ export function NumberedSequence({
   return (
     <section
       data-section="numbered-sequence"
-      className="relative overflow-hidden bg-[var(--wra-void)] px-5 py-14 text-[var(--wra-ivory)] md:px-10 md:py-20"
+      className="relative overflow-hidden bg-[var(--wra-void)] px-5 py-10 text-[var(--wra-ivory)] md:px-10 md:py-12"
     >
       <div className="relative mx-auto max-w-[1400px]">
         {eyebrow || heading ? (
-          <header className="mb-14 md:mb-20">
+          <header className="mb-8 md:mb-10">
             {eyebrow ? (
               <p className="mb-4 text-xs font-semibold tracking-[0.22em] text-[var(--wra-gold)] uppercase">
                 {eyebrow}
@@ -98,7 +98,7 @@ function SequenceRow({step, index}: {step: SequenceStep; index: number}) {
   return (
     <li
       ref={ref}
-      className="relative py-12 md:py-16"
+      className="relative py-8 md:py-10"
       data-sequence-step={step.number}
     >
       {/* Ghost numeral + nebula wash, behind the copy. */}

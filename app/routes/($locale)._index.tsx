@@ -1,10 +1,15 @@
 import {useLoaderData} from 'react-router';
 import type {Route} from './+types/_index';
 import '~/components/sections/wra-reskin.css';
-import type {HomepageProductsQuery} from 'storefrontapi.generated';
+import type {
+  HomepageCollectionsQuery,
+  HomepageProductsQuery,
+} from 'storefrontapi.generated';
 import {MockShopNotice} from '~/components/MockShopNotice';
 import {EditorialHero} from '~/components/sections/EditorialHero';
+import {MarqueeBand} from '~/components/sections/MarqueeBand';
 import {StatBand} from '~/components/sections/StatBand';
+import {CategoryBand, type CategoryTile} from '~/components/sections/CategoryBand';
 import {NumberedSequence} from '~/components/sections/NumberedSequence';
 import {FeaturedProducts} from '~/components/sections/FeaturedProducts';
 import {ProductTiles, type ProductTile} from '~/components/sections/ProductTiles';
@@ -74,8 +79,9 @@ export async function loader(args: Route.LoaderArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context}: Route.LoaderArgs) {
-  const [{products}] = await Promise.all([
+  const [{products}, {collections}] = await Promise.all([
     context.storefront.query(HOMEPAGE_PRODUCTS_QUERY),
+    context.storefront.query(HOMEPAGE_COLLECTIONS_QUERY),
     // Add other queries here, so that they are loaded in parallel
   ]);
 
@@ -96,10 +102,41 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
       image: product.featuredImage!,
     }));
 
+  // ENERGY PASS — the category wall: the six core collections in a
+  // fixed order, matched by handle (title as fallback). Their images
+  // are the celestial tile art set in Shopify admin on 2026-11-18.
+  // A collection the shop doesn't return is skipped, never faked.
+  type HomepageCollection =
+    HomepageCollectionsQuery['collections']['nodes'][number];
+  const CATEGORY_ORDER = [
+    'hoodies',
+    'tees',
+    'crewnecks',
+    'headwear',
+    'joggers',
+    'bags',
+  ] as const;
+  const categories: CategoryTile[] = CATEGORY_ORDER.flatMap((handle) => {
+    const match = collections.nodes.find(
+      (collection: HomepageCollection) =>
+        collection.handle === handle ||
+        collection.title.trim().toLowerCase() === handle,
+    );
+    if (!match) return [];
+    const tile: CategoryTile = {
+      id: match.id,
+      handle: match.handle,
+      title: match.title,
+      image: match.image ?? null,
+    };
+    return [tile];
+  });
+
   return {
     isShopLinked: Boolean(context.env.PUBLIC_STORE_DOMAIN),
     featured,
     tiles,
+    categories,
   };
 }
 
@@ -128,6 +165,10 @@ export default function Homepage() {
         cta={{label: 'JOIN THE RISE', href: '/collections/all'}}
       />
 
+      {/* ENERGY PASS — the ticker: real store facts + the RISE10
+          code, scrolling gold on black, straight under the hero. */}
+      <MarqueeBand />
+
       {/* Reskin §2 — confirmed real numbers (audited live catalog,
           2026-11-18: 68 products, 12 collections, shop 100268966179). */}
       <StatBand
@@ -138,6 +179,10 @@ export default function Homepage() {
           {value: '01', label: 'UNIVERSE'},
         ]}
       />
+
+      {/* ENERGY PASS — the category wall: six core collections,
+          full-bleed 3×2, real tile art from the shop. */}
+      <CategoryBand tiles={data.categories} />
 
       {/* Reskin §3 — the universe steps, the spec's exact copy. */}
       <NumberedSequence
@@ -182,8 +227,8 @@ export default function Homepage() {
       >
         <div className="wra-starfield" aria-hidden="true" />
         <div className="wra-nebula-layer" aria-hidden="true" />
-        <div className="relative flex aspect-[21/9] items-center justify-center px-5">
-          <h2 className="wra-display m-0 text-center text-[8vw] leading-none font-bold tracking-tight uppercase">
+        <div className="relative flex items-center justify-center px-5 py-12 md:py-16">
+          <h2 className="wra-display m-0 text-center text-[9vw] leading-none font-bold tracking-tight uppercase md:text-[7vw]">
             The fire is family
           </h2>
         </div>
@@ -193,17 +238,41 @@ export default function Homepage() {
           Spotify · Apple Music · Anghami, every name a real link. */}
       <ArtistStrip />
 
-      {/* Reskin §5 — the statement band. The manifesto line is VIBES'
-          PROPOSAL (SOUNDWAVE crowns); the subline is brand canon,
-          verbatim. */}
+      {/* ENERGY PASS + DENSITY SPEC — the statement band: canon
+          line PRIMARY at oversized type; "RISE LIKE YOU MEANT IT
+          ALL ALONG." retained as the SECONDARY campaign statement
+          beneath it (SOUNDWAVE via Starscream, 2026-11-19). */}
       <StandardStatement
-        heading="RISE LIKE YOU MEANT IT ALL ALONG."
-        subline="Pressure builds. We rise. No final form."
+        heading="Pressure builds. We rise. No final form."
+        subline="RISE LIKE YOU MEANT IT ALL ALONG."
         columns={[]}
       />
     </div>
   );
 }
+
+const HOMEPAGE_COLLECTIONS_QUERY = `#graphql
+  fragment HomepageCollectionItem on Collection {
+    id
+    handle
+    title
+    image {
+      id
+      altText
+      url
+      width
+      height
+    }
+  }
+  query HomepageCollections($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    collections(first: 12, sortKey: TITLE) {
+      nodes {
+        ...HomepageCollectionItem
+      }
+    }
+  }
+` as const;
 
 const HOMEPAGE_PRODUCTS_QUERY = `#graphql
   fragment MoneyProductItem on MoneyV2 {
