@@ -21,6 +21,38 @@ import {PageLayout} from './components/PageLayout';
 export type RootLoader = typeof loader;
 
 /**
+ * Site-wide SEO defaults (salvage, 2026-11-18). Wording recovered
+ * verbatim from the pre-PR#144 homepage (old `app/routes/_index.tsx`):
+ * title 'We Rise Above | No Final Form' + its description. Routes
+ * that export their own meta (the homepage does, with the same
+ * wording plus its OG/Twitter set) override these defaults; routes
+ * that don't inherit them — so no page can fall back to the stock
+ * template's 'Hydrogen | Home' again.
+ *
+ * TODO(analytics): GA G-F7SLHQZBWV / GTM GTM-TW29LW4X / Meta Pixel
+ * 2793791147688986 are NOT added here. Live firing is unverified —
+ * adding the tags in code before a real-browser firing check risks
+ * double-firing against whatever the current deployment already
+ * sends. Add them only after that check.
+ */
+export const meta: Route.MetaFunction = () => {
+  const title = 'We Rise Above | No Final Form';
+  const description =
+    'Streetwear armor for the ones still rising. Faith. Discipline. Hard work. No final form.';
+  return [
+    {title},
+    {name: 'description', content: description},
+    {property: 'og:type', content: 'website'},
+    {property: 'og:title', content: title},
+    {property: 'og:description', content: description},
+    {property: 'og:url', content: 'https://weriseabove.life/'},
+    {name: 'twitter:card', content: 'summary_large_image'},
+    {name: 'twitter:title', content: title},
+    {name: 'twitter:description', content: description},
+  ];
+};
+
+/**
  * This is important to avoid re-fetching root queries on sub-navigations
  */
 export const shouldRevalidate: ShouldRevalidateFunction = ({
