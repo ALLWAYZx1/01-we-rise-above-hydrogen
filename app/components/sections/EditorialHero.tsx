@@ -65,12 +65,12 @@ export function EditorialHero({
       >
         <div className="wra-starfield" aria-hidden="true" />
         <div className="wra-nebula-layer" aria-hidden="true" />
-        <div className="relative mx-auto flex min-h-svh max-w-[1400px] flex-col justify-center px-5 py-24 md:px-10">
+        <div className="relative flex min-h-[94svh] flex-col justify-center px-4 py-10 md:px-6 md:py-14">
           <h1 className="wra-display m-0 font-bold tracking-tight uppercase">
             {lines.map((line, index) => (
               <span
                 key={line}
-                className="wra-rise block text-[17vw] leading-[0.85] md:text-[15vw]"
+                className="wra-rise block text-[23vw] leading-[0.82] md:text-[22vw]"
                 style={{animationDelay: `${index * 120}ms`}}
               >
                 {line}
@@ -79,11 +79,11 @@ export function EditorialHero({
           </h1>
           <div
             aria-hidden="true"
-            className="wra-draw-x mt-10 h-px w-full bg-[var(--wra-gold)] md:mt-14"
+            className="wra-draw-x mt-6 h-px w-full bg-[var(--wra-gold)] md:mt-8"
           />
           {cta ? (
             <Link
-              className="wra-cta mt-10 inline-block self-start text-sm font-semibold tracking-[0.3em] text-[var(--wra-gold)] uppercase"
+              className="wra-cta mt-6 inline-block self-start text-sm font-semibold tracking-[0.3em] text-[var(--wra-gold)] uppercase"
               to={cta.href}
             >
               {cta.label}

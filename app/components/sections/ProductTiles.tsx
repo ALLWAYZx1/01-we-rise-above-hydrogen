@@ -48,7 +48,7 @@ export function ProductTiles({tiles}: ProductTilesProps) {
     >
       {tiles.map(({product}) => (
         <Link
-          className="wra-tile wra-hold group relative block min-h-[420px] overflow-hidden bg-[var(--wra-panel)] text-[var(--wra-ivory)] md:min-h-[520px]"
+          className="wra-tile wra-hold group relative block min-h-[360px] overflow-hidden bg-[var(--wra-panel)] text-[var(--wra-ivory)] md:min-h-[440px]"
           to={`/products/${product.handle}`}
           key={product.handle}
           data-hold-frame={product.handle}

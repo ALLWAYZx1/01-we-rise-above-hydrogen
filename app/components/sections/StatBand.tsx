@@ -38,7 +38,7 @@ export function StatBand({stats}: StatBandProps) {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="grid gap-2 bg-[var(--wra-void)] px-5 py-10 md:px-10 md:py-14"
+            className="grid gap-2 bg-[var(--wra-void)] px-5 py-6 md:px-8 md:py-8"
           >
             <strong className="wra-display text-[13vw] leading-none font-bold text-[var(--wra-gold)] sm:text-6xl md:text-[5.5vw]">
               <CountUpValue value={stat.value} />

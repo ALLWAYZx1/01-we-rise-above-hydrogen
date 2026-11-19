@@ -38,9 +38,9 @@ export function ArtistStrip() {
     <section
       data-section="artist-strip"
       aria-label="As seen and heard"
-      className="border-y border-[var(--wra-gold-line)] bg-[var(--wra-void)] px-5 py-10 text-center text-[var(--wra-ivory)] md:py-12"
+      className="border-y border-[var(--wra-gold-line)] bg-[var(--wra-void)] px-5 py-7 text-center text-[var(--wra-ivory)] md:py-8"
     >
-      <p className="mb-6 text-xs font-semibold tracking-[0.3em] text-[var(--wra-gold)] uppercase">
+      <p className="mb-4 text-xs font-semibold tracking-[0.3em] text-[var(--wra-gold)] uppercase">
         The artist behind the armor
       </p>
       <div className="mx-auto flex max-w-[1000px] flex-wrap justify-center gap-x-10 gap-y-6">

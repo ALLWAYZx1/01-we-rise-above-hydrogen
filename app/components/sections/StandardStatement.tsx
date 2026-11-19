@@ -8,14 +8,23 @@
  * - With no columns the statement still renders on its own; with no
  *   heading and no columns it renders nothing.
  *
- * RESKIN v1 (spec §5 — the statement band): a full-viewport black void
- * with ONE dominant moment. A 60px gold hairline sits above the
- * manifesto line (display serif, 10–12vw, ivory, nothing else competing
- * on screen); the canon second line rides below in gold tracked caps
- * via the `subline` prop. Behind the type, a single nebula bloom
- * breathes on a 6s loop (8% → 14%); reduced motion rests it at 10%.
- * The `columns` path survives for callers that still pass supporting
- * copy — the band's own render passes none.
+ * RESKIN v1 (spec §5 — the statement band): ONE dominant moment. A
+ * 60px gold hairline sits above the line (display serif, ivory,
+ * nothing else competing on screen); an optional canon second line
+ * rides below in gold tracked caps via the `subline` prop. Behind
+ * the type, a single nebula bloom breathes on a 6s loop (8% → 14%);
+ * reduced motion rests it at 10%. The `columns` path survives for
+ * callers that still pass supporting copy — the band's own render
+ * passes none.
+ *
+ * ENERGY PASS (2026-11-19): the band no longer burns a full
+ * viewport of dead space — the min-h-svh is gone, padding is tight,
+ * and the homepage passes the canon line itself as the heading at
+ * oversized type ("Pressure builds. We rise. No final form."). Per
+ * SOUNDWAVE's density spec, the campaign line "RISE LIKE YOU MEANT
+ * IT ALL ALONG." rides as the `subline` — elevated to a secondary
+ * display statement in champagne serif under the canon, never
+ * replacing it.
  */
 
 export interface StandardStatementProps {
@@ -39,28 +48,28 @@ export function StandardStatement({
       className="relative overflow-hidden bg-[var(--wra-void)] text-[var(--wra-ivory)]"
     >
       <div className="wra-bloom" aria-hidden="true" />
-      <div className="relative mx-auto flex min-h-svh max-w-[1400px] flex-col items-start justify-center px-5 py-24 md:px-10">
+      <div className="relative mx-auto flex max-w-[1400px] flex-col items-start justify-center px-5 py-14 md:px-10 md:py-16">
         <div
           aria-hidden="true"
           className="h-px w-[60px] bg-[var(--wra-gold)]"
         />
         {eyebrow ? (
-          <p className="mt-10 mb-0 text-xs font-semibold tracking-[0.22em] text-[var(--wra-gold)] uppercase">
+          <p className="mt-6 mb-0 text-xs font-semibold tracking-[0.22em] text-[var(--wra-gold)] uppercase">
             {eyebrow}
           </p>
         ) : null}
         {heading ? (
-          <h2 className="wra-display mt-10 mb-0 max-w-none text-[11vw] leading-[0.95] font-bold tracking-tight uppercase md:text-[10.5vw]">
+          <h2 className="wra-display mt-6 mb-0 max-w-none text-[10vw] leading-[0.95] font-bold tracking-tight uppercase md:text-[9vw]">
             {heading}
           </h2>
         ) : null}
         {subline ? (
-          <p className="mt-10 mb-0 text-base tracking-[0.3em] text-[var(--wra-gold)] uppercase">
+          <p className="wra-display mt-8 mb-0 text-[5.5vw] leading-[1.05] font-bold tracking-tight text-[var(--wra-champagne)] uppercase md:text-[2.8vw]">
             {subline}
           </p>
         ) : null}
         {columns.length > 0 ? (
-          <div className="mt-14 grid grid-cols-1 gap-6 text-base leading-relaxed text-[var(--wra-ivory-80)] md:grid-cols-3 md:gap-10">
+          <div className="mt-10 grid grid-cols-1 gap-6 text-base leading-relaxed text-[var(--wra-ivory-80)] md:grid-cols-3 md:gap-10">
             {columns.map((column) => (
               <p key={column}>{column}</p>
             ))}
