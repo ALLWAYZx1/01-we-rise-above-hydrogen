@@ -18,13 +18,31 @@ export function Footer({
       <Await resolve={footerPromise}>
         {(footer) => (
           <footer className="footer">
-            {footer?.menu && header.shop.primaryDomain?.url && (
-              <FooterMenu
-                menu={footer.menu}
-                primaryDomainUrl={header.shop.primaryDomain.url}
-                publicStoreDomain={publicStoreDomain}
-              />
-            )}
+            <div className="footer-inner">
+              {/* DENSITY SPEC — the footer is a brand destination,
+                  not an empty band: brand block, dense nav grid,
+                  and the store's real service facts. */}
+              <div className="footer-brand">
+                <p className="footer-brand-name">We Rise Above</p>
+                <p className="footer-brand-line">
+                  Faith. Discipline. Hard work. Keep rising.{' '}
+                  <strong>No final form.</strong>
+                </p>
+              </div>
+              {footer?.menu && header.shop.primaryDomain?.url && (
+                <FooterMenu
+                  menu={footer.menu}
+                  primaryDomainUrl={header.shop.primaryDomain.url}
+                  publicStoreDomain={publicStoreDomain}
+                />
+              )}
+              <p className="footer-facts">
+                <span>✦ Printed to order</span>
+                <span>✦ Ships from the USA</span>
+                <span>✦ Secure Shopify checkout</span>
+                <span>✦ RISE10 — 10% off your first order</span>
+              </p>
+            </div>
           </footer>
         )}
       </Await>
