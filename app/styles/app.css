@@ -677,3 +677,125 @@ button.reset:hover:not(:has(> *)) {
 .policy img {
   margin-inline: auto;
 }
+
+/*
+* --------------------------------------------------
+* WRA storefront scale + alignment pass (2026-11-19)
+* Larger editorial product/collection imagery and centered policy navigation.
+* --------------------------------------------------
+*/
+
+/* Give catalog imagery the space it needs to read as fashion, not thumbnails. */
+.products-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+@media (min-width: 75em) {
+  .products-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+  }
+}
+
+.product-item {
+  display: block;
+  min-width: 0;
+}
+
+.product-item-image,
+.product-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center;
+}
+
+.collections-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+.collection-item {
+  display: block;
+  min-width: 0;
+  width: 100%;
+}
+
+.collection-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (min-width: 75em) {
+  .collections-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* The policy index route has its own .policies wrapper, not .policy. */
+.policies {
+  box-sizing: border-box;
+  width: min(100% - 2.5rem, 800px);
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4rem) 0;
+  text-align: center;
+}
+
+.policies > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.policies fieldset {
+  box-sizing: border-box;
+  width: min(100%, 34rem);
+  margin: 0;
+  padding: 1rem 1.25rem;
+  text-align: center;
+}
+
+.policies fieldset a {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+
+.policy {
+  box-sizing: border-box;
+  width: min(100% - 2.5rem, 800px);
+  margin-inline: auto;
+  padding-block: clamp(2rem, 5vw, 4rem);
+  text-align: center;
+}
+
+/* Keep footer policy/navigation links centered across every viewport. */
+.footer {
+  width: 100%;
+}
+
+.footer-menu {
+  box-sizing: border-box;
+  width: 100%;
+  margin-inline: auto;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.75rem 1.5rem;
+  padding: 1.5rem 1rem;
+}
+
+.footer-menu a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
