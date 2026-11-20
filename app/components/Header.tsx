@@ -8,6 +8,7 @@ import {
 import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 import wraLogo from '~/assets/we-rise-above-logo.png';
+import {getMenuLinkUrl} from '~/lib/menu';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -98,12 +99,11 @@ export function HeaderMenu({
       ))}
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url) return null;
-        const url =
-          item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
-            ? new URL(item.url).pathname
-            : item.url;
+        const url = getMenuLinkUrl(
+          item.url,
+          publicStoreDomain,
+          primaryDomainUrl,
+        );
         return (
           <NavLink
             className="header-menu-item"
