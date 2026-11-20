@@ -1,6 +1,7 @@
 import {useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale)._index';
 import '~/components/sections/wra-reskin.css';
+import '~/styles/cosmic.css';
 import type {
   HomepageCollectionsQuery,
   HomepageProductsQuery,
@@ -153,7 +154,7 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
-    <div className="home">
+    <div className="home cosmic-home">
       {data.isShopLinked ? null : <MockShopNotice />}
 
       {/* Reskin §1 — the hero. TYPE-ONLY per the spec fallback: no

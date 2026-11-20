@@ -9,6 +9,7 @@
  */
 
 const ITEMS = [
+  'Pressure builds. We rise. No final form.',
   'NO FINAL FORM',
   'PRINTED TO ORDER',
   'RISE10 — 10% OFF YOUR FIRST ORDER',
