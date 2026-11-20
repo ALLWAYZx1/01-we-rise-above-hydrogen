@@ -70,8 +70,14 @@ export default function Collection() {
 
   return (
     <div className="collection">
-      <h1>{collection.title}</h1>
-      <p className="collection-description">{collection.description}</p>
+      <header className="shelf-mast">
+        <p className="shelf-kicker">We Rise Above</p>
+        <h1>{collection.title}</h1>
+        <p className="shelf-canon">Pressure builds. We rise. No final form.</p>
+        {collection.description ? (
+          <p className="collection-description">{collection.description}</p>
+        ) : null}
+      </header>
       <PaginatedResourceSection<ProductItemFragment>
         connection={collection.products}
         resourcesClassName="products-grid"

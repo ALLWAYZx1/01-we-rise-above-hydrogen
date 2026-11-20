@@ -99,9 +99,13 @@ export default function Product() {
 
   return (
     <div className="product">
-      <ProductImage image={selectedVariant?.image} />
+      <div className="product-stage">
+        <ProductImage image={selectedVariant?.image} />
+      </div>
       <div className="product-main">
+        <p className="shelf-kicker">We Rise Above</p>
         <h1>{title}</h1>
+        <p className="shelf-canon">No final form.</p>
         <ProductPrice
           price={selectedVariant?.price}
           compareAtPrice={selectedVariant?.compareAtPrice}

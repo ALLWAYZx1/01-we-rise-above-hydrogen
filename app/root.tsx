@@ -16,6 +16,9 @@ import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
+import wraReskinStyles from '~/components/sections/wra-reskin.css?url';
+import cosmicStyles from '~/styles/cosmic.css?url';
+import commerceStyles from '~/styles/wra-commerce.css?url';
 import {PageLayout} from './components/PageLayout';
 
 export type RootLoader = typeof loader;
@@ -185,6 +188,9 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <link rel="stylesheet" href={tailwindCss}></link>
         <link rel="stylesheet" href={resetStyles}></link>
         <link rel="stylesheet" href={appStyles}></link>
+        <link rel="stylesheet" href={wraReskinStyles}></link>
+        <link rel="stylesheet" href={cosmicStyles}></link>
+        <link rel="stylesheet" href={commerceStyles}></link>
         <Meta />
         <Links />
       </head>

@@ -39,6 +39,17 @@ export function ProductForm({
                   swatch,
                 } = value;
 
+                const chipStyle = {
+                  border: selected
+                    ? '1px solid #d8b66a'
+                    : '1px solid rgba(247, 240, 232, 0.28)',
+                  background: selected
+                    ? 'rgba(216, 182, 106, 0.16)'
+                    : 'transparent',
+                  color: '#f7f0e8',
+                  opacity: available ? 1 : 0.35,
+                };
+
                 if (isDifferentProduct) {
                   // SEO
                   // When the variant is a combined listing child product
@@ -52,12 +63,7 @@ export function ProductForm({
                       preventScrollReset
                       replace
                       to={`/products/${handle}?${variantUriQuery}`}
-                      style={{
-                        border: selected
-                          ? '1px solid black'
-                          : '1px solid transparent',
-                        opacity: available ? 1 : 0.3,
-                      }}
+                      style={chipStyle}
                     >
                       <ProductOptionSwatch swatch={swatch} name={name} />
                     </Link>
@@ -75,12 +81,7 @@ export function ProductForm({
                         exists && !selected ? ' link' : ''
                       }`}
                       key={option.name + name}
-                      style={{
-                        border: selected
-                          ? '1px solid black'
-                          : '1px solid transparent',
-                        opacity: available ? 1 : 0.3,
-                      }}
+                      style={chipStyle}
                       disabled={!exists}
                       onClick={() => {
                         if (!selected) {

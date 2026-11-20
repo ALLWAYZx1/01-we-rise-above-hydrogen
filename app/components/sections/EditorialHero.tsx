@@ -38,6 +38,10 @@ export interface EditorialHeroProps {
    * `image`/`imageSide` are ignored.
    */
   lines?: string[];
+  /** Canonical line above the stacked wordmark. */
+  kicker?: string;
+  /** Canonical line under the stacked wordmark. */
+  subline?: string;
   copy?: string;
   cta?: SectionCta;
   /** A Storefront API image, or nothing. */
@@ -50,6 +54,8 @@ export function EditorialHero({
   eyebrow,
   heading,
   lines,
+  kicker,
+  subline,
   copy,
   cta,
   image,
@@ -65,21 +71,28 @@ export function EditorialHero({
       >
         <div className="wra-starfield" aria-hidden="true" />
         <div className="wra-nebula-layer" aria-hidden="true" />
-        <div className="relative flex min-h-[94svh] flex-col justify-center px-4 py-10 md:px-6 md:py-14">
-          <h1 className="wra-display m-0 font-bold tracking-tight uppercase">
+        <div className="wra-orbit" aria-hidden="true">
+          <span />
+          <span />
+          <i />
+        </div>
+        <div className="relative z-[2] flex min-h-[68svh] flex-col justify-end px-4 pt-10 pb-8 md:px-8 md:pt-16 md:pb-12">
+          {kicker ? <p className="hero-kicker">{kicker}</p> : null}
+          <h1 className="wra-display m-0 max-w-[16ch] font-bold tracking-tight uppercase">
             {lines.map((line, index) => (
               <span
                 key={line}
-                className="wra-rise block text-[23vw] leading-[0.82] md:text-[22vw]"
+                className="wra-rise block text-[18vw] leading-[0.82] md:text-[11vw]"
                 style={{animationDelay: `${index * 120}ms`}}
               >
                 {line}
               </span>
             ))}
           </h1>
+          {subline ? <p className="hero-subline">{subline}</p> : null}
           <div
             aria-hidden="true"
-            className="wra-draw-x mt-6 h-px w-full bg-[var(--wra-gold)] md:mt-8"
+            className="wra-draw-x mt-6 h-px w-full max-w-3xl bg-[var(--wra-gold)] md:mt-8"
           />
           {cta ? (
             <Link

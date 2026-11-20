@@ -1,7 +1,6 @@
-import {useLoaderData} from 'react-router';
+import {Link, useLoaderData} from 'react-router';
+import {Image, Money} from '@shopify/hydrogen';
 import type {Route} from './+types/($locale)._index';
-import '~/components/sections/wra-reskin.css';
-import '~/styles/cosmic.css';
 import type {
   HomepageCollectionsQuery,
   HomepageProductsQuery,
@@ -19,16 +18,12 @@ import {StandardStatement} from '~/components/sections/StandardStatement';
 import {ProductItem} from '~/components/ProductItem';
 
 /**
- * Homepage — KARMALOOP-STYLE EVOLUTION (feature/wra-karmaloop-evolution).
+ * Homepage — COSMIC ENERGY, campaign density.
  *
- * Preserves COSMIC ENERGY (cosmic-home + cosmic.css) and canonical WRA copy.
- * Evolves toward denser, product-forward shopping destination:
- * - Products visible higher and denser
- * - New Drops / Trending / Featured Collections emphasis
- * - Stronger campaign energy without dead space
- * - Real Shopify data only; no fakes
- *
- * Existing reskin sections retained where they serve identity.
+ * Canonical copy only: "Pressure builds. We rise." / "No final form." /
+ * "WE RISE ABOVE". Real Shopify products and collections. The hero shares
+ * the first screen with a shop CTA, then a real garment campaign and a
+ * dense drop grid. No invented rankings, scarcity, or sub-brands.
  */
 
 const OG_IMAGE =
@@ -66,10 +61,12 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
   ]);
 
   type HomepageProduct = HomepageProductsQuery['products']['nodes'][number];
-  const allProducts = products.nodes;
-  const newDrops = allProducts.slice(0, 8); // recent as New Drops
-  const trending = allProducts.slice(0, 6); // reuse for density
+  const allProducts: HomepageProduct[] = products.nodes;
+  const newDrops = allProducts.slice(0, 8);
   const featured = allProducts.slice(0, 4);
+  const campaign =
+    allProducts.find((product: HomepageProduct) => product.featuredImage) ??
+    null;
 
   const tiles: ProductTile[] = allProducts
     .filter((product: HomepageProduct) => product.featuredImage != null)
@@ -111,7 +108,7 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
   return {
     isShopLinked: Boolean(context.env.PUBLIC_STORE_DOMAIN),
     newDrops,
-    trending,
+    campaign,
     featured,
     tiles,
     categories,
@@ -134,12 +131,49 @@ export default function Homepage() {
       <EditorialHero
         heading="We Rise Above"
         lines={['WE', 'RISE', 'ABOVE']}
+        kicker="Pressure builds. We rise."
+        subline="No final form."
         cta={{label: 'SHOP THE DROP', href: '/collections/all'}}
       />
 
       <MarqueeBand />
 
-      {/* NEW: Dense New Drops grid — product-forward above fold */}
+      {data.campaign?.featuredImage ? (
+        <section data-section="campaign-piece" className="px-4 py-8 md:px-8 md:py-12">
+          <div className="campaign-piece mx-auto grid max-w-[1400px] items-center gap-6 md:grid-cols-[0.86fr_1.14fr] md:gap-12">
+            <Link
+              className="campaign-piece-media"
+              prefetch="intent"
+              to={`/products/${data.campaign.handle}`}
+            >
+              <Image
+                alt={data.campaign.featuredImage.altText || data.campaign.title}
+                aspectRatio="4/5"
+                data={data.campaign.featuredImage}
+                sizes="(min-width: 768px) 40vw, 100vw"
+              />
+            </Link>
+            <div>
+              <p className="campaign-kicker">We Rise Above</p>
+              <h2 className="wra-display">Pressure builds.</h2>
+              <p className="campaign-line">We rise. No final form.</p>
+              <p className="campaign-product">{data.campaign.title}</p>
+              <p className="campaign-price">
+                <Money data={data.campaign.priceRange.minVariantPrice} />
+              </p>
+              <Link
+                className="wra-cta"
+                prefetch="intent"
+                to={`/products/${data.campaign.handle}`}
+              >
+                View the piece
+              </Link>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* Dense New Drops grid — product-forward, real catalog only */}
       <section data-section="new-drops" className="px-4 py-8 md:px-8 md:py-10">
         <div className="mx-auto max-w-[1400px]">
           <h2 className="wra-display mb-4 text-2xl font-bold uppercase tracking-tight md:text-3xl">New Drops</h2>
@@ -155,18 +189,6 @@ export default function Homepage() {
       </section>
 
       <CategoryBand tiles={data.categories} />
-
-      {/* Trending Now — denser product visibility */}
-      <section data-section="trending" className="px-4 py-6 md:px-8">
-        <div className="mx-auto max-w-[1400px]">
-          <h2 className="wra-display mb-4 text-2xl font-bold uppercase">Trending Now</h2>
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
-            {data.trending.map((product) => (
-              <ProductItem key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-      </section>
 
       <StatBand
         stats={[
