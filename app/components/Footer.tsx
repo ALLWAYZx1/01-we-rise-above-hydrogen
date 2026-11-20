@@ -1,6 +1,7 @@
 import {Suspense} from 'react';
 import {Await, NavLink} from 'react-router';
 import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
+import {getInternalMenuUrl} from '~/lib/menuUrl';
 
 interface FooterProps {
   footer: Promise<FooterQuery | null>;
@@ -64,12 +65,11 @@ function FooterMenu({
       {(menu || FALLBACK_FOOTER_MENU).items.map((item) => {
         if (!item.url) return null;
         // if the url is internal, we strip the domain
-        const url =
-          item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
-            ? new URL(item.url).pathname
-            : item.url;
+        const url = getInternalMenuUrl(
+          item.url,
+          publicStoreDomain,
+          primaryDomainUrl,
+        );
         const isExternal = !url.startsWith('/');
         return isExternal ? (
           <a href={url} key={item.id} rel="noopener noreferrer" target="_blank">
