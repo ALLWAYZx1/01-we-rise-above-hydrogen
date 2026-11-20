@@ -27,6 +27,8 @@
  * replacing it.
  */
 
+import campaignSunriseArt from '~/assets/campaign-sunrise-art.webp';
+
 export interface StandardStatementProps {
   eyebrow?: string;
   heading: string;
@@ -47,6 +49,20 @@ export function StandardStatement({
       data-section="standard-statement"
       className="relative overflow-hidden bg-[var(--wra-void)] text-[var(--wra-ivory)]"
     >
+      {/* ALLWAYZ sunrise art (2026-11-20): the logo's sunrise
+          realized, as the statement backdrop — behind the existing
+          copy only, dimmed in cosmic.css so the canon line stays
+          dominant. No copy changes. */}
+      <img
+        className="wra-statement-art"
+        src={campaignSunriseArt}
+        alt=""
+        aria-hidden="true"
+        width={1535}
+        height={1024}
+        loading="lazy"
+        decoding="async"
+      />
       <div className="wra-bloom" aria-hidden="true" />
       <div className="relative mx-auto flex max-w-[1400px] flex-col items-start justify-center px-5 py-14 md:px-10 md:py-16">
         <div

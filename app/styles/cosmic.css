@@ -508,3 +508,54 @@ body { background: linear-gradient(145deg, #05030e 0%, #0a0618 48%, #070412 100%
 @media (prefers-reduced-motion: reduce) {
   .cosmic-home [data-section="editorial-hero"] .wra-nebula-layer { animation: none !important; }
 }
+
+/* ============================================================
+   CAMPAIGN SET — ALLWAYZ campaign imagery (2026-11-20).
+   Editorial frames in the same voltage language as the
+   product cards: artifact borders, an igniting top line and
+   a light bloom on hover, scroll materialize where supported
+   (opacity/filter only, so hovers never fight the entrance).
+   The sunrise art backs the closing statement, dimmed so the
+   canon copy stays dominant.
+   ============================================================ */
+.cosmic-home .wra-campaign-frame {
+  position: relative; overflow: hidden; border-radius: 10px;
+  border: 1px solid var(--cosmic-edge);
+  background: linear-gradient(145deg, rgba(23,15,48,.88), rgba(8,6,22,.92));
+  box-shadow: inset 0 1px rgba(255,255,255,.035), 0 12px 38px rgba(0,0,0,.24);
+  transition: border-color .35s ease, box-shadow .35s ease, transform .35s ease;
+}
+.cosmic-home .wra-campaign-frame::before {
+  content: ""; position: absolute; z-index: 1; top: 0; left: 0; right: 0; height: 2px;
+  pointer-events: none;
+  background: var(--voltage-line); opacity: .38;
+  transition: opacity .35s ease;
+}
+.cosmic-home .wra-campaign-frame:hover {
+  border-color: var(--cosmic-gold-edge);
+  box-shadow: 0 0 24px rgba(139,92,246,.24), 0 0 32px rgba(103,232,249,.10), 0 0 20px rgba(216,182,106,.13);
+  transform: translateY(-4px);
+}
+.cosmic-home .wra-campaign-frame:hover::before { opacity: 1; }
+.cosmic-home .wra-campaign-frame img {
+  transition: transform 700ms cubic-bezier(0.22, 0.61, 0.21, 1), filter .35s ease;
+}
+.cosmic-home .wra-campaign-frame:hover img { transform: scale(1.03); filter: saturate(1.07); }
+.cosmic-home [data-section="standard-statement"] .wra-statement-art {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: center 62%;
+  opacity: .5; filter: brightness(.75) saturate(1.05);
+  pointer-events: none;
+}
+@supports (animation-timeline: view()) {
+  .cosmic-home .wra-campaign-frame {
+    animation: voltage-materialize linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 55%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cosmic-home .wra-campaign-frame { animation: none !important; transition: none; }
+  .cosmic-home .wra-campaign-frame:hover { transform: none; }
+  .cosmic-home .wra-campaign-frame:hover img { transform: none; }
+}

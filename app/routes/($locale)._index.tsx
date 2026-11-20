@@ -16,6 +16,10 @@ import {FeaturedProducts} from '~/components/sections/FeaturedProducts';
 import {ProductTiles, type ProductTile} from '~/components/sections/ProductTiles';
 import {ArtistStrip} from '~/components/sections/ArtistStrip';
 import {StandardStatement} from '~/components/sections/StandardStatement';
+import {
+  CampaignFeature,
+  CampaignSplit,
+} from '~/components/sections/CampaignGallery';
 import {ProductItem} from '~/components/ProductItem';
 
 /**
@@ -186,6 +190,9 @@ export default function Homepage() {
         ]}
       />
 
+      {/* Campaign feature — ALLWAYZ campaign art (2026-11-20) */}
+      <CampaignFeature />
+
       {/* Featured Collections campaign block */}
       <section data-section="featured-collections" className="px-4 py-8 md:px-8">
         <div className="mx-auto max-w-[1400px]">
@@ -209,6 +216,9 @@ export default function Homepage() {
       />
 
       <ProductTiles tiles={data.tiles} />
+
+      {/* Campaign split — ALLWAYZ campaign art (2026-11-20) */}
+      <CampaignSplit />
 
       <section data-section="flame-interstitial" className="relative overflow-hidden bg-[var(--wra-void)] text-[var(--wra-ivory)]">
         <div className="wra-starfield" aria-hidden="true" />
