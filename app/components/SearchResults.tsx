@@ -133,7 +133,7 @@ function SearchResultsProducts({
 
           return (
             <div>
-              <div>
+              <div className="pagination-controls">
                 <PreviousLink>
                   {isLoading ? 'Loading...' : <span>↑ Load previous</span>}
                 </PreviousLink>
@@ -142,7 +142,7 @@ function SearchResultsProducts({
                 {ItemsMarkup}
                 <br />
               </div>
-              <div>
+              <div className="pagination-controls">
                 <NextLink>
                   {isLoading ? 'Loading...' : <span>Load more ↓</span>}
                 </NextLink>
