@@ -7,6 +7,7 @@ import {
 } from '@shopify/hydrogen';
 import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
+import wraLogo from '~/assets/we-rise-above-logo.png';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -27,7 +28,19 @@ export function Header({
   return (
     <header className="header">
       <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
+        {/* ALLWAYZ logo lockup (2026-11-20): black line art on
+            transparency, rendered in brand gold through a CSS mask
+            (see .header-logo in app.css). Shop name stays for
+            screen readers. */}
+        <span
+          className="header-logo"
+          aria-hidden="true"
+          style={{
+            WebkitMaskImage: `url(${wraLogo})`,
+            maskImage: `url(${wraLogo})`,
+          }}
+        />
+        <strong className="sr-only">{shop.name}</strong>
       </NavLink>
       <HeaderMenu
         menu={menu}

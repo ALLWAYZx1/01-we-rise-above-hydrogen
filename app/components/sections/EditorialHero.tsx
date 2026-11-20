@@ -22,12 +22,16 @@
  *
  * The hero is TYPE-ONLY by spec fallback: no Simulation Ascension
  * campaign shot exists, and a catalog thumbnail must never be faked
- * into this slot — so the `lines` path takes no image at all. The
- * older copy/image split below remains for non-hero callers.
+ * into this slot — so the `lines` path takes no product/campaign
+ * image. Its only imagery is decorative: ALLWAYZ's golden nebula
+ * mandala backdrop (added 2026-11-20) behind the CSS atmosphere
+ * layers. The older copy/image split below remains for non-hero
+ * callers.
  */
 import {Link} from 'react-router';
 import {Image} from '@shopify/hydrogen';
 import type {SectionCta, SectionImage} from './section-types';
+import heroNebulaArt from '~/assets/golden-nebula-mandala.jpg';
 
 export interface EditorialHeroProps {
   eyebrow?: string;
@@ -63,6 +67,14 @@ export function EditorialHero({
         aria-label={heading}
         className="relative overflow-hidden bg-[var(--wra-void)] text-[var(--wra-ivory)]"
       >
+        {/* ALLWAYZ brand art (2026-11-20): golden nebula mandala
+            backdrop, styled in cosmic.css; the CSS voltage layers
+            blend over it at reduced strength. */}
+        <div
+          className="wra-hero-art"
+          aria-hidden="true"
+          style={{backgroundImage: `url(${heroNebulaArt})`}}
+        />
         <div className="wra-starfield" aria-hidden="true" />
         <div className="wra-nebula-layer" aria-hidden="true" />
         {/* MAX VOLTAGE (2026-11-20): pure-CSS starburst + orbital rings,
