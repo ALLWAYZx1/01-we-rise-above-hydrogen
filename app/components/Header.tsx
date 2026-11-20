@@ -54,23 +54,37 @@ export function HeaderMenu({
   const className = `header-menu-${viewport}`;
   const {close} = useAside();
 
+  // Shopping-first category shortcuts (real collections)
+  const categoryShortcuts = [
+    {title: 'Shop All', url: '/collections/all'},
+    {title: 'New Drops', url: '/collections/new'},
+    {title: 'Hoodies', url: '/collections/hoodies'},
+    {title: 'Tees', url: '/collections/tees'},
+    {title: 'Sale', url: '/collections/sale'},
+  ];
+
   return (
     <nav className={className} role="navigation">
       {viewport === 'mobile' && (
-        <NavLink
-          end
-          onClick={close}
-          prefetch="intent"
-          style={activeLinkStyle}
-          to="/"
-        >
+        <NavLink end onClick={close} prefetch="intent" style={activeLinkStyle} to="/">
           Home
         </NavLink>
       )}
+      {categoryShortcuts.map((item) => (
+        <NavLink
+          className="header-menu-item"
+          end
+          key={item.title}
+          onClick={close}
+          prefetch="intent"
+          style={activeLinkStyle}
+          to={item.url}
+        >
+          {item.title}
+        </NavLink>
+      ))}
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url) return null;
-
-        // if the url is internal, we strip the domain
         const url =
           item.url.includes('myshopify.com') ||
           item.url.includes(publicStoreDomain) ||
@@ -121,6 +135,7 @@ function HeaderMenuMobileToggle() {
     <button
       className="header-menu-mobile-toggle reset"
       onClick={() => open('mobile')}
+      aria-label="Open menu"
     >
       <h3>☰</h3>
     </button>
@@ -130,7 +145,7 @@ function HeaderMenuMobileToggle() {
 function SearchToggle() {
   const {open} = useAside();
   return (
-    <button className="reset" onClick={() => open('search')}>
+    <button className="reset" onClick={() => open('search')} aria-label="Search">
       Search
     </button>
   );
@@ -153,6 +168,7 @@ function CartBadge({count}: {count: number}) {
           url: window.location.href || '',
         } as CartViewPayload);
       }}
+      aria-label={`Cart (${count} items)`}
     >
       Cart <span aria-label={`(items: ${count})`}>{count}</span>
     </a>
@@ -226,6 +242,6 @@ function activeLinkStyle({
 }) {
   return {
     fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'black',
+    color: isPending ? 'grey' : undefined,
   };
 }
