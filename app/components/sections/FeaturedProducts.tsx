@@ -31,15 +31,13 @@ import {Money} from '@shopify/hydrogen';
 import type {
   CollectionItemFragment,
   ProductItemFragment,
-  RecommendedProductFragment,
 } from 'storefrontapi.generated';
 import {GarmentSilhouette} from './GarmentSilhouette';
 import type {SectionCta} from './section-types';
 
 export type FeaturedProduct =
   | CollectionItemFragment
-  | ProductItemFragment
-  | RecommendedProductFragment;
+  | ProductItemFragment;
 
 export interface FeaturedProductsProps {
   eyebrow?: string;
