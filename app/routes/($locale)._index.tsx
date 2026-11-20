@@ -16,31 +16,19 @@ import {FeaturedProducts} from '~/components/sections/FeaturedProducts';
 import {ProductTiles, type ProductTile} from '~/components/sections/ProductTiles';
 import {ArtistStrip} from '~/components/sections/ArtistStrip';
 import {StandardStatement} from '~/components/sections/StandardStatement';
+import {ProductItem} from '~/components/ProductItem';
 
 /**
- * Homepage — SALVAGE WIRING (2026-11-18, branch salvage-homepage-wiring).
+ * Homepage — KARMALOOP-STYLE EVOLUTION (feature/wra-karmaloop-evolution).
  *
- * PR #144 landed the fresh template + Forward port + WRA reskin on
- * main, but the reskin sections only ever rendered on the bench route
- * `($locale).bench-sections.tsx`; this route stayed the stock template
- * homepage. This file wires the reskin into the real homepage, in the
- * bench route's own order: type-only WE RISE ABOVE hero, StatBand,
- * the universe steps, the AWAITING ART featured row + tiles, the
- * Celestial Flame interstitial, the artist strip, and the statement
- * band. The bench route is untouched and still renders the same
- * sections plus its edge-case zone.
+ * Preserves COSMIC ENERGY (cosmic-home + cosmic.css) and canonical WRA copy.
+ * Evolves toward denser, product-forward shopping destination:
+ * - Products visible higher and denser
+ * - New Drops / Trending / Featured Collections emphasis
+ * - Stronger campaign energy without dead space
+ * - Real Shopify data only; no fakes
  *
- * SEO wording is recovered verbatim from the pre-PR#144 homepage
- * (old `app/routes/_index.tsx`, read at PR #141's branch tip
- * 9e61abf): title 'We Rise Above | No Final Form' and its description.
- * Deploying this must NOT regress the homepage title to the stock
- * 'Hydrogen | Home'. Root defaults live in `app/root.tsx`.
- *
- * TODO(analytics): GA G-F7SLHQZBWV / GTM GTM-TW29LW4X / Meta Pixel
- * 2793791147688986 are NOT added here. Live firing is unverified —
- * adding the tags in code before a real-browser firing check risks
- * double-firing against whatever the current deployment already
- * sends. Add them only after that check, in root.tsx.
+ * Existing reskin sections retained where they serve identity.
  */
 
 const OG_IMAGE =
@@ -66,34 +54,26 @@ export const meta: Route.MetaFunction = () => {
 };
 
 export async function loader(args: Route.LoaderArgs) {
-  // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);
-
-  // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
-
   return {...deferredData, ...criticalData};
 }
 
-/**
- * Load data necessary for rendering content above the fold. This is the critical data
- * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
- */
 async function loadCriticalData({context}: Route.LoaderArgs) {
   const [{products}, {collections}] = await Promise.all([
     context.storefront.query(HOMEPAGE_PRODUCTS_QUERY),
     context.storefront.query(HOMEPAGE_COLLECTIONS_QUERY),
-    // Add other queries here, so that they are loaded in parallel
   ]);
 
   type HomepageProduct = HomepageProductsQuery['products']['nodes'][number];
-  const featured = products.nodes.slice(0, 4);
-  // Same product-tiles rule as the bench route: a product with no
-  // usable image is omitted from the tiles rather than rendered as
-  // an empty frame.
-  const tiles: ProductTile[] = products.nodes
+  const allProducts = products.nodes;
+  const newDrops = allProducts.slice(0, 8); // recent as New Drops
+  const trending = allProducts.slice(0, 6); // reuse for density
+  const featured = allProducts.slice(0, 4);
+
+  const tiles: ProductTile[] = allProducts
     .filter((product: HomepageProduct) => product.featuredImage != null)
-    .slice(0, 3)
+    .slice(0, 6)
     .map((product: HomepageProduct) => ({
       product: {
         handle: product.handle,
@@ -103,10 +83,6 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
       image: product.featuredImage!,
     }));
 
-  // ENERGY PASS — the category wall: the six core collections in a
-  // fixed order, matched by handle (title as fallback). Their images
-  // are the celestial tile art set in Shopify admin on 2026-11-18.
-  // A collection the shop doesn't return is skipped, never faked.
   type HomepageCollection =
     HomepageCollectionsQuery['collections']['nodes'][number];
   const CATEGORY_ORDER = [
@@ -124,28 +100,25 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
         collection.title.trim().toLowerCase() === handle,
     );
     if (!match) return [];
-    const tile: CategoryTile = {
+    return [{
       id: match.id,
       handle: match.handle,
       title: match.title,
       image: match.image ?? null,
-    };
-    return [tile];
+    }];
   });
 
   return {
     isShopLinked: Boolean(context.env.PUBLIC_STORE_DOMAIN),
+    newDrops,
+    trending,
     featured,
     tiles,
     categories,
+    collections: collections.nodes.slice(0, 6),
   };
 }
 
-/**
- * Load data for rendering content below the fold. This data is deferred and will be
- * fetched after the initial page load. If it's unavailable, the page should still 200.
- * Make sure to not throw any errors here, as it will cause the page to 500.
- */
 function loadDeferredData({context}: Route.LoaderArgs) {
   void context;
   return {};
@@ -157,21 +130,44 @@ export default function Homepage() {
     <div className="home cosmic-home">
       {data.isShopLinked ? null : <MockShopNotice />}
 
-      {/* Reskin §1 — the hero. TYPE-ONLY per the spec fallback: no
-          Simulation Ascension campaign shot exists, and a catalog
-          thumbnail must never be faked into this slot. */}
+      {/* Compact hero — identity preserved, less dead space */}
       <EditorialHero
         heading="We Rise Above"
         lines={['WE', 'RISE', 'ABOVE']}
-        cta={{label: 'JOIN THE RISE', href: '/collections/all'}}
+        cta={{label: 'SHOP THE DROP', href: '/collections/all'}}
       />
 
-      {/* ENERGY PASS — the ticker: real store facts + the RISE10
-          code, scrolling gold on black, straight under the hero. */}
       <MarqueeBand />
 
-      {/* Reskin §2 — confirmed real numbers (audited live catalog,
-          2026-11-18: 68 products, 12 collections, shop 100268966179). */}
+      {/* NEW: Dense New Drops grid — product-forward above fold */}
+      <section data-section="new-drops" className="px-4 py-8 md:px-8 md:py-10">
+        <div className="mx-auto max-w-[1400px]">
+          <h2 className="wra-display mb-4 text-2xl font-bold uppercase tracking-tight md:text-3xl">New Drops</h2>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+            {data.newDrops.map((product) => (
+              <ProductItem key={product.id} product={product} />
+            ))}
+          </div>
+          <div className="mt-4 text-center">
+            <a href="/collections/all" className="wra-cta text-sm font-semibold uppercase tracking-widest">Shop All</a>
+          </div>
+        </div>
+      </section>
+
+      <CategoryBand tiles={data.categories} />
+
+      {/* Trending Now — denser product visibility */}
+      <section data-section="trending" className="px-4 py-6 md:px-8">
+        <div className="mx-auto max-w-[1400px]">
+          <h2 className="wra-display mb-4 text-2xl font-bold uppercase">Trending Now</h2>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+            {data.trending.map((product) => (
+              <ProductItem key={product.id} product={product} />
+            ))}
+          </div>
+        </div>
+      </section>
+
       <StatBand
         stats={[
           {value: '2026', label: 'EST.'},
@@ -181,34 +177,30 @@ export default function Homepage() {
         ]}
       />
 
-      {/* ENERGY PASS — the category wall: six core collections,
-          full-bleed 3×2, real tile art from the shop. */}
-      <CategoryBand tiles={data.categories} />
-
-      {/* Reskin §3 — the universe steps, the spec's exact copy. */}
       <NumberedSequence
         heading="The universe steps"
         steps={[
-          {
-            number: '01',
-            title: 'PRESSURE',
-            copy: 'The weight builds. Everyone feels it. Most fold under it.',
-          },
-          {
-            number: '02',
-            title: 'ASCENSION',
-            copy: 'PREZZURE takes it. RIZE turns it. The Simulation Hoodie carries the story out of the dark.',
-          },
-          {
-            number: '03',
-            title: 'THE RISE',
-            copy: "We Rise Above. No final form. The universe doesn't cap — it compounds.",
-          },
+          {number: '01', title: 'PRESSURE', copy: 'The weight builds. Everyone feels it. Most fold under it.'},
+          {number: '02', title: 'ASCENSION', copy: 'PREZZURE takes it. RIZE turns it. The Simulation Hoodie carries the story out of the dark.'},
+          {number: '03', title: 'THE RISE', copy: "We Rise Above. No final form. The universe doesn't cap — it compounds."},
         ]}
       />
 
-      {/* Reskin §4 — AWAITING ART hold frames: real titles, real
-          prices, no catalog photos, no add-to-cart. */}
+      {/* Featured Collections campaign block */}
+      <section data-section="featured-collections" className="px-4 py-8 md:px-8">
+        <div className="mx-auto max-w-[1400px]">
+          <h2 className="wra-display mb-4 text-2xl font-bold uppercase">Featured Collections</h2>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+            {data.collections.map((col) => (
+              <a key={col.id} href={`/collections/${col.handle}`} className="block overflow-hidden rounded border border-[var(--cosmic-edge)]">
+                {col.image && <img src={col.image.url} alt={col.title} className="aspect-square w-full object-cover" />}
+                <p className="p-2 text-center text-sm font-semibold uppercase">{col.title}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <FeaturedProducts
         eyebrow="RIZE PIECES"
         heading="Featured products"
@@ -218,14 +210,7 @@ export default function Homepage() {
 
       <ProductTiles tiles={data.tiles} />
 
-      {/* Reskin §4 interstitial — Celestial Flame atmosphere frame.
-          The 21:9 campaign banner does not exist, so this is pure
-          atmosphere: nebula + starfield CSS, the headline, no photo,
-          no CTA. */}
-      <section
-        data-section="flame-interstitial"
-        className="relative overflow-hidden bg-[var(--wra-void)] text-[var(--wra-ivory)]"
-      >
+      <section data-section="flame-interstitial" className="relative overflow-hidden bg-[var(--wra-void)] text-[var(--wra-ivory)]">
         <div className="wra-starfield" aria-hidden="true" />
         <div className="wra-nebula-layer" aria-hidden="true" />
         <div className="relative flex items-center justify-center px-5 py-12 md:py-16">
@@ -235,14 +220,8 @@ export default function Homepage() {
         </div>
       </section>
 
-      {/* The artist strip, restored from the pre-PR#144 homepage —
-          Spotify · Apple Music · Anghami, every name a real link. */}
       <ArtistStrip />
 
-      {/* ENERGY PASS + DENSITY SPEC — the statement band: canon
-          line PRIMARY at oversized type; "RISE LIKE YOU MEANT IT
-          ALL ALONG." retained as the SECONDARY campaign statement
-          beneath it (SOUNDWAVE via Starscream, 2026-11-19). */}
       <StandardStatement
         heading="Pressure builds. We rise. No final form."
         subline="RISE LIKE YOU MEANT IT ALL ALONG."
@@ -303,7 +282,7 @@ const HOMEPAGE_PRODUCTS_QUERY = `#graphql
   }
   query HomepageProducts($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    products(first: 8, sortKey: UPDATED_AT, reverse: true) {
+    products(first: 12, sortKey: UPDATED_AT, reverse: true) {
       nodes {
         ...HomepageProductItem
       }
