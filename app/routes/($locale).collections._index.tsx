@@ -30,7 +30,17 @@ async function loadCriticalData({context, request}: Route.LoaderArgs) {
     // Add other queries here, so that they are loaded in parallel
   ]);
 
-  return {collections};
+  // Shopify's built-in "Home page" collection (handle `frontpage`)
+  // is not a real shelf — keep its empty tile out of the index grid.
+  // The collection itself is untouched and still resolves at its URL.
+  return {
+    collections: {
+      ...collections,
+      nodes: collections.nodes.filter(
+        (collection) => collection.handle !== 'frontpage',
+      ),
+    },
+  };
 }
 
 /**
