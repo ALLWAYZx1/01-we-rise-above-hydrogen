@@ -65,6 +65,14 @@ export function EditorialHero({
       >
         <div className="wra-starfield" aria-hidden="true" />
         <div className="wra-nebula-layer" aria-hidden="true" />
+        {/* MAX VOLTAGE (2026-11-20): pure-CSS starburst + orbital rings,
+            styled in cosmic.css; decorative only, behind the type. */}
+        <div className="wra-starburst" aria-hidden="true" />
+        <div className="wra-orbit" aria-hidden="true">
+          <span className="wra-orbit-ring wra-orbit-ring--outer" />
+          <span className="wra-orbit-ring wra-orbit-ring--mid" />
+          <span className="wra-orbit-ring wra-orbit-ring--core" />
+        </div>
         <div className="relative flex min-h-[94svh] flex-col justify-center px-4 py-10 md:px-6 md:py-14">
           <h1 className="wra-display m-0 font-bold tracking-tight uppercase">
             {lines.map((line, index) => (
