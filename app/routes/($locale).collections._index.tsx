@@ -47,7 +47,11 @@ export default function Collections() {
 
   return (
     <div className="collections">
-      <h1>Collections</h1>
+      <header className="shelf-mast">
+        <p className="shelf-kicker">We Rise Above</p>
+        <h1>Collections</h1>
+        <p className="shelf-canon">Pressure builds. We rise. No final form.</p>
+      </header>
       <PaginatedResourceSection<CollectionFragment>
         connection={collections}
         resourcesClassName="collections-grid"

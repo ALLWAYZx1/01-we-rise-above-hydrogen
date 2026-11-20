@@ -52,7 +52,11 @@ export default function Collection() {
 
   return (
     <div className="collection">
-      <h1>Products</h1>
+      <header className="shelf-mast">
+        <p className="shelf-kicker">We Rise Above</p>
+        <h1>Products</h1>
+        <p className="shelf-canon">Pressure builds. We rise. No final form.</p>
+      </header>
       <PaginatedResourceSection<CollectionItemFragment>
         connection={products}
         resourcesClassName="products-grid"
