@@ -236,6 +236,35 @@ button.reset:hover:not(:has(> *)) {
   z-index: 1;
 }
 
+/* ALLWAYZ logo lockup (2026-11-20): black line art keyed to
+   transparency, rendered in brand gold via CSS mask so it reads on
+   the dark cosmic header and the light default header alike. The
+   mask image itself is set inline in Header.tsx from the imported
+   asset. */
+.header-logo {
+  display: block;
+  height: 2.25rem;
+  aspect-ratio: 901 / 243;
+  background: linear-gradient(
+    100deg,
+    #d9b45c 0%,
+    #a87f24 55%,
+    #7d5a16 100%
+  );
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+}
+
+@media (max-width: 48em) {
+  .header-logo {
+    height: 1.875rem;
+  }
+}
+
 .header-menu-mobile-toggle {
   @media (min-width: 48em) {
     display: none;
