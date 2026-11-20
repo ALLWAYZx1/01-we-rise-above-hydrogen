@@ -391,3 +391,289 @@ body {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .cosmic-home::before, .cosmic-home .wra-starfield, .cosmic-home .wra-marquee-track, .cosmic-home .wra-orbit { animation: none !important; }
 }
+
+/* ============================================================
+   COSMIC ENERGY — MAXIMUM VOLTAGE (SOUNDWAVE work order, 2026-11-20).
+   Amplification layer: everything below EXTENDS the COSMIC ENERGY
+   system above — same tokens, same surfaces, same copy. The voltage
+   lives in atmosphere layers, display type, glows and hovers;
+   product titles, prices and CTAs keep the exact readable surfaces
+   they already had. Animation is transform/opacity/filter only.
+   Reduced-motion and small-screen fallbacks close the file.
+   ============================================================ */
+:root {
+  --voltage-line: linear-gradient(90deg, var(--cosmic-gold) 0%, var(--cosmic-violet) 34%, var(--cosmic-magenta) 62%, var(--cosmic-cyan) 84%, var(--cosmic-gold) 100%);
+}
+
+/* ---------- 1 · HERO — cinematic, dimensional ---------- */
+.cosmic-home [data-section="editorial-hero"] {
+  box-shadow: inset 0 -1px 0 rgba(216,182,106,.35), inset 0 -90px 90px -60px rgba(109,40,217,.45), inset 0 60px 90px -60px rgba(103,232,249,.14);
+}
+.cosmic-home [data-section="editorial-hero"] .wra-nebula-layer {
+  background:
+    radial-gradient(ellipse 46% 40% at 50% 44%, rgba(139,92,246,.34), transparent 70%),
+    radial-gradient(ellipse 34% 30% at 76% 66%, rgba(109,40,217,.26), transparent 70%),
+    radial-gradient(ellipse 26% 22% at 18% 72%, rgba(232,121,249,.16), transparent 72%),
+    radial-gradient(ellipse 24% 20% at 84% 18%, rgba(103,232,249,.15), transparent 72%),
+    radial-gradient(ellipse 20% 16% at 46% 86%, rgba(216,182,106,.14), transparent 75%),
+    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(124,58,237,.10), transparent 75%);
+  animation: voltage-nebula-breathe 9s ease-in-out infinite alternate;
+}
+.cosmic-home .wra-starburst {
+  position: absolute; left: 50%; top: 46%;
+  width: 150vmax; height: 150vmax;
+  transform: translate(-50%, -50%);
+  pointer-events: none; opacity: .55;
+  background: repeating-conic-gradient(from 0deg at 50% 50%, rgba(216,182,106,.055) 0deg 1.5deg, transparent 1.5deg 12deg);
+  -webkit-mask-image: radial-gradient(closest-side, #000 0%, transparent 70%);
+  mask-image: radial-gradient(closest-side, #000 0%, transparent 70%);
+  animation: voltage-spin 140s linear infinite;
+}
+.cosmic-home .wra-orbit {
+  position: absolute; top: 50%; right: -8vw;
+  width: 46vw; height: 46vw; max-width: 720px; max-height: 720px;
+  transform: translateY(-50%);
+  pointer-events: none; opacity: .8;
+}
+.cosmic-home .wra-orbit-ring { position: absolute; display: block; border-radius: 50%; }
+.cosmic-home .wra-orbit-ring--outer {
+  inset: 0; border: 1px solid rgba(216,182,106,.30);
+  animation: voltage-spin-flat 70s linear infinite;
+}
+.cosmic-home .wra-orbit-ring--outer::after {
+  content: ""; position: absolute; top: -4px; left: 50%;
+  width: 8px; height: 8px; margin-left: -4px; border-radius: 50%;
+  background: radial-gradient(circle, #fff6dd 0%, var(--cosmic-gold) 55%, transparent 75%);
+  box-shadow: 0 0 12px 3px rgba(216,182,106,.55);
+}
+.cosmic-home .wra-orbit-ring--mid {
+  inset: 17%; border: 1px dashed rgba(167,139,250,.38);
+  animation: voltage-spin-rev 48s linear infinite;
+}
+.cosmic-home .wra-orbit-ring--core {
+  inset: 33%; border: 1px solid rgba(103,232,249,.25);
+  box-shadow: inset 0 0 42px rgba(139,92,246,.20), 0 0 24px rgba(103,232,249,.08);
+  animation: voltage-spin-flat 90s linear infinite;
+}
+.cosmic-home .wra-orbit-ring--core::after {
+  content: ""; position: absolute; bottom: -3px; left: 50%;
+  width: 6px; height: 6px; margin-left: -3px; border-radius: 50%;
+  background: radial-gradient(circle, #eafcff 0%, var(--cosmic-cyan) 55%, transparent 75%);
+  box-shadow: 0 0 10px 2px rgba(103,232,249,.5);
+}
+.cosmic-home [data-section="editorial-hero"] h1 {
+  text-shadow: 2px 0 0 rgba(103,232,249,.16), -2px 0 0 rgba(232,121,249,.16), 0 10px 44px rgba(0,0,0,.6), 0 0 24px rgba(139,92,246,.36), 0 0 70px rgba(109,40,217,.24);
+}
+.cosmic-home [data-section="editorial-hero"] h1 span:nth-child(2) {
+  filter: drop-shadow(0 0 22px rgba(167,139,250,.65)) drop-shadow(0 0 44px rgba(103,232,249,.25));
+}
+.cosmic-home [data-section="editorial-hero"] .wra-cta { position: relative; overflow: hidden; }
+.cosmic-home [data-section="editorial-hero"] .wra-cta::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(105deg, transparent 42%, rgba(255,255,255,.5) 50%, transparent 58%);
+  transform: translateX(-110%);
+  transition: transform .6s ease;
+}
+.cosmic-home [data-section="editorial-hero"] .wra-cta:hover::before { transform: translateX(110%); }
+
+@keyframes voltage-nebula-breathe { from { transform: scale(1); opacity: .92; } to { transform: scale(1.07); opacity: 1; } }
+@keyframes voltage-spin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+@keyframes voltage-spin-flat { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes voltage-spin-rev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+
+/* ---------- 5 · MARQUEE — energetic movement, glowing type ---------- */
+.cosmic-home [data-section="marquee-band"] {
+  position: relative;
+  border-image: var(--voltage-line) 1;
+  background: linear-gradient(90deg, rgba(10,6,24,.98), rgba(32,16,64,.96), rgba(10,6,24,.98));
+  background-size: 200% 100%;
+  animation: voltage-marquee-drift 12s ease-in-out infinite alternate;
+}
+.cosmic-home [data-section="marquee-band"]::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(105deg, transparent 42%, rgba(242,223,181,.08) 50%, transparent 58%);
+  transform: translateX(-110%);
+  animation: voltage-sweep 6.5s ease-in-out infinite;
+}
+.cosmic-home [data-section="marquee-band"] .wra-marquee-track { animation-duration: 24s; }
+.cosmic-home [data-section="marquee-band"] span span {
+  text-shadow: 0 0 14px rgba(216,182,106,.95), 0 0 30px rgba(232,121,249,.35);
+}
+@keyframes voltage-marquee-drift { from { background-position: 0% 0; } to { background-position: 100% 0; } }
+@keyframes voltage-sweep { 0% { transform: translateX(-110%); } 55%, 100% { transform: translateX(110%); } }
+
+/* ---------- 2 · CAMPAIGN SECTIONS — nebula energy, bold presentation ---------- */
+.cosmic-home [data-section="flame-interstitial"] {
+  box-shadow: inset 0 1px 0 rgba(216,182,106,.4), inset 0 -1px 0 rgba(139,92,246,.4);
+}
+.cosmic-home [data-section="flame-interstitial"]::before {
+  content: ""; position: absolute; inset: -40%; pointer-events: none; opacity: .5;
+  background: repeating-conic-gradient(from 0deg at 50% 50%, rgba(232,121,249,.05) 0deg 2deg, transparent 2deg 16deg);
+  -webkit-mask-image: radial-gradient(closest-side, #000 0%, transparent 68%);
+  mask-image: radial-gradient(closest-side, #000 0%, transparent 68%);
+  animation: voltage-spin-flat 110s linear infinite;
+}
+.cosmic-home [data-section="flame-interstitial"] h2 {
+  text-shadow: 2px 0 0 rgba(103,232,249,.20), -2px 0 0 rgba(232,121,249,.28), 0 0 12px rgba(232,121,249,.72), 0 0 32px rgba(139,92,246,.62), 0 0 62px rgba(103,232,249,.25);
+}
+.cosmic-home [data-section="standard-statement"] {
+  background:
+    radial-gradient(ellipse 55% 60% at 18% 30%, rgba(103,232,249,.07), transparent 70%),
+    radial-gradient(ellipse 75% 80% at 50% 50%, rgba(109,40,217,.20), transparent 72%),
+    linear-gradient(180deg, #090515, #0b0619);
+}
+.cosmic-home [data-section="artist-strip"] {
+  box-shadow: inset 0 1px 0 rgba(216,182,106,.45), inset 0 -1px 0 rgba(139,92,246,.35);
+}
+.cosmic-home [data-section="artist-strip"] a:hover {
+  color: #fff; text-shadow: 0 0 18px rgba(216,182,106,.6), 0 0 34px rgba(139,92,246,.4);
+}
+.cosmic-home [data-section="stat-band"] strong {
+  color: transparent;
+  background: linear-gradient(100deg, var(--cosmic-champagne) 0%, var(--cosmic-gold) 45%, #b18cff 100%);
+  background-clip: text; -webkit-background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 0 14px rgba(216,182,106,.35));
+}
+.cosmic-home [data-section="numbered-sequence"] .wra-seq-num {
+  color: transparent;
+  background: linear-gradient(160deg, #c4a5fd 0%, var(--cosmic-magenta) 90%);
+  background-clip: text; -webkit-background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 0 22px rgba(139,92,246,.35));
+}
+
+/* ---------- 3 · PRODUCT GRIDS — collectible artifacts, luminous hover ---------- */
+.cosmic-home [data-section="new-drops"],
+.cosmic-home [data-section="trending"] {
+  background: radial-gradient(ellipse 60% 34% at 50% 0%, rgba(109,40,217,.13), transparent 70%);
+}
+.cosmic-home [data-section="new-drops"] h2,
+.cosmic-home [data-section="trending"] h2,
+.cosmic-home [data-section="featured-collections"] h2 {
+  position: relative; padding-bottom: .55rem;
+  text-shadow: 0 0 18px rgba(139,92,246,.30);
+}
+.cosmic-home [data-section="new-drops"] h2::after,
+.cosmic-home [data-section="trending"] h2::after,
+.cosmic-home [data-section="featured-collections"] h2::after {
+  content: ""; position: absolute; left: 0; bottom: 0;
+  width: 72px; height: 2px; border-radius: 2px;
+  background: var(--voltage-line);
+  box-shadow: 0 0 12px rgba(139,92,246,.45);
+}
+.cosmic-home .product-item { position: relative; overflow: hidden; }
+.cosmic-home .product-item::before {
+  content: ""; position: absolute; z-index: 1; top: 0; left: 0; right: 0; height: 2px;
+  pointer-events: none;
+  background: var(--voltage-line); opacity: .38;
+  transition: opacity .35s ease;
+}
+.cosmic-home .product-item::after {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(105deg, transparent 42%, rgba(242,223,181,.13) 50%, transparent 58%);
+  transform: translateX(-110%);
+  transition: transform .55s ease;
+}
+.cosmic-home .product-item:hover, .cosmic-home .product-item:focus-visible { transform: translateY(-4px); }
+.cosmic-home .product-item:hover::before, .cosmic-home .product-item:focus-visible::before { opacity: 1; }
+.cosmic-home .product-item:hover::after, .cosmic-home .product-item:focus-visible::after { transform: translateX(110%); }
+.cosmic-home .product-item img { transition: transform 700ms cubic-bezier(0.22, 0.61, 0.21, 1), filter .35s ease; }
+.cosmic-home .product-item:hover img { filter: saturate(1.07); }
+.cosmic-home .product-item small { color: var(--cosmic-champagne); letter-spacing: .06em; }
+.cosmic-home [data-section="featured-products"] article,
+.cosmic-home [data-section="product-tiles"] > a { position: relative; }
+.cosmic-home [data-section="featured-products"] article::before,
+.cosmic-home [data-section="product-tiles"] > a::before {
+  content: ""; position: absolute; z-index: 1; top: 0; left: 0; right: 0; height: 2px;
+  pointer-events: none;
+  background: var(--voltage-line); opacity: .38;
+  transition: opacity .35s ease;
+}
+.cosmic-home [data-section="featured-products"] article:hover,
+.cosmic-home [data-section="product-tiles"] > a:hover { transform: translateY(-4px); }
+.cosmic-home [data-section="featured-products"] article:hover::before,
+.cosmic-home [data-section="product-tiles"] > a:hover::before { opacity: 1; }
+
+/* ---------- 4 · FEATURED COLLECTIONS — dramatic entrances ---------- */
+.cosmic-home [data-section="featured-collections"] {
+  background: radial-gradient(ellipse 65% 40% at 50% 0%, rgba(109,40,217,.16), transparent 72%);
+}
+.cosmic-home [data-section="featured-collections"] a {
+  background: linear-gradient(160deg, rgba(23,15,48,.66), rgba(8,6,22,.35));
+  transition: border-color .35s ease, box-shadow .35s ease, transform .35s ease;
+}
+.cosmic-home [data-section="featured-collections"] a:hover,
+.cosmic-home [data-section="featured-collections"] a:focus-visible {
+  border-color: var(--cosmic-gold-edge);
+  box-shadow: 0 0 26px rgba(139,92,246,.28), 0 0 34px rgba(103,232,249,.10);
+  transform: translateY(-3px);
+}
+.cosmic-home [data-section="featured-collections"] a img {
+  transition: transform .7s cubic-bezier(0.22, 0.61, 0.21, 1), filter .35s ease;
+}
+.cosmic-home [data-section="featured-collections"] a:hover img { transform: scale(1.05); filter: saturate(1.08); }
+.cosmic-home [data-section="featured-collections"] a p {
+  border-top: 1px solid rgba(216,182,106,.30);
+  color: var(--cosmic-champagne); letter-spacing: .14em;
+  text-shadow: 0 0 10px rgba(216,182,106,.25);
+}
+.cosmic-home [data-section="category-band"] a:hover {
+  box-shadow: inset 0 2px 0 rgba(216,182,106,.65), 0 0 24px rgba(139,92,246,.22);
+}
+.cosmic-home [data-section="category-band"] header h2 { text-shadow: 0 0 20px rgba(139,92,246,.3); }
+@supports (animation-timeline: view()) {
+  .cosmic-home [data-section="featured-collections"] a,
+  .cosmic-home [data-section="category-band"] a {
+    animation: voltage-materialize linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 55%;
+  }
+}
+@keyframes voltage-materialize {
+  from { opacity: 0; filter: brightness(1.4) saturate(1.25); }
+  to { opacity: 1; filter: brightness(1) saturate(1); }
+}
+
+/* ---------- 6 · NAVIGATION — premium, compact, shopping-first ---------- */
+.header {
+  border-image: linear-gradient(90deg, rgba(216,182,106,.75), rgba(139,92,246,.55), rgba(103,232,249,.45), rgba(216,182,106,.75)) 1;
+  background:
+    radial-gradient(ellipse 30% 120% at 8% 50%, rgba(109,40,217,.20), transparent 70%),
+    rgba(7,4,18,.85);
+}
+.header > a strong { letter-spacing: .14em; text-shadow: 0 0 16px rgba(216,182,106,.45); }
+.header .header-menu-item {
+  background-image: linear-gradient(var(--cosmic-gold), var(--cosmic-gold));
+  background-size: 0% 1px; background-repeat: no-repeat; background-position: 0 100%;
+  transition: color .25s ease, text-shadow .25s ease, background-size .45s ease;
+}
+.header .header-menu-item:hover { background-size: 100% 1px; }
+.header .header-ctas a span {
+  color: var(--cosmic-gold); font-weight: 700;
+  text-shadow: 0 0 10px rgba(216,182,106,.5);
+}
+.footer { border-image: linear-gradient(90deg, rgba(103,232,249,.4), rgba(216,182,106,.6), rgba(139,92,246,.5)) 1; }
+
+/* ---------- 7 · MOBILE — same voltage, lighter paint ---------- */
+@media (max-width: 820px) {
+  .cosmic-home::before { opacity: .15; }
+  .cosmic-home .wra-orbit { width: 78vw; height: 78vw; right: -30vw; opacity: .5; }
+  .cosmic-home .wra-starburst { opacity: .35; }
+  .cosmic-home [data-section="marquee-band"]::after { animation: none; }
+  .cosmic-home .product-item { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+}
+
+/* Reduced motion: every MAX VOLTAGE layer rests static. */
+@media (prefers-reduced-motion: reduce) {
+  .cosmic-home .wra-starburst,
+  .cosmic-home .wra-orbit-ring,
+  .cosmic-home [data-section="editorial-hero"] .wra-nebula-layer,
+  .cosmic-home [data-section="marquee-band"],
+  .cosmic-home [data-section="marquee-band"]::after,
+  .cosmic-home [data-section="flame-interstitial"]::before,
+  .cosmic-home [data-section="featured-collections"] a,
+  .cosmic-home [data-section="category-band"] a {
+    animation: none !important;
+  }
+}
