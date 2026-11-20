@@ -9,25 +9,29 @@
  *   port renders an honest empty state instead: heading, a plain
  *   "nothing here yet" line, no fake products, no borrowed images.
  *
- * RESKIN v1 (spec §4 + its fallback): the catalog's product photography
- * is daylight catalog work, which the spec bans from tiles, and no
- * campaign shots exist yet — so the featured row launches as
- * IMAGE-HOLD FRAMES, exactly as the spec prescribes: DEEP BLACK 3:4
+ * RESKIN v1 (spec §4 + its fallback) launched the row as IMAGE-HOLD
+ * FRAMES: DEEP BLACK 3:4
  * frames carrying a gold garment silhouette labeled AWAITING ART, with
  * the REAL product title (ivory small caps, below the frame) and the
  * REAL price (gold, tabular, right-aligned on the title's baseline)
- * from the live catalog data. The frames are holds, not shoppable
- * tiles: no add-to-cart, no product photo, no fake imagery. On hover
+ * from the live catalog data.
+ *
+ * ART LIVE (2026-11-20, ALLWAYZ ruling): the hold outlived its brief —
+ * live screenshots showed AWAITING ART on products that DO carry real
+ * featured art in Shopify (the same products render it on collection
+ * pages), while every query feeding this section already requests
+ * `featuredImage`. The frames now render each product's REAL featured
+ * image whenever one exists; the AWAITING ART hold remains ONLY for a
+ * product that genuinely has no image. The frames are holds, not
+ * shoppable tiles: no add-to-cart, no fake imagery. On hover
  * the frame holds still while a champagne light sweep crosses it once
  * (400ms); the middle two frames lift 4px over a faint gold glow.
  * Layout: centered "RIZE PIECES" eyebrow, the row framed by gold
  * hairlines above and below, gallery spacing (32px+) — gallery first,
- * grid second. When the campaign shots land, the frames take the real
- * art and the tiles become shoppable; until then this is the honest
- * state of the row.
+ * grid second.
  */
 import {Link} from 'react-router';
-import {Money} from '@shopify/hydrogen';
+import {Image, Money} from '@shopify/hydrogen';
 import type {
   CollectionItemFragment,
   ProductItemFragment,
@@ -75,8 +79,8 @@ export function FeaturedProducts({
         {products.length > 0 ? (
           <div className="border-y border-[var(--wra-gold-line)] py-6 md:py-8">
             {/* ENERGY PASS — a horizontal snap rail on small screens,
-                the four-across grid on desktop. Same real products,
-                same AWAITING ART hold frames. */}
+                the four-across grid on desktop. Same real products;
+                real art where it exists, hold frames only where not. */}
             <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-4 md:gap-6 md:overflow-visible md:pb-0">
               {products.map((product, index) => (
                 <article
@@ -89,10 +93,22 @@ export function FeaturedProducts({
                   data-hold-frame={product.handle}
                 >
                   <div className="wra-hold flex aspect-[3/4] items-center justify-center bg-[var(--wra-panel)]">
-                    <GarmentSilhouette className="h-[62%] w-auto" />
-                    <span className="absolute inset-x-0 bottom-4 text-center text-[11px] font-semibold tracking-[0.3em] text-[var(--wra-gold)] uppercase">
-                      Awaiting art
-                    </span>
+                    {product.featuredImage ? (
+                      <Image
+                        alt={product.featuredImage.altText || product.title}
+                        aspectRatio="3/4"
+                        className="h-full w-full object-cover"
+                        data={product.featuredImage}
+                        sizes="(min-width: 768px) 25vw, 70vw"
+                      />
+                    ) : (
+                      <>
+                        <GarmentSilhouette className="h-[62%] w-auto" />
+                        <span className="absolute inset-x-0 bottom-4 text-center text-[11px] font-semibold tracking-[0.3em] text-[var(--wra-gold)] uppercase">
+                          Awaiting art
+                        </span>
+                      </>
+                    )}
                   </div>
                   <div className="mt-4 flex items-baseline justify-between gap-4">
                     <h3 className="wra-tile-title m-0 text-lg leading-snug font-semibold tracking-[0.06em] uppercase">
