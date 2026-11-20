@@ -1,5 +1,5 @@
 import {useLoaderData} from 'react-router';
-import type {Route} from './+types/_index';
+import type {Route} from './+types/($locale)._index';
 import '~/components/sections/wra-reskin.css';
 import type {
   HomepageCollectionsQuery,
