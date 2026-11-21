@@ -37,7 +37,8 @@
 
 .collection,
 .collections,
-.product {
+.product,
+.account {
   position: relative;
   width: min(1400px, calc(100% - 2rem));
   margin: 0 auto;
