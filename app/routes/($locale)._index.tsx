@@ -303,6 +303,20 @@ const HOMEPAGE_PRODUCTS_QUERY = `#graphql
       width
       height
     }
+    media(first: 2) {
+      nodes {
+        __typename
+        ... on MediaImage {
+          image {
+            id
+            altText
+            url
+            width
+            height
+          }
+        }
+      }
+    }
     priceRange {
       minVariantPrice {
         ...MoneyProductItem
