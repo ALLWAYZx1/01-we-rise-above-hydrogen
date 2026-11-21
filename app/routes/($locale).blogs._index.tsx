@@ -54,7 +54,8 @@ export default function Blogs() {
   const {blogs} = useLoaderData<typeof loader>();
 
   return (
-    <div className="blogs">
+    <div className="blogs cosmic-blog">
+      <div className="wra-blog-starfield" aria-hidden="true" />
       <h1>Blogs</h1>
       <div className="blogs-grid">
         <PaginatedResourceSection<BlogNode> connection={blogs}>

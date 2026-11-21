@@ -76,7 +76,8 @@ export default function Article() {
   }).format(new Date(article.publishedAt));
 
   return (
-    <div className="article">
+    <div className="article cosmic-blog cosmic-article">
+      <div className="wra-blog-starfield" aria-hidden="true" />
       <h1>
         {title}
         <div>
