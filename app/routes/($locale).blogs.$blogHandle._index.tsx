@@ -65,7 +65,8 @@ export default function Blog() {
   const {articles} = blog;
 
   return (
-    <div className="blog">
+    <div className="blog cosmic-blog">
+      <div className="wra-blog-starfield" aria-hidden="true" />
       <h1>{blog.title}</h1>
       <div className="blog-grid">
         <PaginatedResourceSection<ArticleItemFragment> connection={articles}>
