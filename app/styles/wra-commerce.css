@@ -367,208 +367,174 @@ aside button {
 }
 
 /* ============================================================
-   COSMIC ENERGY — authenticated customer account surfaces.
+   COSMIC ENERGY — product detail surface.
+   Preserve the existing two-column geometry and sticky details;
+   add atmosphere, artifact framing, and readable gold/ivory type.
    ============================================================ */
-.cosmic-account {
+.cosmic-product {
   position: relative;
   isolation: isolate;
   overflow: clip;
-  width: min(1400px, calc(100% - 2rem));
-  margin: 1.75rem auto 3.5rem;
-  padding: clamp(1rem, 2.5vw, 2rem);
-  border: 1px solid rgba(216, 182, 106, .3);
-  border-radius: 12px;
   color: var(--cosmic-ivory);
   background:
-    radial-gradient(ellipse 64% 38% at 12% 0%, rgba(109, 40, 217, .18), transparent 74%),
-    radial-gradient(ellipse 46% 44% at 92% 82%, rgba(103, 232, 249, .065), transparent 76%),
-    linear-gradient(145deg, var(--cosmic-void), var(--cosmic-deep) 54%, #070412);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, .22);
+    radial-gradient(ellipse 58% 48% at 14% 12%, rgba(109, 40, 217, .2), transparent 72%),
+    radial-gradient(ellipse 42% 38% at 86% 72%, rgba(103, 232, 249, .075), transparent 74%),
+    radial-gradient(ellipse 34% 30% at 52% 48%, rgba(216, 182, 106, .055), transparent 76%),
+    linear-gradient(145deg, var(--cosmic-void), var(--cosmic-deep) 52%, #070412);
 }
-.cosmic-account > :not(.wra-account-starfield) {
-  position: relative;
-  z-index: 1;
-}
-.cosmic-account .wra-account-starfield {
+.cosmic-product .wra-product-starfield {
   position: absolute;
   z-index: 0;
   inset: 0;
+  overflow: hidden;
   pointer-events: none;
-  opacity: .42;
+  opacity: .58;
   background-image:
-    radial-gradient(rgba(247, 240, 232, .8) .8px, transparent 1.5px),
-    radial-gradient(rgba(216, 182, 106, .75) 1px, transparent 1.7px),
-    radial-gradient(rgba(167, 139, 250, .7) .8px, transparent 1.6px),
-    radial-gradient(rgba(103, 232, 249, .5) .7px, transparent 1.5px);
-  background-size: 127px 139px, 193px 211px, 241px 229px, 307px 283px;
-  animation: wra-account-stars 132s linear infinite alternate;
+    radial-gradient(rgba(247, 240, 232, .82) .8px, transparent 1.5px),
+    radial-gradient(rgba(216, 182, 106, .78) 1px, transparent 1.7px),
+    radial-gradient(rgba(167, 139, 250, .72) .8px, transparent 1.6px),
+    radial-gradient(rgba(103, 232, 249, .58) .7px, transparent 1.5px),
+    radial-gradient(rgba(255, 255, 255, .34) .55px, transparent 1.2px);
+  background-size: 127px 139px, 193px 211px, 241px 229px, 307px 283px, 67px 71px;
+  animation: wra-product-stars 118s linear infinite alternate;
 }
-@keyframes wra-account-stars {
-  to { background-position: 30px -18px, -24px 30px, 20px 16px, -30px -20px; }
+.cosmic-product .wra-product-starfield::after {
+  content: "";
+  position: absolute;
+  top: 12%;
+  right: 8%;
+  width: 104px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(242, 223, 181, .9), #fff);
+  filter: drop-shadow(0 0 5px rgba(242, 223, 181, .72));
+  animation: wra-product-streak 16s linear infinite;
 }
-.cosmic-account h1 {
+@keyframes wra-product-stars {
+  from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; }
+  to { background-position: 34px -22px, -28px 36px, 22px 18px, -36px -24px, 14px 28px; }
+}
+@keyframes wra-product-streak {
+  0%, 72%, 100% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-24deg); }
+  74% { opacity: .9; }
+  80% { opacity: 0; transform: translate3d(-32vw, 13vh, 0) rotate(-24deg); }
+}
+.cosmic-product > .product-stage,
+.cosmic-product > .product-main {
+  position: relative;
+  z-index: 1;
+}
+.cosmic-product > .product-main {
+  position: sticky;
+  top: 6rem;
   color: var(--cosmic-ivory);
-  text-shadow: 0 0 22px rgba(167, 139, 250, .2), 0 0 12px rgba(216, 182, 106, .16);
 }
-.cosmic-account h2,
-.cosmic-account h3,
-.cosmic-account legend {
-  color: var(--cosmic-champagne);
+.cosmic-product .product-stage {
+  align-self: start;
+  min-width: 0;
+  padding: clamp(.55rem, 1.2vw, 1rem);
+  border: 1px solid var(--cosmic-gold-edge);
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(18, 12, 38, .9), rgba(6, 4, 17, .94));
+  box-shadow: inset 0 1px rgba(255, 255, 255, .045), 0 0 30px rgba(109, 40, 217, .18), 0 18px 48px rgba(0, 0, 0, .28);
 }
-.cosmic-account nav[role="navigation"] {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: .35rem .65rem;
-  padding: .85rem 1rem;
-  border: 1px solid rgba(216, 182, 106, .28);
+.cosmic-product .product-stage .product-image {
+  overflow: hidden;
   border-radius: 7px;
-  color: rgba(247, 240, 232, .42);
-  background: linear-gradient(145deg, rgba(23, 15, 48, .76), rgba(8, 6, 22, .88));
+  background: rgba(5, 3, 14, .72);
 }
-.cosmic-account nav a {
-  color: var(--cosmic-ivory);
-  text-decoration-color: rgba(216, 182, 106, .4);
-  text-underline-offset: .2em;
+.cosmic-product .product-stage .product-image img {
+  background: transparent;
+  display: block;
+  border-radius: 7px;
 }
-.cosmic-account nav a[aria-current="page"] {
+.cosmic-product .shelf-kicker {
+  margin: 0 0 .7rem;
   color: var(--cosmic-gold);
-  font-weight: 800;
-  text-shadow: 0 0 12px rgba(216, 182, 106, .2);
-}
-.cosmic-account button {
-  min-height: 2.6rem;
-  border: 1px solid rgba(216, 182, 106, .48);
-  border-radius: 5px;
-  padding: .55rem .9rem;
-  color: var(--cosmic-champagne);
-  background: rgba(216, 182, 106, .09);
+  font-size: .72rem;
   font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  text-shadow: 0 0 14px rgba(216, 182, 106, .3);
+}
+.cosmic-product .product-main h1 {
+  color: var(--cosmic-ivory);
+  text-shadow: 0 0 24px rgba(167, 139, 250, .2), 0 0 12px rgba(216, 182, 106, .12);
+}
+.cosmic-product .shelf-canon {
+  color: var(--cosmic-champagne);
+  letter-spacing: .045em;
+}
+.cosmic-product .product-price {
+  color: var(--cosmic-gold);
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  font-weight: 700;
+  text-shadow: 0 0 16px rgba(216, 182, 106, .2);
+}
+.cosmic-product .product-price-on-sale s {
+  color: rgba(247, 240, 232, .58);
+  font-size: .88em;
+  font-weight: 400;
+  text-shadow: none;
+}
+.cosmic-product .product-options h5,
+.cosmic-product .product-main strong {
+  color: var(--cosmic-champagne);
+}
+.cosmic-product .product-options-item {
+  min-height: 2.5rem;
+  border-radius: 5px;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .035);
   transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
 }
-.cosmic-account button:hover:not(:disabled) {
-  border-color: var(--cosmic-gold);
-  background: rgba(216, 182, 106, .16);
+.cosmic-product .product-options-item:hover:not(:disabled) {
+  border-color: var(--cosmic-gold) !important;
+  background: rgba(216, 182, 106, .12) !important;
   box-shadow: 0 0 16px rgba(216, 182, 106, .14);
 }
-.cosmic-account button:disabled {
+.cosmic-product .product-options-item:disabled {
   cursor: not-allowed;
-  opacity: .5;
 }
-.cosmic-account input,
-.cosmic-account select,
-.cosmic-account textarea {
-  max-width: 100%;
-  min-height: 2.7rem;
-  border: 1px solid rgba(216, 182, 106, .36);
-  border-radius: 4px;
-  padding: .6rem .75rem;
-  color: var(--cosmic-ivory);
-  background: rgba(5, 3, 14, .76);
-}
-.cosmic-account input::placeholder,
-.cosmic-account textarea::placeholder {
-  color: rgba(247, 240, 232, .48);
-}
-.cosmic-account label {
-  display: block;
-  margin: .65rem 0 .3rem;
-  color: var(--cosmic-champagne);
-  font-size: .85rem;
-  font-weight: 600;
-}
-.cosmic-account fieldset {
-  min-width: 0;
-  margin: .75rem 0;
-  padding: 1rem;
-  border: 1px solid rgba(167, 139, 250, .24);
-  border-radius: 7px;
-  color: var(--cosmic-ivory);
-  background: linear-gradient(145deg, rgba(23, 15, 48, .66), rgba(8, 6, 22, .82));
-}
-.cosmic-account .order-search-fieldset {
-  border-color: rgba(216, 182, 106, .32);
-}
-.cosmic-account .order-search-legend {
-  color: var(--cosmic-champagne);
-}
-.cosmic-account .order-search-input {
+.cosmic-product .product-form form > button[type="submit"] {
   width: 100%;
+  min-height: 3.25rem;
+  border: 1px solid rgba(242, 223, 181, .72);
+  border-radius: 5px;
+  padding: .85rem 1.25rem;
+  color: #100922;
+  background: linear-gradient(110deg, #f2dfb5, #d8b66a 58%, #b88a48);
+  box-shadow: 0 0 22px rgba(216, 182, 106, .2), inset 0 1px rgba(255, 255, 255, .48);
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  transition: filter .2s ease, box-shadow .2s ease;
 }
-.cosmic-account .order-search-buttons {
-  align-items: center;
+.cosmic-product .product-form form > button[type="submit"]:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow: 0 0 28px rgba(216, 182, 106, .34), 0 0 22px rgba(139, 92, 246, .16);
 }
-.cosmic-account .orders,
-.cosmic-account .account-profile,
-.cosmic-account .account-addresses,
-.cosmic-account .account-order {
+.cosmic-product .product-form form > button[type="submit"]:disabled {
+  cursor: not-allowed;
+  opacity: .58;
+  filter: saturate(.55);
+}
+.cosmic-product .product-main > div:last-of-type {
   color: rgba(247, 240, 232, .88);
+  line-height: 1.7;
 }
-.cosmic-account .orders a,
-.cosmic-account .account-profile a,
-.cosmic-account .account-addresses a,
-.cosmic-account .account-order a {
+.cosmic-product .product-main a {
   color: var(--cosmic-champagne);
-  text-decoration-color: rgba(216, 182, 106, .45);
+  text-decoration-color: rgba(216, 182, 106, .48);
   text-underline-offset: .2em;
 }
-.cosmic-account .account-order table {
-  width: 100%;
-  border-collapse: collapse;
-  color: var(--cosmic-ivory);
-  background: rgba(8, 6, 22, .55);
-}
-.cosmic-account .account-order th,
-.cosmic-account .account-order td {
-  padding: .7rem;
-  border-bottom: 1px solid rgba(216, 182, 106, .18);
-  text-align: left;
-}
-.cosmic-account .account-order th {
-  color: var(--cosmic-champagne);
-}
-.cosmic-account .account-order address {
-  padding: 1rem;
-  border: 1px solid rgba(167, 139, 250, .22);
-  border-radius: 6px;
-  color: rgba(247, 240, 232, .82);
-  background: rgba(8, 6, 22, .58);
-}
-.cosmic-account .acccount-orders > fieldset {
-  border-color: rgba(216, 182, 106, .24);
-}
-.cosmic-account .order-search-form {
-  margin-bottom: 1.5rem;
-}
-.cosmic-account mark {
-  color: var(--cosmic-ivory);
-  background: rgba(124, 58, 237, .3);
-}
-.cosmic-account hr {
-  border: 0;
-  border-top: 1px solid rgba(216, 182, 106, .24);
-}
-@media (max-width: 700px) {
-  .cosmic-account {
-    width: calc(100% - 1.25rem);
-    margin: .75rem auto 2rem;
-    padding: .85rem;
-  }
-  .cosmic-account nav[role="navigation"] {
-    gap: .35rem .45rem;
-    padding: .7rem;
-  }
-  .cosmic-account .account-order table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
-  .cosmic-account .wra-account-starfield {
+  .cosmic-product .wra-product-starfield,
+  .cosmic-product .wra-product-starfield::after {
     animation: none !important;
   }
-  .cosmic-account button {
+  .cosmic-product .product-options-item,
+  .cosmic-product .product-form form > button[type="submit"] {
     transition: none;
   }
 }

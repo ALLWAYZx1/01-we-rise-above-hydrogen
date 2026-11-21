@@ -73,7 +73,8 @@ function SearchAside() {
   const queriesDatalistId = useId();
   return (
     <Aside type="search" heading="SEARCH">
-      <div className="predictive-search">
+      <div className="predictive-search cosmic-predictive-search">
+        <div className="wra-search-starfield" aria-hidden="true" />
         <br />
         <SearchFormPredictive>
           {({fetchResults, goToSearch, inputRef}) => (
