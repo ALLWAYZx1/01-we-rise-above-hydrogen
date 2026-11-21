@@ -98,7 +98,8 @@ export default function Product() {
   const {title, descriptionHtml} = product;
 
   return (
-    <div className="product">
+    <div className="product cosmic-product">
+      <div className="wra-product-starfield" aria-hidden="true" />
       <div className="product-stage">
         <ProductImage image={selectedVariant?.image} />
       </div>

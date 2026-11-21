@@ -367,180 +367,174 @@ aside button {
 }
 
 /* ============================================================
-   COSMIC ENERGY — blog index, blog shelves, and article pages.
-   Hero/title surfaces glow; long-form article copy stays plain
-   ivory for comfortable reading.
+   COSMIC ENERGY — product detail surface.
+   Preserve the existing two-column geometry and sticky details;
+   add atmosphere, artifact framing, and readable gold/ivory type.
    ============================================================ */
-.cosmic-blog {
+.cosmic-product {
   position: relative;
   isolation: isolate;
   overflow: clip;
-  width: min(1400px, calc(100% - 2rem));
-  margin: 1.75rem auto 3.5rem;
-  padding: clamp(1rem, 2.5vw, 2rem);
-  border: 1px solid rgba(216, 182, 106, .3);
-  border-radius: 12px;
   color: var(--cosmic-ivory);
   background:
-    radial-gradient(ellipse 64% 38% at 12% 0%, rgba(109, 40, 217, .2), transparent 74%),
-    radial-gradient(ellipse 46% 44% at 92% 82%, rgba(103, 232, 249, .065), transparent 76%),
-    linear-gradient(145deg, var(--cosmic-void), var(--cosmic-deep) 54%, #070412);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, .22);
+    radial-gradient(ellipse 58% 48% at 14% 12%, rgba(109, 40, 217, .2), transparent 72%),
+    radial-gradient(ellipse 42% 38% at 86% 72%, rgba(103, 232, 249, .075), transparent 74%),
+    radial-gradient(ellipse 34% 30% at 52% 48%, rgba(216, 182, 106, .055), transparent 76%),
+    linear-gradient(145deg, var(--cosmic-void), var(--cosmic-deep) 52%, #070412);
 }
-.cosmic-blog > :not(.wra-blog-starfield) {
-  position: relative;
-  z-index: 1;
-}
-.cosmic-blog .wra-blog-starfield {
+.cosmic-product .wra-product-starfield {
   position: absolute;
   z-index: 0;
   inset: 0;
+  overflow: hidden;
   pointer-events: none;
-  opacity: .46;
+  opacity: .58;
   background-image:
     radial-gradient(rgba(247, 240, 232, .82) .8px, transparent 1.5px),
     radial-gradient(rgba(216, 182, 106, .78) 1px, transparent 1.7px),
     radial-gradient(rgba(167, 139, 250, .72) .8px, transparent 1.6px),
-    radial-gradient(rgba(103, 232, 249, .55) .7px, transparent 1.5px);
-  background-size: 127px 139px, 193px 211px, 241px 229px, 307px 283px;
-  animation: wra-blog-stars 132s linear infinite alternate;
+    radial-gradient(rgba(103, 232, 249, .58) .7px, transparent 1.5px),
+    radial-gradient(rgba(255, 255, 255, .34) .55px, transparent 1.2px);
+  background-size: 127px 139px, 193px 211px, 241px 229px, 307px 283px, 67px 71px;
+  animation: wra-product-stars 118s linear infinite alternate;
 }
-@keyframes wra-blog-stars {
-  to { background-position: 30px -18px, -24px 30px, 20px 16px, -30px -20px; }
+.cosmic-product .wra-product-starfield::after {
+  content: "";
+  position: absolute;
+  top: 12%;
+  right: 8%;
+  width: 104px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(242, 223, 181, .9), #fff);
+  filter: drop-shadow(0 0 5px rgba(242, 223, 181, .72));
+  animation: wra-product-streak 16s linear infinite;
 }
-.cosmic-blog > h1,
-.cosmic-article > h1 {
-  color: var(--cosmic-ivory);
-  text-shadow: 0 0 24px rgba(167, 139, 250, .2), 0 0 14px rgba(216, 182, 106, .16);
+@keyframes wra-product-stars {
+  from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; }
+  to { background-position: 34px -22px, -28px 36px, 22px 18px, -36px -24px, 14px 28px; }
 }
-.cosmic-blog .blogs-grid,
-.cosmic-blog .blog-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-  gap: clamp(1rem, 2vw, 1.75rem);
-  margin: 1.5rem 0 0;
+@keyframes wra-product-streak {
+  0%, 72%, 100% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-24deg); }
+  74% { opacity: .9; }
+  80% { opacity: 0; transform: translate3d(-32vw, 13vh, 0) rotate(-24deg); }
 }
-.cosmic-blog .blogs-grid .blog,
-.cosmic-blog .blog-article {
-  min-width: 0;
-  padding: 1rem;
-  border: 1px solid rgba(167, 139, 250, .26);
-  border-radius: 9px;
-  color: var(--cosmic-ivory);
-  background: linear-gradient(145deg, rgba(23, 15, 48, .84), rgba(8, 6, 22, .92));
-  box-shadow: inset 0 1px rgba(255, 255, 255, .035), 0 12px 30px rgba(0, 0, 0, .18);
-  transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
-}
-.cosmic-blog .blogs-grid .blog {
-  text-decoration: none;
-}
-.cosmic-blog .blogs-grid .blog h2 {
-  margin: 0;
-  color: var(--cosmic-champagne);
-  text-shadow: 0 0 14px rgba(216, 182, 106, .16);
-}
-.cosmic-blog .blog-article a {
-  color: var(--cosmic-ivory);
-  text-decoration: none;
-}
-.cosmic-blog .blog-article-image {
-  overflow: hidden;
-  border: 1px solid rgba(216, 182, 106, .32);
-  border-radius: 6px;
-  background: rgba(5, 3, 14, .72);
-}
-.cosmic-blog .blog-article-image img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.cosmic-blog .blog-article h3 {
-  color: var(--cosmic-ivory);
-  text-shadow: 0 0 12px rgba(167, 139, 250, .16);
-}
-.cosmic-blog .blog-article small {
-  color: var(--cosmic-gold);
-  letter-spacing: .04em;
-}
-.cosmic-blog .blogs-grid .blog:hover,
-.cosmic-blog .blog-article:hover {
-  border-color: var(--cosmic-gold-edge);
-  box-shadow: 0 0 22px rgba(139, 92, 246, .18), 0 0 20px rgba(216, 182, 106, .1);
-  transform: translateY(-3px);
-}
-.cosmic-article > h1 > div {
-  margin-top: 1rem;
-  color: var(--cosmic-gold);
-  font-family: inherit;
-  font-size: .82rem;
-  font-weight: 600;
-  letter-spacing: .08em;
-  line-height: 1.5;
-  text-shadow: 0 0 12px rgba(216, 182, 106, .14);
-}
-.cosmic-article > h1 address {
-  display: inline;
-  color: var(--cosmic-champagne);
-  font-style: normal;
-}
-.cosmic-article > img {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 42rem;
-  margin: 1.5rem 0 2rem;
-  border: 1px solid rgba(216, 182, 106, .34);
-  border-radius: 8px;
-  object-fit: cover;
-  box-shadow: 0 16px 42px rgba(0, 0, 0, .24);
-}
-/* Long-form article body: plain ivory, no decorative title glow. */
-.cosmic-article > .article {
+.cosmic-product > .product-stage,
+.cosmic-product > .product-main {
   position: relative;
   z-index: 1;
-  max-width: 78ch;
-  margin: 0 auto;
-  color: rgba(247, 240, 232, .9);
-  font-size: 1rem;
-  line-height: 1.8;
-  text-shadow: none;
 }
-.cosmic-article > .article :is(p, li, blockquote, figcaption) {
-  color: rgba(247, 240, 232, .9);
-  text-shadow: none;
-}
-.cosmic-article > .article :is(h2, h3, h4, h5, h6) {
+.cosmic-product > .product-main {
+  position: sticky;
+  top: 6rem;
   color: var(--cosmic-ivory);
+}
+.cosmic-product .product-stage {
+  align-self: start;
+  min-width: 0;
+  padding: clamp(.55rem, 1.2vw, 1rem);
+  border: 1px solid var(--cosmic-gold-edge);
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(18, 12, 38, .9), rgba(6, 4, 17, .94));
+  box-shadow: inset 0 1px rgba(255, 255, 255, .045), 0 0 30px rgba(109, 40, 217, .18), 0 18px 48px rgba(0, 0, 0, .28);
+}
+.cosmic-product .product-stage .product-image {
+  overflow: hidden;
+  border-radius: 7px;
+  background: rgba(5, 3, 14, .72);
+}
+.cosmic-product .product-stage .product-image img {
+  background: transparent;
+  display: block;
+  border-radius: 7px;
+}
+.cosmic-product .shelf-kicker {
+  margin: 0 0 .7rem;
+  color: var(--cosmic-gold);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  text-shadow: 0 0 14px rgba(216, 182, 106, .3);
+}
+.cosmic-product .product-main h1 {
+  color: var(--cosmic-ivory);
+  text-shadow: 0 0 24px rgba(167, 139, 250, .2), 0 0 12px rgba(216, 182, 106, .12);
+}
+.cosmic-product .shelf-canon {
+  color: var(--cosmic-champagne);
+  letter-spacing: .045em;
+}
+.cosmic-product .product-price {
+  color: var(--cosmic-gold);
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  font-weight: 700;
+  text-shadow: 0 0 16px rgba(216, 182, 106, .2);
+}
+.cosmic-product .product-price-on-sale s {
+  color: rgba(247, 240, 232, .58);
+  font-size: .88em;
+  font-weight: 400;
   text-shadow: none;
 }
-.cosmic-article > .article a {
+.cosmic-product .product-options h5,
+.cosmic-product .product-main strong {
   color: var(--cosmic-champagne);
-  text-decoration-color: rgba(216, 182, 106, .5);
+}
+.cosmic-product .product-options-item {
+  min-height: 2.5rem;
+  border-radius: 5px;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .035);
+  transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
+}
+.cosmic-product .product-options-item:hover:not(:disabled) {
+  border-color: var(--cosmic-gold) !important;
+  background: rgba(216, 182, 106, .12) !important;
+  box-shadow: 0 0 16px rgba(216, 182, 106, .14);
+}
+.cosmic-product .product-options-item:disabled {
+  cursor: not-allowed;
+}
+.cosmic-product .product-form form > button[type="submit"] {
+  width: 100%;
+  min-height: 3.25rem;
+  border: 1px solid rgba(242, 223, 181, .72);
+  border-radius: 5px;
+  padding: .85rem 1.25rem;
+  color: #100922;
+  background: linear-gradient(110deg, #f2dfb5, #d8b66a 58%, #b88a48);
+  box-shadow: 0 0 22px rgba(216, 182, 106, .2), inset 0 1px rgba(255, 255, 255, .48);
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  transition: filter .2s ease, box-shadow .2s ease;
+}
+.cosmic-product .product-form form > button[type="submit"]:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow: 0 0 28px rgba(216, 182, 106, .34), 0 0 22px rgba(139, 92, 246, .16);
+}
+.cosmic-product .product-form form > button[type="submit"]:disabled {
+  cursor: not-allowed;
+  opacity: .58;
+  filter: saturate(.55);
+}
+.cosmic-product .product-main > div:last-of-type {
+  color: rgba(247, 240, 232, .88);
+  line-height: 1.7;
+}
+.cosmic-product .product-main a {
+  color: var(--cosmic-champagne);
+  text-decoration-color: rgba(216, 182, 106, .48);
   text-underline-offset: .2em;
 }
-.cosmic-article > .article img {
-  height: auto;
-  width: 100%;
-  border-radius: 6px;
-}
-@media (max-width: 700px) {
-  .cosmic-blog {
-    width: calc(100% - 1.25rem);
-    margin: .75rem auto 2rem;
-    padding: .85rem;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
-  .cosmic-blog .wra-blog-starfield {
+  .cosmic-product .wra-product-starfield,
+  .cosmic-product .wra-product-starfield::after {
     animation: none !important;
   }
-  .cosmic-blog .blogs-grid .blog,
-  .cosmic-blog .blog-article {
+  .cosmic-product .product-options-item,
+  .cosmic-product .product-form form > button[type="submit"] {
     transition: none;
-  }
-  .cosmic-blog .blogs-grid .blog:hover,
-  .cosmic-blog .blog-article:hover {
-    transform: none;
   }
 }
