@@ -41,9 +41,10 @@ export default function SearchPage() {
   if (type === 'predictive') return null;
 
   return (
-    <div className="search">
+    <div className="search cosmic-search">
+      <div className="wra-search-starfield" aria-hidden="true" />
       <h1>Search</h1>
-      <SearchForm>
+      <SearchForm className="search-form">
         {({inputRef}) => (
           <>
             <input
