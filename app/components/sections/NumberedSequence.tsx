@@ -111,7 +111,7 @@ function SequenceRow({step, index}: {step: SequenceStep; index: number}) {
         <div className="relative">
           <div className="wra-nebula-soft" />
           <span
-            className={`wra-seq-num wra-display relative block text-[26vw] leading-none font-bold text-[var(--wra-gold)] select-none md:text-[8vw] ${
+            className={`wra-seq-num wra-display relative block text-[19vw] leading-none font-bold text-[var(--wra-gold)] select-none md:text-[7vw] ${
               lit ? 'is-lit' : ''
             }`}
           >
