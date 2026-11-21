@@ -51,9 +51,10 @@ export function CartMain({layout, cart: originalCart}: CartMainProps) {
 
   return (
     <section
-      className={className}
+      className={`${className} cosmic-cart-main`}
       aria-label={layout === 'page' ? 'Cart page' : 'Cart drawer'}
     >
+      <div className="wra-cart-starfield" aria-hidden="true" />
       <CartEmpty hidden={linesCount} layout={layout} />
       <div className="cart-details">
         <p id="cart-lines" className="sr-only">
