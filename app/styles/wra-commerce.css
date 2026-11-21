@@ -367,193 +367,174 @@ aside button {
 }
 
 /* ============================================================
-   COSMIC ENERGY — cart page + shared cart drawer.
-   The same starfield and glass surface serve both layouts.
+   COSMIC ENERGY — product detail surface.
+   Preserve the existing two-column geometry and sticky details;
+   add atmosphere, artifact framing, and readable gold/ivory type.
    ============================================================ */
-.cosmic-cart {
+.cosmic-product {
   position: relative;
   isolation: isolate;
   overflow: clip;
-  border: 1px solid rgba(216, 182, 106, .3);
-  border-radius: 12px;
-  background:
-    radial-gradient(ellipse 64% 38% at 12% 0%, rgba(109, 40, 217, .18), transparent 74%),
-    radial-gradient(ellipse 46% 44% at 92% 82%, rgba(103, 232, 249, .065), transparent 76%),
-    linear-gradient(145deg, var(--cosmic-void), var(--cosmic-deep) 54%, #070412);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, .22);
-}
-.cosmic-cart > h1 {
-  color: var(--cosmic-ivory);
-  text-shadow: 0 0 22px rgba(167, 139, 250, .2), 0 0 12px rgba(216, 182, 106, .16);
-}
-.cosmic-cart-main {
-  position: relative;
-  isolation: isolate;
-  border: 1px solid rgba(167, 139, 250, .24);
-  border-radius: 10px;
-  padding: 1rem;
   color: var(--cosmic-ivory);
   background:
-    radial-gradient(ellipse 54% 46% at 80% 0%, rgba(109, 40, 217, .14), transparent 76%),
-    linear-gradient(150deg, rgba(15, 10, 34, .94), rgba(5, 3, 14, .97));
-  box-shadow: inset 0 1px rgba(255, 255, 255, .035), 0 12px 34px rgba(0, 0, 0, .2);
+    radial-gradient(ellipse 58% 48% at 14% 12%, rgba(109, 40, 217, .2), transparent 72%),
+    radial-gradient(ellipse 42% 38% at 86% 72%, rgba(103, 232, 249, .075), transparent 74%),
+    radial-gradient(ellipse 34% 30% at 52% 48%, rgba(216, 182, 106, .055), transparent 76%),
+    linear-gradient(145deg, var(--cosmic-void), var(--cosmic-deep) 52%, #070412);
 }
-.cosmic-cart-main > :not(.wra-cart-starfield) {
-  position: relative;
-  z-index: 1;
-}
-.cosmic-cart-main .wra-cart-starfield {
+.cosmic-product .wra-product-starfield {
   position: absolute;
   z-index: 0;
   inset: 0;
+  overflow: hidden;
   pointer-events: none;
-  opacity: .42;
+  opacity: .58;
   background-image:
-    radial-gradient(rgba(247, 240, 232, .8) .8px, transparent 1.5px),
-    radial-gradient(rgba(216, 182, 106, .75) 1px, transparent 1.7px),
-    radial-gradient(rgba(167, 139, 250, .7) .8px, transparent 1.6px),
-    radial-gradient(rgba(103, 232, 249, .5) .7px, transparent 1.5px);
-  background-size: 127px 139px, 193px 211px, 241px 229px, 307px 283px;
-  animation: wra-cart-stars 132s linear infinite alternate;
+    radial-gradient(rgba(247, 240, 232, .82) .8px, transparent 1.5px),
+    radial-gradient(rgba(216, 182, 106, .78) 1px, transparent 1.7px),
+    radial-gradient(rgba(167, 139, 250, .72) .8px, transparent 1.6px),
+    radial-gradient(rgba(103, 232, 249, .58) .7px, transparent 1.5px),
+    radial-gradient(rgba(255, 255, 255, .34) .55px, transparent 1.2px);
+  background-size: 127px 139px, 193px 211px, 241px 229px, 307px 283px, 67px 71px;
+  animation: wra-product-stars 118s linear infinite alternate;
 }
-@keyframes wra-cart-stars {
-  to { background-position: 30px -18px, -24px 30px, 20px 16px, -30px -20px; }
+.cosmic-product .wra-product-starfield::after {
+  content: "";
+  position: absolute;
+  top: 12%;
+  right: 8%;
+  width: 104px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(242, 223, 181, .9), #fff);
+  filter: drop-shadow(0 0 5px rgba(242, 223, 181, .72));
+  animation: wra-product-streak 16s linear infinite;
 }
-.cosmic-cart-main .cart-details,
-.cosmic-cart-main .cart-empty {
+@keyframes wra-product-stars {
+  from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; }
+  to { background-position: 34px -22px, -28px 36px, 22px 18px, -36px -24px, 14px 28px; }
+}
+@keyframes wra-product-streak {
+  0%, 72%, 100% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-24deg); }
+  74% { opacity: .9; }
+  80% { opacity: 0; transform: translate3d(-32vw, 13vh, 0) rotate(-24deg); }
+}
+.cosmic-product > .product-stage,
+.cosmic-product > .product-main {
+  position: relative;
+  z-index: 1;
+}
+.cosmic-product > .product-main {
+  position: sticky;
+  top: 6rem;
   color: var(--cosmic-ivory);
 }
-.cosmic-cart-main .cart-line {
-  border-bottom: 1px solid rgba(216, 182, 106, .2);
-  padding: 1rem 0;
+.cosmic-product .product-stage {
+  align-self: start;
+  min-width: 0;
+  padding: clamp(.55rem, 1.2vw, 1rem);
+  border: 1px solid var(--cosmic-gold-edge);
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(18, 12, 38, .9), rgba(6, 4, 17, .94));
+  box-shadow: inset 0 1px rgba(255, 255, 255, .045), 0 0 30px rgba(109, 40, 217, .18), 0 18px 48px rgba(0, 0, 0, .28);
 }
-.cosmic-cart-main .cart-line-inner {
-  align-items: flex-start;
-  gap: .9rem;
-}
-.cosmic-cart-main .cart-line-inner > img {
-  flex: 0 0 5.5rem;
-  width: 5.5rem;
-  height: 5.5rem;
-  object-fit: cover;
-  border: 1px solid rgba(216, 182, 106, .36);
+.cosmic-product .product-stage .product-image {
+  overflow: hidden;
   border-radius: 7px;
   background: rgba(5, 3, 14, .72);
 }
-.cosmic-cart-main .cart-line a {
-  color: var(--cosmic-ivory);
-  text-decoration-color: rgba(216, 182, 106, .4);
-  text-underline-offset: .18em;
+.cosmic-product .product-stage .product-image img {
+  background: transparent;
+  display: block;
+  border-radius: 7px;
 }
-.cosmic-cart-main .cart-line small {
-  color: rgba(247, 240, 232, .72);
-}
-.cosmic-cart-main .cart-line .product-price {
-  margin: .35rem 0;
+.cosmic-product .shelf-kicker {
+  margin: 0 0 .7rem;
   color: var(--cosmic-gold);
+  font-size: .72rem;
   font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  text-shadow: 0 0 14px rgba(216, 182, 106, .3);
 }
-.cosmic-cart-main .cart-line-quantity {
-  align-items: center;
-  flex-wrap: wrap;
-  gap: .35rem;
-  margin-top: .55rem;
-}
-.cosmic-cart-main .cart-line-quantity button,
-.cosmic-cart-main .cart-summary-page button,
-.cosmic-cart-main .cart-summary-aside button {
-  min-height: 2rem;
-  border: 1px solid rgba(216, 182, 106, .42);
-  border-radius: 4px;
-  padding: .35rem .65rem;
-  color: var(--cosmic-champagne);
-  background: rgba(216, 182, 106, .08);
-}
-.cosmic-cart-main button:disabled {
-  cursor: not-allowed;
-  opacity: .45;
-}
-.cosmic-cart-main .cart-summary-page,
-.cosmic-cart-main .cart-summary-aside {
-  margin-top: 1rem;
-  padding: 1rem;
-  border: 1px solid rgba(216, 182, 106, .3);
-  border-radius: 8px;
+.cosmic-product .product-main h1 {
   color: var(--cosmic-ivory);
-  background: linear-gradient(145deg, rgba(23, 15, 48, .82), rgba(8, 6, 22, .94));
+  text-shadow: 0 0 24px rgba(167, 139, 250, .2), 0 0 12px rgba(216, 182, 106, .12);
 }
-.cosmic-cart-main .cart-summary-aside {
-  position: relative;
-  width: 100%;
-  border-top: 1px solid rgba(216, 182, 106, .3);
+.cosmic-product .shelf-canon {
+  color: var(--cosmic-champagne);
+  letter-spacing: .045em;
 }
-.cosmic-cart-main .cart-summary-page h4,
-.cosmic-cart-main .cart-summary-aside h4,
-.cosmic-cart-main .cart-summary-page dt,
-.cosmic-cart-main .cart-summary-aside dt {
+.cosmic-product .product-price {
+  color: var(--cosmic-gold);
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  font-weight: 700;
+  text-shadow: 0 0 16px rgba(216, 182, 106, .2);
+}
+.cosmic-product .product-price-on-sale s {
+  color: rgba(247, 240, 232, .58);
+  font-size: .88em;
+  font-weight: 400;
+  text-shadow: none;
+}
+.cosmic-product .product-options h5,
+.cosmic-product .product-main strong {
   color: var(--cosmic-champagne);
 }
-.cosmic-cart-main .cart-subtotal {
-  justify-content: space-between;
-  color: var(--cosmic-gold);
-  font-weight: 700;
-}
-.cosmic-cart-main input {
-  max-width: 100%;
+.cosmic-product .product-options-item {
   min-height: 2.5rem;
-  border: 1px solid rgba(216, 182, 106, .38);
-  border-radius: 4px;
-  padding: .55rem .7rem;
-  color: var(--cosmic-ivory);
-  background: rgba(5, 3, 14, .72);
+  border-radius: 5px;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .035);
+  transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease;
 }
-.cosmic-cart-main input::placeholder {
-  color: rgba(247, 240, 232, .48);
+.cosmic-product .product-options-item:hover:not(:disabled) {
+  border-color: var(--cosmic-gold) !important;
+  background: rgba(216, 182, 106, .12) !important;
+  box-shadow: 0 0 16px rgba(216, 182, 106, .14);
 }
-.cosmic-cart-main .cart-summary-page a,
-.cosmic-cart-main .cart-summary-aside a,
-.cosmic-cart-main > div a {
-  color: var(--cosmic-champagne);
-  text-decoration-color: rgba(216, 182, 106, .5);
-  text-underline-offset: .2em;
+.cosmic-product .product-options-item:disabled {
+  cursor: not-allowed;
 }
-.cosmic-cart-main .cart-summary-page a p,
-.cosmic-cart-main .cart-summary-aside a p {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.cosmic-product .product-form form > button[type="submit"] {
   width: 100%;
-  min-height: 3rem;
+  min-height: 3.25rem;
   border: 1px solid rgba(242, 223, 181, .72);
   border-radius: 5px;
+  padding: .85rem 1.25rem;
   color: #100922;
   background: linear-gradient(110deg, #f2dfb5, #d8b66a 58%, #b88a48);
-  box-shadow: 0 0 20px rgba(216, 182, 106, .2);
+  box-shadow: 0 0 22px rgba(216, 182, 106, .2), inset 0 1px rgba(255, 255, 255, .48);
   font-weight: 800;
-  letter-spacing: .1em;
+  letter-spacing: .12em;
   text-transform: uppercase;
-  text-decoration: none;
+  transition: filter .2s ease, box-shadow .2s ease;
 }
-.overlay:has(.cosmic-cart-main) {
-  background: rgba(3, 2, 10, .78);
-  backdrop-filter: blur(5px);
+.cosmic-product .product-form form > button[type="submit"]:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow: 0 0 28px rgba(216, 182, 106, .34), 0 0 22px rgba(139, 92, 246, .16);
 }
-.overlay:has(.cosmic-cart-main) > aside {
-  background:
-    radial-gradient(ellipse 70% 34% at 100% 0%, rgba(109, 40, 217, .18), transparent 72%),
-    linear-gradient(155deg, #0a0618, #05030e);
-  color: var(--cosmic-ivory);
-  border-left: 1px solid var(--cosmic-gold-edge);
+.cosmic-product .product-form form > button[type="submit"]:disabled {
+  cursor: not-allowed;
+  opacity: .58;
+  filter: saturate(.55);
 }
-.overlay:has(.cosmic-cart-main) > aside header {
-  border-bottom: 1px solid rgba(216, 182, 106, .34);
+.cosmic-product .product-main > div:last-of-type {
+  color: rgba(247, 240, 232, .88);
+  line-height: 1.7;
+}
+.cosmic-product .product-main a {
   color: var(--cosmic-champagne);
-}
-.overlay:has(.cosmic-cart-main) > aside main {
-  margin: .75rem;
+  text-decoration-color: rgba(216, 182, 106, .48);
+  text-underline-offset: .2em;
 }
 @media (prefers-reduced-motion: reduce) {
-  .cosmic-cart-main .wra-cart-starfield {
+  .cosmic-product .wra-product-starfield,
+  .cosmic-product .wra-product-starfield::after {
     animation: none !important;
+  }
+  .cosmic-product .product-options-item,
+  .cosmic-product .product-form form > button[type="submit"] {
+    transition: none;
   }
 }
