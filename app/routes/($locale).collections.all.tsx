@@ -89,6 +89,20 @@ const COLLECTION_ITEM_FRAGMENT = `#graphql
       width
       height
     }
+    media(first: 2) {
+      nodes {
+        __typename
+        ... on MediaImage {
+          image {
+            id
+            altText
+            url
+            width
+            height
+          }
+        }
+      }
+    }
     priceRange {
       minVariantPrice {
         ...MoneyCollectionItem
