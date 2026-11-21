@@ -757,3 +757,96 @@ body {
   .cosmic-home .wra-campaign-frame:hover { transform: none; }
   .cosmic-home .wra-campaign-frame:hover img { transform: none; }
 }
+
+/* ============================================================
+   COSMIC ENERGY — FULL SEND (2026-11-21, ALLWAYZ: "need that
+   cosmic energy. not there yet"). Three moves, same tokens:
+   (1) the hero art comes ALIVE — the golden nebula mandala
+   drifts on a slow burn instead of sitting static, and the
+   atmosphere layers the BRAND ASSETS pass dimmed are turned
+   back up; a single shooting star crosses the hero on a long
+   loop. (2) The cosmos leaves the homepage: every page gets
+   the starfield + nebula ambience through the body ground and
+   the collection hero, so the energy survives the click into
+   the catalog. (3) The sequence numerals' cosmic glow is
+   toned to match their new 38% lit ceiling (wra-reskin.css).
+   Transform/opacity only; reduced-motion rests everything.
+   ============================================================ */
+
+/* ---------- 1 · HERO — living nebula ---------- */
+.cosmic-home [data-section="editorial-hero"] .wra-hero-art {
+  animation: cosmic-hero-drift 46s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes cosmic-hero-drift {
+  from { transform: scale(1.02) translate3d(0, 0, 0); }
+  to { transform: scale(1.1) translate3d(-1.2%, 1.6%, 0); }
+}
+.cosmic-home [data-section="editorial-hero"] .wra-starfield { opacity: .68; }
+.cosmic-home .wra-starburst { opacity: .5; }
+@keyframes voltage-nebula-breathe-soft {
+  from { transform: scale(1); opacity: .62; }
+  to { transform: scale(1.07); opacity: .78; }
+}
+/* One shooting star, long rest between passes. */
+.cosmic-home [data-section="editorial-hero"] .wra-starfield::after {
+  content: ""; position: absolute; top: 11%; right: 6%;
+  width: 132px; height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 246, 221, .92) 72%, #fff);
+  filter: drop-shadow(0 0 6px rgba(242, 223, 181, .85));
+  opacity: 0; pointer-events: none;
+  animation: cosmic-shooting-star 11s linear infinite;
+}
+@keyframes cosmic-shooting-star {
+  0% { transform: translate3d(0, 0, 0) rotate(-24deg); opacity: 0; }
+  3% { opacity: .95; }
+  8% { transform: translate3d(-36vw, 15vh, 0) rotate(-24deg); opacity: 0; }
+  100% { transform: translate3d(-36vw, 15vh, 0) rotate(-24deg); opacity: 0; }
+}
+
+/* ---------- 2 · SITEWIDE — the cosmos on every page ---------- */
+body {
+  background:
+    radial-gradient(1px 1px at 14% 20%, rgba(255, 255, 245, .75) 50%, transparent 100%),
+    radial-gradient(1.2px 1.2px at 68% 34%, rgba(216, 182, 106, .7) 50%, transparent 100%),
+    radial-gradient(1px 1px at 44% 72%, rgba(167, 139, 250, .75) 50%, transparent 100%),
+    radial-gradient(1px 1px at 86% 84%, rgba(103, 232, 249, .6) 50%, transparent 100%),
+    radial-gradient(.7px .7px at 26% 56%, rgba(255, 255, 255, .55) 50%, transparent 100%),
+    radial-gradient(ellipse 85% 30% at 50% -10%, rgba(124, 58, 237, .13), transparent 70%),
+    linear-gradient(145deg, #05030e 0%, #0a0618 48%, #070412 100%);
+  background-size:
+    173px 181px, 227px 239px, 197px 211px, 263px 251px, 89px 97px,
+    100% 100%, 100% 100%;
+}
+[data-section="collection-hero"] {
+  background:
+    radial-gradient(1px 1px at 22% 30%, rgba(255, 255, 245, .8) 50%, transparent 100%),
+    radial-gradient(1.2px 1.2px at 74% 22%, rgba(216, 182, 106, .75) 50%, transparent 100%),
+    radial-gradient(1px 1px at 52% 68%, rgba(167, 139, 250, .8) 50%, transparent 100%),
+    radial-gradient(ellipse 55% 90% at 82% 50%, rgba(109, 40, 217, .22), transparent 72%),
+    radial-gradient(ellipse 40% 70% at 8% 80%, rgba(103, 232, 249, .09), transparent 72%),
+    radial-gradient(ellipse 30% 50% at 30% 10%, rgba(232, 121, 249, .08), transparent 72%),
+    linear-gradient(130deg, #05030e, #100922 55%, #070412);
+  background-size:
+    149px 157px, 211px 223px, 181px 199px,
+    100% 100%, 100% 100%, 100% 100%, 100% 100%;
+}
+
+/* ---------- 3 · SEQUENCE — glow matched to the new ceiling ---------- */
+.cosmic-home [data-section="numbered-sequence"] .wra-seq-num {
+  filter: drop-shadow(0 0 16px rgba(139, 92, 246, .22));
+}
+
+@media (max-width: 820px) {
+  .cosmic-home .wra-starburst { opacity: .34; }
+  .cosmic-home [data-section="editorial-hero"] .wra-starfield::after {
+    width: 84px;
+    animation-duration: 13s;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cosmic-home [data-section="editorial-hero"] .wra-hero-art,
+  .cosmic-home [data-section="editorial-hero"] .wra-starfield::after {
+    animation: none !important;
+  }
+}

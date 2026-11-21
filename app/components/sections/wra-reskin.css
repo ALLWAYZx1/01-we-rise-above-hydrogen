@@ -173,13 +173,24 @@
   background-size: 100% 1px;
 }
 
-/* Sequence ghost numerals — rest at 25%, ignite to 60% in view. */
+/* Sequence ghost numerals — rest at 25%, ignite in view. The lit
+   ceiling dropped 60% → 38% on 2026-11-21: at 60% the numeral bled
+   over the subline copy on the PRESSURE and ASCENSION rows. */
 .wra-seq-num {
   opacity: 0.25;
   transition: opacity 800ms var(--wra-ease);
 }
 .wra-seq-num.is-lit {
-  opacity: 0.6;
+  opacity: 0.38;
+}
+
+/* Copy legibility over the ghost numeral (2026-11-21): a soft void
+   halo behind step copy so the numeral reads as atmosphere, never
+   as interference. */
+[data-sequence-step] p {
+  text-shadow:
+    0 1px 14px rgba(5, 3, 14, 0.95),
+    0 0 3px rgba(5, 3, 14, 0.9);
 }
 
 /* Sequence thread — faint full line, gold fill drawn by scroll (JS
