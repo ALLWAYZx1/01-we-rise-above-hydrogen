@@ -44,7 +44,8 @@ export default function AccountLayout() {
     : 'Account Details';
 
   return (
-    <div className="account">
+    <div className="account cosmic-account">
+      <div className="wra-account-starfield" aria-hidden="true" />
       <h1>{heading}</h1>
       <br />
       <AccountMenu />
@@ -65,7 +66,9 @@ function AccountMenu() {
   }) {
     return {
       fontWeight: isActive ? 'bold' : undefined,
-      color: isPending ? 'grey' : 'black',
+      color: isPending
+        ? 'var(--cosmic-gold)'
+        : 'var(--cosmic-ivory)',
     };
   }
 
