@@ -95,7 +95,12 @@ function CartEmpty({
 }) {
   const {close} = useAside();
   return (
-    <div hidden={hidden}>
+    <div
+      className="cosmic-cart-empty"
+      hidden={hidden}
+      role="status"
+      aria-live="polite"
+    >
       <br />
       <p>
         Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you

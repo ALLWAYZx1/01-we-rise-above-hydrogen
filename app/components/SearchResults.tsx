@@ -157,5 +157,9 @@ function SearchResultsProducts({
 }
 
 function SearchResultsEmpty() {
-  return <p>No results, try a different search.</p>;
+  return (
+    <p className="cosmic-search-empty" role="status" aria-live="polite">
+      No results, try a different search.
+    </p>
+  );
 }

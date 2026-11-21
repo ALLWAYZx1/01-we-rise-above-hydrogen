@@ -18,7 +18,9 @@ export function ProductForm({
   const navigate = useNavigate();
   const {open} = useAside();
   return (
-    <div className="product-form">
+    <div
+      className={`product-form cosmic-product-form${!selectedVariant || !selectedVariant.availableForSale ? ' is-sold-out' : ''}`}
+    >
       {productOptions.map((option) => {
         // If there is only a single value in the option values, don't display the option
         if (option.optionValues.length === 1) return null;

@@ -268,7 +268,7 @@ function SearchResultsPredictiveEmpty({
   }
 
   return (
-    <p>
+    <p className="cosmic-search-empty" role="status" aria-live="polite">
       No results found for <q>{term.current}</q>
     </p>
   );
