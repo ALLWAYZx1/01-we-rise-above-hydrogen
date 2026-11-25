@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Pagination} from '~/lib/legacy-components';
+import {Pagination} from '~/components/Pagination';
 
 /**
  * <PaginatedResourceSection> encapsulates the previous and next pagination behaviors throughout your application.

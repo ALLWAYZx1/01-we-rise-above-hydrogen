@@ -1,5 +1,6 @@
 import {Link} from 'react-router';
-import {Image, Money, Pagination} from '~/lib/legacy-components';
+import {Image, Money} from '~/lib/legacy-components';
+import {Pagination} from '~/components/Pagination';
 import {urlWithTrackingParams, type RegularSearchReturn} from '~/lib/search';
 
 type SearchItems = RegularSearchReturn['result']['items'];

@@ -1,15 +1,12 @@
 import {useEffect, useState} from 'react';
 import {
   useFetcher,
-  Link,
-  useLocation,
   useNavigate,
   useRevalidator,
   useSearchParams,
 } from 'react-router';
 import type {
   CartLineInput,
-  PageInfo,
   Product,
   ProductOptionValueSwatch,
   ProductVariant,
@@ -36,10 +33,10 @@ import type {CartApiQueryFragment} from 'storefrontapi.generated';
  *     action runs the bridge's direct Storefront mutations
  *     (~/lib/cart-extensions). `getFormInput` is retained for API
  *     compatibility; no route action consumes it any more.
- *   • Pagination — server-rendered bridge: Previous/Next are real links
- *     carrying the direction/cursor params that ~/lib/pagination reads,
- *     matching repo 06's documented behavior change from the classic
- *     client-side component. isLoading is always false.
+ *   • Pagination — RETIRED in Phase 4: the server-rendered component
+ *     now lives at ~/components/Pagination (Previous/Next are real links
+ *     carrying the direction/cursor params that ~/lib/pagination
+ *     reads).
  *   • Analytics / useAnalytics — inert passthrough. TODO(Phase 4):
  *     re-implement on the 2026.10 tracker components
  *     (PageViewedTracker / CartAnalyticsTracker, as repo 06 does) and
@@ -421,98 +418,6 @@ export type CartQueryDataReturn = {
   errors?: Array<{message: string; code?: string; field?: string[]}> | null;
   warnings?: Array<{message: string; code?: string}> | null;
 };
-
-// ── Pagination (server-rendered bridge) ──────────────────────────────────
-
-export type PaginationConnection<NodesType> = {
-  nodes: NodesType[];
-  pageInfo: PageInfo;
-};
-
-type PaginationLinkProps = {
-  children?: React.ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
-  onClick?: React.MouseEventHandler;
-  preventScrollReset?: boolean;
-};
-
-export type PaginationRenderArgs<NodesType> = {
-  nodes: NodesType[];
-  isLoading: boolean;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  NextLink: React.ComponentType<PaginationLinkProps>;
-  PreviousLink: React.ComponentType<PaginationLinkProps>;
-  nextPageUrl: string;
-  previousPageUrl: string;
-  state: {pageInfo: PageInfo; nodes: NodesType[]};
-};
-
-export function Pagination<NodesType>({
-  connection,
-  children,
-}: {
-  connection: PaginationConnection<NodesType>;
-  children: (args: PaginationRenderArgs<NodesType>) => React.ReactNode;
-}) {
-  const location = useLocation();
-  const {pageInfo} = connection;
-
-  const buildUrl = (
-    direction: 'next' | 'previous',
-    cursor: string | null | undefined,
-  ) => {
-    const params = new URLSearchParams(location.search);
-    params.set('direction', direction);
-    if (cursor) params.set('cursor', cursor);
-    else params.delete('cursor');
-    return `${location.pathname}?${params.toString()}`;
-  };
-
-  const nextPageUrl = buildUrl('next', pageInfo.endCursor);
-  const previousPageUrl = buildUrl('previous', pageInfo.startCursor);
-
-  const NextLink: React.ComponentType<PaginationLinkProps> = ({
-    children: linkChildren,
-    ...props
-  }) =>
-    pageInfo.hasNextPage ? (
-      <Link to={nextPageUrl} {...props}>
-        {linkChildren}
-      </Link>
-    ) : (
-      <span {...props}>{linkChildren}</span>
-    );
-
-  const PreviousLink: React.ComponentType<PaginationLinkProps> = ({
-    children: linkChildren,
-    ...props
-  }) =>
-    pageInfo.hasPreviousPage ? (
-      <Link to={previousPageUrl} {...props}>
-        {linkChildren}
-      </Link>
-    ) : (
-      <span {...props}>{linkChildren}</span>
-    );
-
-  return (
-    <>
-      {children({
-        nodes: connection.nodes,
-        isLoading: false,
-        hasNextPage: pageInfo.hasNextPage,
-        hasPreviousPage: pageInfo.hasPreviousPage,
-        NextLink,
-        PreviousLink,
-        nextPageUrl,
-        previousPageUrl,
-        state: {pageInfo, nodes: connection.nodes},
-      })}
-    </>
-  );
-}
 
 // ── Analytics (inert bridge — TODO Phase 4) ──────────────────────────────
 
