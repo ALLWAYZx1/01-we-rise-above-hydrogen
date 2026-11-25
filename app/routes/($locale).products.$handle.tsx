@@ -1,19 +1,16 @@
 import {redirect, useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).products.$handle';
-import {
-  getSelectedProductOptions,
-  Analytics,
-  useOptimisticVariant,
-  getProductOptions,
-  getAdjacentAndFirstAvailableVariants,
-  useSelectedOptionInUrlParam,
-} from '@shopify/hydrogen';
+import {getSelectedProductOptions} from '@shopify/hydrogen';
+import {useOptimisticVariant, getProductOptions, getAdjacentAndFirstAvailableVariants, useSelectedOptionInUrlParam} from '~/lib/legacy-components';
+import type {ProductQuery} from 'storefrontapi.generated';
+import {Analytics} from '~/lib/legacy-components';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {legacyContext} from '~/lib/context';
 
-export const meta: Route.MetaFunction = ({data}) => {
+export const meta: Route.MetaFunction = ({loaderData: data}) => {
   return [
     {title: `Hydrogen | ${data?.product.title ?? ''}`},
     {
@@ -39,15 +36,15 @@ export async function loader(args: Route.LoaderArgs) {
  */
 async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
   const {handle} = params;
-  const {storefront} = context;
+  const {storefront} = legacyContext(context);
 
   if (!handle) {
     throw new Error('Expected product handle to be defined');
   }
 
   const [{product}] = await Promise.all([
-    storefront.query(PRODUCT_QUERY, {
-      variables: {handle, selectedOptions: getSelectedProductOptions(request)},
+    storefront.query<ProductQuery>(PRODUCT_QUERY, {
+      variables: {handle, selectedOptions: getSelectedProductOptions({searchParams: new URL(request.url).searchParams})},
     }),
     // Add other queries here, so that they are loaded in parallel
   ]);

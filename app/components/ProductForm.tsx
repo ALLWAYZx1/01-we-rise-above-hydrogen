@@ -1,5 +1,5 @@
 import {Link, useNavigate} from 'react-router';
-import {type MappedProductOptions} from '@shopify/hydrogen';
+import type {MappedProductOptions} from '~/lib/legacy-components';
 import type {
   Maybe,
   ProductOptionValueSwatch,

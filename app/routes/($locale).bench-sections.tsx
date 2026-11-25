@@ -1,5 +1,4 @@
-import {useLoaderData} from 'react-router';
-import type {HydrogenRouterContextProvider} from '@shopify/hydrogen';
+import {useLoaderData, type RouterContextProvider} from 'react-router';
 import '~/components/sections/wra-reskin.css';
 import type {BenchSpotlightQuery} from 'storefrontapi.generated';
 import {StatBand} from '~/components/sections/StatBand';
@@ -14,6 +13,9 @@ import {
   ProductSpotlight,
   type SpotlightProduct,
 } from '~/components/sections/ProductSpotlight';
+import type {ProductItemFragment} from 'storefrontapi.generated';
+import type {Collection, ProductConnection} from '@shopify/hydrogen/storefront-api-types';
+import {legacyContext} from '~/lib/context';
 
 /**
  * BENCH-ONLY route for the Forward section port (2026-11-18).
@@ -34,7 +36,7 @@ import {
 // NOTE: this bench route deliberately avoids the scaffold's `./+types/*`
 // imports — in this bench copy those resolve to nothing for EVERY route
 // (all 36 pre-existing typecheck errors are that scaffold quirk). Typing
-// the loader against HydrogenRouterContextProvider keeps this file clean.
+// the loader against RouterContextProvider keeps this file clean.
 export const meta = () => {
   return [{title: 'Bench | Forward Sections'}];
 };
@@ -42,9 +44,9 @@ export const meta = () => {
 export async function loader({
   context,
 }: {
-  context: HydrogenRouterContextProvider;
+  context: RouterContextProvider;
 }) {
-  const {storefront} = context;
+  const {storefront} = legacyContext(context);
   const [
     {products: heroProducts},
     {products: catalogProducts},
@@ -52,15 +54,15 @@ export async function loader({
     {product: spotlightMainRaw},
     {product: spotlightNoColorRaw},
   ] = await Promise.all([
-    storefront.query(BENCH_HERO_QUERY),
-    storefront.query(BENCH_PRODUCTS_QUERY),
-    storefront.query(BENCH_COLLECTION_QUERY, {
+    storefront.query<{products: {nodes: Array<ProductItemFragment & {productType: string}>}}>(BENCH_HERO_QUERY),
+    storefront.query<{products: {nodes: Array<ProductItemFragment & {productType: string}>}}>(BENCH_PRODUCTS_QUERY),
+    storefront.query<{collection: Collection | null}>(BENCH_COLLECTION_QUERY, {
       variables: {handle: 'hoodies'},
     }),
-    storefront.query(BENCH_SPOTLIGHT_QUERY, {
+    storefront.query<BenchSpotlightQuery>(BENCH_SPOTLIGHT_QUERY, {
       variables: {handle: 'evil-eye-evil-ai-hoodie'},
     }),
-    storefront.query(BENCH_SPOTLIGHT_QUERY, {
+    storefront.query<BenchSpotlightQuery>(BENCH_SPOTLIGHT_QUERY, {
       variables: {handle: 'two-sides-one-purpose-all-over-print-hoodie'},
     }),
   ]);

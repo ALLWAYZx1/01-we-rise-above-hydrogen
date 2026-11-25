@@ -1,6 +1,6 @@
 import type {CartLineUpdateInput} from '@shopify/hydrogen/storefront-api-types';
 import type {CartLayout, LineItemChildrenMap} from '~/components/CartMain';
-import {CartForm, Image, type OptimisticCartLine} from '@shopify/hydrogen';
+import {CartForm, Image, type OptimisticCartLine} from '~/lib/legacy-components';
 import {useVariantUrl} from '~/lib/variants';
 import {Link} from 'react-router';
 import {ProductPrice} from './ProductPrice';
@@ -192,6 +192,6 @@ function CartLineUpdateButton({
  * @param lineIds - line ids affected by the update
  * @returns
  */
-function getUpdateKey(lineIds: string[]) {
+function getUpdateKey(lineIds: Array<string | null | undefined>) {
   return [CartForm.ACTIONS.LinesUpdate, ...lineIds].join('-');
 }

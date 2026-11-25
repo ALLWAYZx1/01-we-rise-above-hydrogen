@@ -1,4 +1,4 @@
-import {useOptimisticCart} from '@shopify/hydrogen';
+import {useOptimisticCart} from '~/lib/legacy-components';
 import {Link} from 'react-router';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
@@ -81,7 +81,7 @@ export function CartMain({layout, cart: originalCart}: CartMainProps) {
             })}
           </ul>
         </div>
-        {cartHasItems && <CartSummary cart={cart} layout={layout} />}
+        {cartHasItems && cart && <CartSummary cart={cart} layout={layout} />}
       </div>
     </section>
   );

@@ -1,10 +1,11 @@
 import {Link, useLoaderData} from 'react-router';
-import {Image, Money} from '@shopify/hydrogen';
+import {Image, Money} from '~/lib/legacy-components';
 import type {Route} from './+types/($locale)._index';
 import type {
   HomepageCollectionsQuery,
   HomepageProductsQuery,
 } from 'storefrontapi.generated';
+import {legacyContext} from '~/lib/context';
 import {MockShopNotice} from '~/components/MockShopNotice';
 import {EditorialHero} from '~/components/sections/EditorialHero';
 import {MarqueeBand} from '~/components/sections/MarqueeBand';
@@ -60,8 +61,8 @@ export async function loader(args: Route.LoaderArgs) {
 
 async function loadCriticalData({context}: Route.LoaderArgs) {
   const [{products}, {collections}] = await Promise.all([
-    context.storefront.query(HOMEPAGE_PRODUCTS_QUERY),
-    context.storefront.query(HOMEPAGE_COLLECTIONS_QUERY),
+    legacyContext(context).storefront.query<HomepageProductsQuery>(HOMEPAGE_PRODUCTS_QUERY),
+    legacyContext(context).storefront.query<HomepageCollectionsQuery>(HOMEPAGE_COLLECTIONS_QUERY),
   ]);
 
   type HomepageProduct = HomepageProductsQuery['products']['nodes'][number];
@@ -110,7 +111,7 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
   });
 
   return {
-    isShopLinked: Boolean(context.env.PUBLIC_STORE_DOMAIN),
+    isShopLinked: Boolean(legacyContext(context).env.PUBLIC_STORE_DOMAIN),
     newDrops,
     campaign,
     featured,

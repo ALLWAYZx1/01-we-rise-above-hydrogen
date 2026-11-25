@@ -1,5 +1,5 @@
 import {type FetcherWithComponents} from 'react-router';
-import {CartForm, type OptimisticCartLineInput} from '@shopify/hydrogen';
+import {CartForm, type OptimisticCartLineInput} from '~/lib/legacy-components';
 
 export function AddToCartButton({
   analytics,

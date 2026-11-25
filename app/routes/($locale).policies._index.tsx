@@ -1,9 +1,10 @@
 import {useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/($locale).policies._index';
 import type {PoliciesQuery, PolicyItemFragment} from 'storefrontapi.generated';
+import {legacyContext} from '~/lib/context';
 
 export async function loader({context}: Route.LoaderArgs) {
-  const data: PoliciesQuery = await context.storefront.query(POLICIES_QUERY);
+  const data: PoliciesQuery = await legacyContext(context).storefront.query(POLICIES_QUERY);
 
   const shopPolicies = data.shop;
   const policies: PolicyItemFragment[] = [

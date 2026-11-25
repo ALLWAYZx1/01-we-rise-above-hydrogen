@@ -1,8 +1,9 @@
 import {useLoaderData, data, type HeadersFunction} from 'react-router';
 import type {Route} from './+types/($locale).cart';
-import type {CartQueryDataReturn} from '@shopify/hydrogen';
-import {CartForm} from '@shopify/hydrogen';
+import type {CartQueryDataReturn} from '~/lib/legacy-components';
+import {CartForm} from '~/lib/legacy-components';
 import {CartMain} from '~/components/CartMain';
+import {legacyContext} from '~/lib/context';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: `Hydrogen | Cart`}];
@@ -11,7 +12,7 @@ export const meta: Route.MetaFunction = () => {
 export const headers: HeadersFunction = ({actionHeaders}) => actionHeaders;
 
 export async function action({request, context}: Route.ActionArgs) {
-  const {cart} = context;
+  const {cart} = legacyContext(context);
 
   const formData = await request.formData();
 
@@ -32,7 +33,7 @@ export async function action({request, context}: Route.ActionArgs) {
       result = await cart.updateLines(inputs.lines);
       break;
     case CartForm.ACTIONS.LinesRemove:
-      result = await cart.removeLines(inputs.lineIds);
+      result = await cart.removeLines(inputs.lineIds ?? []);
       break;
     case CartForm.ACTIONS.DiscountCodesUpdate: {
       const formDiscountCode = inputs.discountCode;
@@ -43,7 +44,7 @@ export async function action({request, context}: Route.ActionArgs) {
       ) as string[];
 
       // Combine discount codes already applied on cart
-      discountCodes.push(...inputs.discountCodes);
+      discountCodes.push(...(inputs.discountCodes ?? []));
 
       result = await cart.updateDiscountCodes(discountCodes);
       break;
@@ -97,7 +98,7 @@ export async function action({request, context}: Route.ActionArgs) {
 }
 
 export async function loader({context}: Route.LoaderArgs) {
-  const {cart} = context;
+  const {cart} = legacyContext(context);
   return (await cart.get()) ?? null;
 }
 

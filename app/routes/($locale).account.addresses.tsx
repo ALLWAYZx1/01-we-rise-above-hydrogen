@@ -3,6 +3,7 @@ import type {
   AddressFragment,
   CustomerFragment,
 } from 'customer-accountapi.generated';
+import {legacyContext} from '~/lib/context';
 import {
   data,
   Form,
@@ -32,13 +33,13 @@ export const meta: Route.MetaFunction = () => {
 };
 
 export async function loader({context}: Route.LoaderArgs) {
-  await context.customerAccount.handleAuthStatus();
+  await legacyContext(context).customerAccount.handleAuthStatus();
 
   return {};
 }
 
 export async function action({request, context}: Route.ActionArgs) {
-  const {customerAccount} = context;
+  const {customerAccount} = legacyContext(context);
 
   try {
     const form = await request.formData();
@@ -65,12 +66,25 @@ export async function action({request, context}: Route.ActionArgs) {
       ? String(form.get('defaultAddress')) === 'on'
       : false;
     const address: CustomerAddressInput = {};
-    const keys: (keyof CustomerAddressInput)[] = [
+    // 2026.10 renamed the address input field territoryCode ->
+    // countryCode. The form field itself is still named 'territoryCode'
+    // (the CustomerAddress object type keeps that name), so it is mapped
+    // explicitly below the generic string-field loop.
+    const keys: Array<
+      | 'address1'
+      | 'address2'
+      | 'city'
+      | 'company'
+      | 'firstName'
+      | 'lastName'
+      | 'phoneNumber'
+      | 'zoneCode'
+      | 'zip'
+    > = [
       'address1',
       'address2',
       'city',
       'company',
-      'territoryCode',
       'firstName',
       'lastName',
       'phoneNumber',
@@ -83,6 +97,12 @@ export async function action({request, context}: Route.ActionArgs) {
       if (typeof value === 'string') {
         address[key] = value;
       }
+    }
+
+    const territoryCode = form.get('territoryCode');
+    if (typeof territoryCode === 'string') {
+      address.countryCode =
+        territoryCode as CustomerAddressInput['countryCode'];
     }
 
     switch (request.method) {
@@ -286,7 +306,7 @@ export default function Addresses() {
 }
 
 function NewAddressForm() {
-  const newAddress = {
+  const newAddress: AddressFormValues = {
     address1: '',
     address2: '',
     city: '',
@@ -298,7 +318,7 @@ function NewAddressForm() {
     phoneNumber: '',
     zoneCode: '',
     zip: '',
-  } as CustomerAddressInput;
+  };
 
   return (
     <AddressForm
@@ -359,6 +379,27 @@ function ExistingAddresses({
   );
 }
 
+/**
+ * The address form renders API address objects (AddressFragment, whose
+ * type keeps `territoryCode`) and collects values for the address
+ * mutations. This local shape is the display-side contract; the action
+ * maps the fields onto CustomerAddressInput (2026.10 renamed the input
+ * field to `countryCode` — see the action above).
+ */
+type AddressFormValues = {
+  id?: string;
+  address1?: string | null;
+  address2?: string | null;
+  city?: string | null;
+  company?: string | null;
+  territoryCode?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  phoneNumber?: string | null;
+  zoneCode?: string | null;
+  zip?: string | null;
+};
+
 export function AddressForm({
   addressId,
   address,
@@ -366,7 +407,7 @@ export function AddressForm({
   children,
 }: {
   addressId: AddressFragment['id'];
-  address: CustomerAddressInput;
+  address: AddressFormValues;
   defaultAddress: CustomerFragment['defaultAddress'];
   children: (props: {
     stateForMethod: (method: 'PUT' | 'POST' | 'DELETE') => Fetcher['state'];

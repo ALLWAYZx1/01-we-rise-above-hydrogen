@@ -1,12 +1,16 @@
 import {redirect, useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).collections.$handle';
-import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
+import {Analytics} from '~/lib/legacy-components';
+import {getPaginationVariables} from '~/lib/pagination';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {ProductItem} from '~/components/ProductItem';
 import type {ProductItemFragment} from 'storefrontapi.generated';
+import {legacyContext} from '~/lib/context';
+import type {Collection} from '@shopify/hydrogen/storefront-api-types';
+import type {PageInfo} from '@shopify/hydrogen/storefront-api-types';
 
-export const meta: Route.MetaFunction = ({data}) => {
+export const meta: Route.MetaFunction = ({loaderData: data}) => {
   return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
 };
 
@@ -26,7 +30,7 @@ export async function loader(args: Route.LoaderArgs) {
  */
 async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
   const {handle} = params;
-  const {storefront} = context;
+  const {storefront} = legacyContext(context);
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 8,
   });
@@ -36,7 +40,7 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
   }
 
   const [{collection}] = await Promise.all([
-    storefront.query(COLLECTION_QUERY, {
+    storefront.query<{collection: (Omit<Collection, 'products'> & {products: {nodes: ProductItemFragment[]; pageInfo: PageInfo}}) | null}>(COLLECTION_QUERY, {
       variables: {handle, ...paginationVariables},
       // Add other queries here, so that they are loaded in parallel
     }),

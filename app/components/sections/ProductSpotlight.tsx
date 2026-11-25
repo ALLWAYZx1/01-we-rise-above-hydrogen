@@ -32,7 +32,7 @@
  */
 import {useState} from 'react';
 import {Link, useLocation} from 'react-router';
-import {Image, Money} from '@shopify/hydrogen';
+import {Image, Money} from '~/lib/legacy-components';
 import type {MoneyV2} from '@shopify/hydrogen/storefront-api-types';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';

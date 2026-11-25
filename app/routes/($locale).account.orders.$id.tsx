@@ -1,25 +1,26 @@
 import {redirect, useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).account.orders.$id';
-import {Money, Image} from '@shopify/hydrogen';
+import {Money, Image} from '~/lib/legacy-components';
 import type {
   OrderLineItemFullFragment,
   OrderQuery,
 } from 'customer-accountapi.generated';
+import {legacyContext} from '~/lib/context';
 import {CUSTOMER_ORDER_QUERY} from '~/graphql/customer-account/CustomerOrderQuery';
 
-export const meta: Route.MetaFunction = ({data}) => {
+export const meta: Route.MetaFunction = ({loaderData: data}) => {
   return [{title: `Order ${data?.order?.name}`}];
 };
 
 export async function loader({params, context}: Route.LoaderArgs) {
-  const {customerAccount} = context;
+  const {customerAccount} = legacyContext(context);
   if (!params.id) {
     return redirect('/account/orders');
   }
 
   const orderId = atob(params.id);
   const {data, errors}: {data: OrderQuery; errors?: Array<{message: string}>} =
-    await customerAccount.query(CUSTOMER_ORDER_QUERY, {
+    await customerAccount.query<{data: OrderQuery; errors?: Array<{message: string}>}>(CUSTOMER_ORDER_QUERY, {
       variables: {
         orderId,
         language: customerAccount.i18n.language,

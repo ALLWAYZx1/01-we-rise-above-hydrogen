@@ -25,7 +25,7 @@
  * fills gold (gold ground, void text) on hover.
  */
 import {Link} from 'react-router';
-import {Image} from '@shopify/hydrogen';
+import {Image} from '~/lib/legacy-components';
 import type {SectionImage} from './section-types';
 
 export interface CollectionHeroCollection {

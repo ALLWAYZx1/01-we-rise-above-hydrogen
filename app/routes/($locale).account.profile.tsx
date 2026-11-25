@@ -8,6 +8,7 @@ import {
   useNavigation,
   useOutletContext,
 } from 'react-router';
+import {legacyContext} from '~/lib/context';
 import type {Route} from './+types/($locale).account.profile';
 
 export type ActionResponse = {
@@ -20,13 +21,13 @@ export const meta: Route.MetaFunction = () => {
 };
 
 export async function loader({context}: Route.LoaderArgs) {
-  await context.customerAccount.handleAuthStatus();
+  await legacyContext(context).customerAccount.handleAuthStatus();
 
   return {};
 }
 
 export async function action({request, context}: Route.ActionArgs) {
-  const {customerAccount} = context;
+  const {customerAccount} = legacyContext(context);
 
   if (request.method !== 'PUT') {
     return data({error: 'Method not allowed'}, {status: 405});

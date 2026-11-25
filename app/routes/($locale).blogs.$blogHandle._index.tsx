@@ -1,11 +1,14 @@
 import {Link, useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).blogs.$blogHandle._index';
-import {Image, getPaginationVariables} from '@shopify/hydrogen';
+import {Image} from '~/lib/legacy-components';
+import {getPaginationVariables} from '~/lib/pagination';
 import type {ArticleItemFragment} from 'storefrontapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {legacyContext} from '~/lib/context';
+import type {Blog} from '@shopify/hydrogen/storefront-api-types';
 
-export const meta: Route.MetaFunction = ({data}) => {
+export const meta: Route.MetaFunction = ({loaderData: data}) => {
   return [{title: `Hydrogen | ${data?.blog.title ?? ''} blog`}];
 };
 
@@ -33,7 +36,7 @@ async function loadCriticalData({context, request, params}: Route.LoaderArgs) {
   }
 
   const [{blog}] = await Promise.all([
-    context.storefront.query(BLOGS_QUERY, {
+    legacyContext(context).storefront.query<{blog: Blog | null}>(BLOGS_QUERY, {
       variables: {
         blogHandle: params.blogHandle,
         ...paginationVariables,

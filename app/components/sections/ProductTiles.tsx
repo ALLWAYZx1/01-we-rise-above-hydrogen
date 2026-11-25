@@ -32,7 +32,7 @@
  * Selection, titles, captions, and links are unchanged.
  */
 import {Link} from 'react-router';
-import {Image} from '@shopify/hydrogen';
+import {Image} from '~/lib/legacy-components';
 import {GarmentSilhouette} from './GarmentSilhouette';
 import type {SectionImage} from './section-types';
 

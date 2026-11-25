@@ -4,13 +4,11 @@ import {
   useNavigation,
   useSearchParams,
 } from 'react-router';
+import {legacyContext} from '~/lib/context';
 import type {Route} from './+types/($locale).account.orders._index';
 import {useRef} from 'react';
-import {
-  Money,
-  getPaginationVariables,
-  flattenConnection,
-} from '@shopify/hydrogen';
+import {Money, flattenConnection} from '~/lib/legacy-components';
+import {getPaginationVariables} from '~/lib/pagination';
 import {
   buildOrderSearchQuery,
   parseOrderFilters,
@@ -34,7 +32,7 @@ export const meta: Route.MetaFunction = () => {
 };
 
 export async function loader({request, context}: Route.LoaderArgs) {
-  const {customerAccount} = context;
+  const {customerAccount} = legacyContext(context);
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 20,
   });

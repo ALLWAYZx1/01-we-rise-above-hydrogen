@@ -5,6 +5,7 @@ import {
   Outlet,
   useLoaderData,
 } from 'react-router';
+import {legacyContext} from '~/lib/context';
 import type {Route} from './+types/($locale).account';
 import {CUSTOMER_DETAILS_QUERY} from '~/graphql/customer-account/CustomerDetailsQuery';
 
@@ -13,7 +14,7 @@ export function shouldRevalidate() {
 }
 
 export async function loader({context}: Route.LoaderArgs) {
-  const {customerAccount} = context;
+  const {customerAccount} = legacyContext(context);
   const {data, errors} = await customerAccount.query(CUSTOMER_DETAILS_QUERY, {
     variables: {
       language: customerAccount.i18n.language,

@@ -1,7 +1,8 @@
 import type {LoaderFunctionArgs} from 'react-router';
+import {legacyContext} from '~/lib/context';
 
 export async function loader({params, context}: LoaderFunctionArgs) {
-  const {language, country} = context.storefront.i18n;
+  const {language, country} = legacyContext(context).storefront.i18n;
 
   if (
     params.locale &&
