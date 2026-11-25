@@ -65,15 +65,12 @@ export function HeaderMenu({
   const className = `header-menu-${viewport}`;
   const {close} = useAside();
 
-  // Shopping-first category shortcuts (real collections)
-  const categoryShortcuts = [
-    {title: 'Shop All', url: '/collections/all'},
-    {title: 'New Drops', url: '/collections/new'},
-    {title: 'Hoodies', url: '/collections/hoodies'},
-    {title: 'Tees', url: '/collections/tees'},
-    {title: 'Sale', url: '/collections/sale'},
-  ];
-
+  // ONE NAV (2026-11-25, ALLWAYZ's order): the header renders ONLY the
+  // Shopify main-menu. The hardcoded "category shortcuts" row that used
+  // to render above it is gone — it duplicated menu entries and two of
+  // its links were dead (/collections/new and /collections/sale 404;
+  // sidekick audit 2026-11-25, owner's screenshots same day). Links are
+  // controlled from the Shopify admin now, nowhere else.
   return (
     <nav className={className} role="navigation">
       {viewport === 'mobile' && (
@@ -81,19 +78,6 @@ export function HeaderMenu({
           Home
         </NavLink>
       )}
-      {categoryShortcuts.map((item) => (
-        <NavLink
-          className="header-menu-item"
-          end
-          key={item.title}
-          onClick={close}
-          prefetch="intent"
-          style={activeLinkStyle}
-          to={item.url}
-        >
-          {item.title}
-        </NavLink>
-      ))}
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url) return null;
         const url =

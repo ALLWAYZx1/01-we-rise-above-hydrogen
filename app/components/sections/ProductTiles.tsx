@@ -62,31 +62,40 @@ export function ProductTiles({tiles}: ProductTilesProps) {
     >
       {tiles.map(({product, image}) => (
         <Link
-          className="wra-tile wra-hold group relative block min-h-[360px] overflow-hidden bg-[var(--wra-panel)] text-[var(--wra-ivory)] md:min-h-[440px]"
+          className="wra-tile group flex flex-col overflow-hidden bg-[var(--wra-panel)] text-[var(--wra-ivory)]"
           to={`/products/${product.handle}`}
           key={product.handle}
           data-hold-frame={product.handle}
         >
-          {image ? (
-            <Image
-              alt={image.altText || product.title}
-              className="absolute inset-0 h-full w-full object-cover"
-              data={image}
-              sizes="(min-width: 768px) 33vw, 100vw"
-            />
-          ) : null}
-          <div className="wra-nebula-soft" aria-hidden="true" />
-          {image ? null : (
-            <>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <GarmentSilhouette className="h-[46%] w-auto" />
-              </div>
-              <span className="absolute top-5 left-5 text-[11px] font-semibold tracking-[0.3em] text-[var(--wra-gold)] uppercase">
-                Awaiting art
-              </span>
-            </>
-          )}
-          <div className="absolute right-5 bottom-5 left-5 grid gap-1 bg-[var(--wra-void)]/90 p-5">
+          {/* Art area — the photo renders CLEAN. No text, no panel,
+              no overlay on top of it (2026-11-25, ALLWAYZ's order:
+              "letters on the images" — captions live below now).
+              The AWAITING ART hold only exists where there is no
+              photo to protect. */}
+          <div className="wra-hold relative min-h-[360px] flex-1 overflow-hidden md:min-h-[440px]">
+            {image ? (
+              <Image
+                alt={image.altText || product.title}
+                className="absolute inset-0 h-full w-full object-cover"
+                data={image}
+                sizes="(min-width: 768px) 33vw, 100vw"
+              />
+            ) : null}
+            <div className="wra-nebula-soft" aria-hidden="true" />
+            {image ? null : (
+              <>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <GarmentSilhouette className="h-[46%] w-auto" />
+                </div>
+                <span className="absolute top-5 left-5 text-[11px] font-semibold tracking-[0.3em] text-[var(--wra-gold)] uppercase">
+                  Awaiting art
+                </span>
+              </>
+            )}
+          </div>
+          {/* Caption — normal flow BELOW the art, solid panel
+              background, ivory on panel: readable at a glance. */}
+          <div className="grid gap-1 p-5">
             {product.category ? (
               <span className="text-[11px] font-semibold tracking-[0.18em] text-[var(--wra-gold)] uppercase">
                 {product.category}
