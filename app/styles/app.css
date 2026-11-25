@@ -841,6 +841,31 @@ button.reset:hover:not(:has(> *)) {
   }
 }
 
+/* "You may also like" rail on the product page — the product →
+   product path, so shoppers never have to back out to a collection
+   to keep moving (2026-11-25). */
+.product-recommendations {
+  margin: 3rem auto 4rem;
+  max-width: 75rem;
+  padding: 0 1rem;
+}
+
+.product-recommendations h2 {
+  margin: 0.25rem 0 1.25rem;
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+@media (min-width: 60em) {
+  .recommendations-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 .collections-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(1rem, 2vw, 2rem);

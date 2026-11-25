@@ -156,6 +156,13 @@ export type ProductQuery = {
   product: (Product & {selectedOrFirstAvailableVariant: ProductVariant}) | null;
 };
 
+// Hand-shaped from the ProductRecommendations query in the product
+// route — its fragment is the product-card shape, so the rail renders
+// through the same ProductItem component as the collection grids.
+export type ProductRecommendationsQuery = {
+  productRecommendations: Array<ProductItemFragment>;
+};
+
 // ── Homepage (hand-shaped from the _index queries) ──────────────────────
 
 // Hand-shaped from the HomepageProductItem fragment in the _index

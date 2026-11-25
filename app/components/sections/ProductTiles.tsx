@@ -47,6 +47,13 @@ export interface ProductTile {
    *  product genuinely has no image — the tile then renders the
    *  AWAITING ART hold instead of a photo. */
   image: SectionImage | null;
+  /** The product's second image (the back view on this catalog),
+   *  paired by the route loaders from the product's media. On hover
+   *  or keyboard focus the tile crossfades to it — the same rule the
+   *  collection cards (ProductItem) already follow (2026-11-25,
+   *  ALLWAYZ's order: "show the back on hover"). Null when the
+   *  product has no second image; the tile then stays on the front. */
+  backImage: SectionImage | null;
 }
 
 export interface ProductTilesProps {
@@ -60,7 +67,7 @@ export function ProductTiles({tiles}: ProductTilesProps) {
       data-section="product-tiles"
       className="grid grid-cols-1 bg-[var(--wra-void)] md:grid-cols-3"
     >
-      {tiles.map(({product, image}) => (
+      {tiles.map(({product, image, backImage}) => (
         <Link
           className="wra-tile group flex flex-col overflow-hidden bg-[var(--wra-panel)] text-[var(--wra-ivory)]"
           to={`/products/${product.handle}`}
@@ -78,6 +85,18 @@ export function ProductTiles({tiles}: ProductTilesProps) {
                 alt={image.altText || product.title}
                 className="absolute inset-0 h-full w-full object-cover"
                 data={image}
+                sizes="(min-width: 768px) 33vw, 100vw"
+              />
+            ) : null}
+            {/* Back view — crossfades in over the front on hover or
+                keyboard focus (the Link carries the `group` class).
+                Decorative duplicate of the product link's imagery,
+                so alt stays empty. */}
+            {image && backImage ? (
+              <Image
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+                data={backImage}
                 sizes="(min-width: 768px) 33vw, 100vw"
               />
             ) : null}
