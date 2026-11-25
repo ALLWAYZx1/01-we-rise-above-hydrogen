@@ -12,7 +12,7 @@
     "typecheck": "react-router typegen && tsc && hydrogen gql check --fail-on-warn",
     "dev:https": "hydrogen skills check --mode=warn && vite dev",
     "start": "vite preview --port ${PORT:-4173} --host 0.0.0.0",
-    "start:node": "node server.mjs"
+    "start:node": "node node-server.mjs"
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
