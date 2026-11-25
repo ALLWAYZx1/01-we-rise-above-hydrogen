@@ -153,7 +153,7 @@ function CartLineRemoveButton({
   return (
     <CartForm
       fetcherKey={getUpdateKey(lineIds)}
-      route="/cart"
+      route="/api/cart"
       action={CartForm.ACTIONS.LinesRemove}
       inputs={{lineIds}}
     >
@@ -176,7 +176,7 @@ function CartLineUpdateButton({
   return (
     <CartForm
       fetcherKey={getUpdateKey(lineIds)}
-      route="/cart"
+      route="/api/cart"
       action={CartForm.ACTIONS.LinesUpdate}
       inputs={{lines}}
     >

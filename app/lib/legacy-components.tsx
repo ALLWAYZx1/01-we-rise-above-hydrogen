@@ -1,9 +1,10 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {
   useFetcher,
   Link,
   useLocation,
   useNavigate,
+  useRevalidator,
   useSearchParams,
 } from 'react-router';
 import type {
@@ -25,10 +26,16 @@ import type {CartApiQueryFragment} from 'storefrontapi.generated';
  *
  *   • Money / Image / flattenConnection — REAL local implementations,
  *     kept permanently (repo 06 ships equivalents the same way).
- *   • CartForm — REAL form contract (hidden `cartFormInput` JSON +
- *     ACTIONS + getFormInput, byte-compatible with the classic one) so
- *     the cart route's dispatch and every AddToCart/CartLine form keep
- *     working unchanged; the server side it posts to is Phase 2.
+ *   • CartForm — REAL form contract (ACTIONS + inputs + render-prop
+ *     fetcher, byte-compatible with the classic one at the component
+ *     surface). Phase 4 binds it to the Phase 2 server contract: each
+ *     action is translated into the /api/cart field-based JSON protocol
+ *     (exactly one of lines / discountCodes / attributes / note per
+ *     body; remove = line id + quantity 0), and gift-card /
+ *     buyer-identity actions post to /api/cart-bridge, whose route
+ *     action runs the bridge's direct Storefront mutations
+ *     (~/lib/cart-extensions). `getFormInput` is retained for API
+ *     compatibility; no route action consumes it any more.
  *   • Pagination — server-rendered bridge: Previous/Next are real links
  *     carrying the direction/cursor params that ~/lib/pagination reads,
  *     matching repo 06's documented behavior change from the classic
@@ -149,7 +156,7 @@ export function flattenConnection<T>(
   return connection.edges?.map((edge) => edge.node) ?? [];
 }
 
-// ── CartForm ─────────────────────────────────────────────────────────────
+// ── CartForm (Phase 4: bound to the /api/cart JSON protocol) ─────────────
 
 export const CART_FORM_INPUT_NAME = 'cartFormInput';
 
@@ -174,17 +181,192 @@ export type CartFormProps = {
   fetcherKey?: string;
 };
 
+const CART_ACTIONS = {
+  LinesAdd: 'LinesAdd',
+  LinesUpdate: 'LinesUpdate',
+  LinesRemove: 'LinesRemove',
+  DiscountCodesUpdate: 'DiscountCodesUpdate',
+  GiftCardCodesAdd: 'GiftCardCodesAdd',
+  GiftCardCodesRemove: 'GiftCardCodesRemove',
+  BuyerIdentityUpdate: 'BuyerIdentityUpdate',
+  NoteUpdate: 'NoteUpdate',
+  AttributesUpdateInput: 'AttributesUpdateInput',
+} as const;
+
+// Actions with no /api/cart intent: they run through the bridge route's
+// direct Storefront mutations instead (~/lib/cart-extensions).
+const BRIDGE_ACTIONS: ReadonlySet<string> = new Set([
+  CART_ACTIONS.GiftCardCodesAdd,
+  CART_ACTIONS.GiftCardCodesRemove,
+  CART_ACTIONS.BuyerIdentityUpdate,
+]);
+
+type CartRequestTranslation = {
+  url: string;
+  body: Record<string, unknown>;
+};
+
+type RawLine = {
+  id?: string;
+  merchandiseId?: string;
+  quantity?: number;
+  attributes?: Array<{key: string; value: string}>;
+  sellingPlanId?: string;
+  [key: string]: unknown;
+};
+
+function formString(formData: FormData, name: string): string | null {
+  const value = formData.get(name);
+  return typeof value === 'string' && value !== '' ? value : null;
+}
+
+/**
+ * Translates one classic CartForm action + inputs (+ the live form
+ * fields) into exactly one field-based body for the cart server
+ * handlers. See the section header for the mapping table.
+ */
+function translateCartAction(
+  action: string,
+  inputs: CartFormInputs,
+  formData: FormData,
+  route: string | undefined,
+): CartRequestTranslation {
+  const apiCartUrl = route && route.endsWith('/api/cart') ? route : '/api/cart';
+  const bridgeUrl = '/api/cart-bridge';
+  const rawLines = (Array.isArray(inputs.lines) ? inputs.lines : []) as RawLine[];
+
+  switch (action) {
+    case CART_ACTIONS.LinesAdd:
+      return {
+        url: apiCartUrl,
+        body: {
+          lines: rawLines.map((line) => ({
+            merchandiseId: line.merchandiseId,
+            quantity: line.quantity ?? 1,
+            ...(line.attributes ? {attributes: line.attributes} : {}),
+            ...(line.sellingPlanId ? {sellingPlanId: line.sellingPlanId} : {}),
+          })),
+        },
+      };
+    case CART_ACTIONS.LinesUpdate:
+      return {
+        url: apiCartUrl,
+        body: {
+          lines: rawLines.map((line) => ({
+            id: line.id,
+            quantity: line.quantity ?? 0,
+            ...(line.attributes ? {attributes: line.attributes} : {}),
+            ...(line.sellingPlanId ? {sellingPlanId: line.sellingPlanId} : {}),
+          })),
+        },
+      };
+    case CART_ACTIONS.LinesRemove: {
+      // The runtime protocol has no lineIds field: a remove is a line
+      // update to quantity 0.
+      const lineIds =
+        inputs.lineIds ??
+        rawLines.map((line) => line.id).filter((id): id is string => Boolean(id));
+      return {
+        url: apiCartUrl,
+        body: {lines: lineIds.map((id) => ({id, quantity: 0}))},
+      };
+    }
+    case CART_ACTIONS.DiscountCodesUpdate: {
+      const codes = [...(inputs.discountCodes ?? [])];
+      const entered = formString(formData, 'discountCode');
+      if (entered && !codes.includes(entered)) codes.push(entered);
+      return {url: apiCartUrl, body: {discountCodes: codes}};
+    }
+    case CART_ACTIONS.NoteUpdate:
+      return {
+        url: apiCartUrl,
+        body: {note: inputs.note ?? formString(formData, 'note') ?? ''},
+      };
+    case CART_ACTIONS.AttributesUpdateInput:
+      return {url: apiCartUrl, body: {attributes: inputs.attributes ?? []}};
+    case CART_ACTIONS.GiftCardCodesAdd: {
+      const codes =
+        inputs.giftCardCodes && inputs.giftCardCodes.length > 0
+          ? inputs.giftCardCodes
+          : [formString(formData, 'giftCardCode')].filter(
+              (code): code is string => Boolean(code),
+            );
+      return {url: bridgeUrl, body: {action, giftCardCodes: codes}};
+    }
+    case CART_ACTIONS.GiftCardCodesRemove:
+      // inputs.giftCardCodes carries the APPLIED gift card ids here
+      // (the classic contract), which the bridge mutation expects.
+      return {
+        url: bridgeUrl,
+        body: {action, giftCardCodes: inputs.giftCardCodes ?? []},
+      };
+    case CART_ACTIONS.BuyerIdentityUpdate:
+      return {
+        url: bridgeUrl,
+        body: {action, buyerIdentity: inputs.buyerIdentity ?? {}},
+      };
+    default:
+      return {url: apiCartUrl, body: {lines: rawLines}};
+  }
+}
+
 function CartFormRoot({action, inputs, children, route, fetcherKey}: CartFormProps) {
   const fetcher = useFetcher({key: fetcherKey});
+  const revalidator = useRevalidator();
+  const [pending, setPending] = useState(false);
+  const [lastData, setLastData] = useState<unknown>(undefined);
+  const isBridgeAction = BRIDGE_ACTIONS.has(action);
+
+  // The render-prop contract hands children a fetcher. Bridge actions
+  // submit through the keyed fetcher itself (the bridge is a real route
+  // action, so keyed fetchers elsewhere — e.g. CartSummary's gift-card
+  // clearing effect — observe its state and data exactly as they did
+  // with the classic CartForm). /api/cart is middleware-served, not a
+  // route, so those submissions go through fetch() + revalidation and
+  // the children receive a fetcher-shaped view of the local state.
+  const fetcherForChildren = isBridgeAction
+    ? fetcher
+    : ({
+        state: pending ? 'submitting' : 'idle',
+        data: lastData,
+      } as unknown as ReturnType<typeof useFetcher>);
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const translation = translateCartAction(
+      action,
+      inputs ?? {},
+      new FormData(event.currentTarget),
+      route,
+    );
+    if (isBridgeAction) {
+      void fetcher.submit(translation.body as never, {
+        method: 'post',
+        action: translation.url,
+        encType: 'application/json',
+      });
+      return;
+    }
+    setPending(true);
+    try {
+      const response = await fetch(translation.url, {
+        method: 'POST',
+        headers: {'content-type': 'application/json'},
+        body: JSON.stringify(translation.body),
+      });
+      setLastData(await response.json().catch(() => null));
+    } catch {
+      setLastData(null);
+    } finally {
+      setPending(false);
+      void revalidator.revalidate();
+    }
+  }
+
   return (
-    <fetcher.Form action={route} method="post">
-      <input
-        type="hidden"
-        name={CART_FORM_INPUT_NAME}
-        value={JSON.stringify({action, inputs})}
-      />
-      {typeof children === 'function' ? children(fetcher) : children}
-    </fetcher.Form>
+    <form method="post" onSubmit={(event) => { void handleSubmit(event); }}>
+      {typeof children === 'function' ? children(fetcherForChildren) : children}
+    </form>
   );
 }
 
@@ -215,17 +397,7 @@ function getFormInput(formData: FormData): {
 
 export const CartForm = Object.assign(CartFormRoot, {
   INPUT_NAME: CART_FORM_INPUT_NAME,
-  ACTIONS: {
-    LinesAdd: 'LinesAdd',
-    LinesUpdate: 'LinesUpdate',
-    LinesRemove: 'LinesRemove',
-    DiscountCodesUpdate: 'DiscountCodesUpdate',
-    GiftCardCodesAdd: 'GiftCardCodesAdd',
-    GiftCardCodesRemove: 'GiftCardCodesRemove',
-    BuyerIdentityUpdate: 'BuyerIdentityUpdate',
-    NoteUpdate: 'NoteUpdate',
-    AttributesUpdateInput: 'AttributesUpdateInput',
-  },
+  ACTIONS: CART_ACTIONS,
   getFormInput,
 });
 

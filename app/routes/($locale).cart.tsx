@@ -15,10 +15,12 @@ export const meta: Route.MetaFunction = () => {
 // retired. Cart mutations are owned by the /api/cart server handlers
 // registered in the root middleware (Phase 2), and this route is
 // loader-only: it reads the cart through those same handlers, the exact
-// code path behind GET /api/cart. The cart UI components still post
-// their legacy forms to this route until the Phase 4 component port
-// binds them to the /api/cart intents — that is a Phase 4 carry item,
-// recorded in the Phase 3 report.
+// code path behind GET /api/cart.
+// Phase 4 (carry item C-1, resolved): the cart UI components now bind
+// to that contract — CartForm translates each classic action into the
+// /api/cart field-based JSON protocol, and the gift-card /
+// buyer-identity forms post to /api/cart-bridge, whose action runs the
+// bridge's direct Storefront mutations.
 export async function loader({context, request}: Route.LoaderArgs) {
   const storefrontClient = context.get(storefrontClientContext);
   const result = await cartHandlers.get({storefrontClient, request});
