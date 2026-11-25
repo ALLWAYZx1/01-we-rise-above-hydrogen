@@ -2,9 +2,11 @@ import {gql, type StorefrontApi} from '@shopify/hydrogen';
 
 // NOTE: https://shopify.dev/docs/api/storefront/latest/queries/cart
 // Kept verbatim from the classic shell. Phase 2's cart server handlers
-// compose their own fragment (see the scope doc's Phase 2 fragment-delta
-// check); this string remains the parity reference for the fields the
-// classic cart query selected.
+// compose their own query (library base fragment + the custom fragment
+// in ~/lib/cart-handlers, which re-selects the classic top-level fields
+// the base lacks: appliedGiftCards, buyerIdentity, duty/tax totals);
+// this string remains the parity reference for the fields the classic
+// cart query selected and is no longer executed.
 export const CART_QUERY_FRAGMENT = `#graphql
   fragment Money on MoneyV2 {
     currencyCode

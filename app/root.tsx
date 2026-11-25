@@ -1,3 +1,4 @@
+import {handleShopifyRedirects, handleShopifyRoutes} from '@shopify/hydrogen';
 import {
   Outlet,
   useRouteError,
@@ -18,11 +19,18 @@ import {
   type HeaderQuery,
 } from '~/lib/fragments';
 import {PageLayout} from './components/PageLayout';
+import {cartHandlers} from '~/lib/cart-handlers';
 import {useNonce} from '~/lib/csp';
+import {
+  createRequestCustomerAccount,
+  customerAccountContext,
+} from '~/lib/customer-account';
 import {envContext} from '~/lib/env';
 import {cacheContext, waitUntilContext} from '~/lib/worker-context';
 import {createRequestStorefrontClient, storefrontClientContext} from '~/lib/storefront';
 import {getLocaleFromRequest} from '~/lib/i18n';
+import {routeTemplates} from '~/lib/route-templates';
+import {toRoutedRequest} from '~/lib/routed-request';
 import {getStoreDomain} from '~/lib/shop';
 import {
   createLegacyCart,
@@ -42,13 +50,17 @@ import wraCommerceStyles from '~/styles/wra-commerce.css?url';
 import tailwindCss from '~/styles/tailwind.css?url';
 
 // Root middleware (2026.10 pattern, modeled on repo 06): builds the
-// request's Storefront client, publishes it on the typed context handle,
-// and — Phase 1 bridge — attaches the legacy context properties
+// request's Storefront client, answers Shopify's own routes
+// (/api/cart and — when Customer Accounts are configured —
+// /account/login|logout|authorize|refresh) through the registered
+// server handlers, publishes the typed context handles, and — until
+// Phase 3 finishes the port — attaches the legacy context properties
 // (storefront / cart / customerAccount / env) that existing loaders and
 // components still read. See ~/lib/context for the bridge contract and
-// its deletion schedule (Phases 2–3).
+// its deletion schedule (Phase 3).
 export const middleware: Route.MiddlewareFunction[] = [
-  async ({request, context}, next) => {
+  async ({context, request: rawRequest, url}, next) => {
+    const request = toRoutedRequest(rawRequest, url);
     const env = context.get(envContext);
     const storefrontClient = createRequestStorefrontClient(
       request,
@@ -56,27 +68,71 @@ export const middleware: Route.MiddlewareFunction[] = [
       context.get(cacheContext),
       context.get(waitUntilContext),
     );
-    context.set(storefrontClientContext, storefrontClient);
+    const requestContext = storefrontClient.requestContext;
 
-    const session = await (env.SESSION_SECRET
-      ? createRequestSessionManager(request, env.SESSION_SECRET)
-      : createEphemeralSessionManager(request));
+    const customerAccount = await createRequestCustomerAccount(
+      request,
+      env,
+      requestContext,
+    );
+    const sessionManager =
+      customerAccount?.customerAccount.sessionManager ??
+      (env.SESSION_SECRET
+        ? await createRequestSessionManager(request, env.SESSION_SECRET)
+        : createEphemeralSessionManager(request));
+
+    const shopifyRoute = await handleShopifyRoutes({
+      request,
+      requestContext,
+      sessionManager,
+      storefrontClient,
+      routeTemplates,
+      handlers: customerAccount
+        ? [cartHandlers, customerAccount.handlers]
+        : [cartHandlers],
+    });
+    if (shopifyRoute) return shopifyRoute;
+
+    context.set(storefrontClientContext, storefrontClient);
+    context.set(
+      customerAccountContext,
+      customerAccount?.customerAccount ?? null,
+    );
 
     const i18n = getLocaleFromRequest(request);
     setLegacyContext(context, {
       storefront: createLegacyStorefront(storefrontClient, i18n),
-      cart: createLegacyCart(),
-      customerAccount: createLegacyCustomerAccount(i18n),
+      cart: createLegacyCart({storefrontClient, request}),
+      customerAccount: createLegacyCustomerAccount({
+        i18n,
+        request,
+        context,
+        customerAccount: customerAccount?.customerAccount ?? null,
+      }),
       env,
     });
 
     const response = await next();
-    const commitHeaders = await session.commit?.();
+    const commitHeaders = await sessionManager.commit?.();
     if (commitHeaders) {
       for (const [name, value] of new Headers(commitHeaders).entries()) {
         response.headers.append(name, value);
       }
     }
+    // Gap 4 (decided in Phase 2): the classic shell's storefrontRedirect
+    // has no 2026.10 equivalent; Shopify-managed redirects are honored
+    // here instead — on a 404, handleShopifyRedirects looks the path up
+    // against the store's URL redirects (and Shopify's default resource
+    // paths, via the route templates) before the 404 stands.
+    if (response.status === 404) {
+      const redirect = await handleShopifyRedirects({
+        request,
+        storefrontClient,
+        routeTemplates,
+      });
+      if (redirect) return redirect;
+    }
+    requestContext.applyResponseHeaders(response.headers);
     return response;
   },
 ];

@@ -9,13 +9,12 @@ import {cacheContext, waitUntilContext} from '~/lib/worker-context';
  *
  * Ported from the repo 06 shell (Hydrogen 2026.10 pattern).
  *
- * TODO(Phase 2 / Gap 4): the classic shell called `storefrontRedirect`
- * here on 404 responses to honor Shopify-managed redirects. Hydrogen
- * 2026.10 removed that helper; repo 06 answers 404 redirects inside its
- * root middleware via `handleShopifyRedirects` + route templates. The
- * keep/drop decision for WRA's redirect behavior is scheduled with the
- * Phase 2 root-middleware work — until then 404s pass through plain,
- * exactly as repo 06's server.ts does.
+ * Gap 4 (resolved in Phase 2): the classic shell called
+ * `storefrontRedirect` here on 404 responses to honor Shopify-managed
+ * redirects. Hydrogen 2026.10 removed that helper; WRA now answers 404
+ * redirects inside the root middleware (app/root.tsx) via
+ * `handleShopifyRedirects` + route templates, the repo 06 pattern.
+ * This entry stays a plain pass-through, exactly as repo 06's does.
  */
 export default {
   async fetch(
