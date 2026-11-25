@@ -29,12 +29,23 @@ import {
 // a single-locale definition pinned to the classically parsed locale and
 // passes it with an explicit `locale` override — the resolved locale is
 // therefore exactly the classic one.
-// TODO(Phase 3, locale batch): replace the per-request definition with
-// one module-scope multi-locale definition when the prefix scheme is
-// ruled on (Phase 0 finding: live prefixes are bare-language /fr /es /de
-// /ja, the classic parser reads /EN-US-style prefixes).
+// Phase 3 locale ruling (2026-11-24): the classic scheme is kept. The
+// classic parser accepts ANY /XX-YY first segment dynamically, so no
+// fixed module-scope locale list can reproduce it; the per-request
+// single-locale definition stays, pinned by the explicit `locale`
+// override below. One SDK constraint shapes the code: defineShopifyI18n
+// forbids the default locale (EN-US) inside pathname routing.locales
+// ("served unprefixed so each page has one canonical URL"), so an
+// explicit /EN-US prefix resolves through the default-locale definition
+// instead. The URL still routes and renders EN/US exactly as the
+// classic app did; only the SDK's own URL generation treats EN-US as
+// unprefixed (the app builds links from `pathPrefix`, not the SDK).
+// The live store's bare-language prefixes (/fr /es /de /ja) are NOT the
+// classic app's scheme — see the Phase 3 report's parity items.
 function i18nDefinition(locale: I18nLocale) {
-  if (!locale.pathPrefix) {
+  const isDefaultLocale =
+    locale.language === 'EN' && locale.country === 'US';
+  if (!locale.pathPrefix || isDefaultLocale) {
     return defineShopifyI18n({
       defaultLocale: {language: locale.language, country: locale.country},
     });
