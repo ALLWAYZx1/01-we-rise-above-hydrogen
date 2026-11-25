@@ -1,12 +1,14 @@
-import {redirect, useLoaderData} from 'react-router';
+import {Suspense} from 'react';
+import {Await, redirect, useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).products.$handle';
 import {getSelectedProductOptions} from '@shopify/hydrogen';
 import {useOptimisticVariant, getProductOptions, getAdjacentAndFirstAvailableVariants, useSelectedOptionInUrlParam} from '~/lib/legacy-components';
-import type {ProductQuery} from 'storefrontapi.generated';
+import type {ProductQuery, ProductRecommendationsQuery} from 'storefrontapi.generated';
 import {Analytics} from '~/lib/analytics';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
+import {ProductItem} from '~/components/ProductItem';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {legacyContext} from '~/lib/context';
 
@@ -27,7 +29,23 @@ export async function loader(args: Route.LoaderArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return {...deferredData, ...criticalData};
+  // "You may also like" — starts only once the product (and its id) is
+  // known, but is NOT awaited: it streams in below the fold so moving
+  // product → product never waits on it, and a failed recommendations
+  // call resolves to an empty list and renders nothing (2026-11-25,
+  // ALLWAYZ's order: product pages need the rail; the flow between
+  // products has to stay smooth).
+  const recommendations = legacyContext(args.context)
+    .storefront.query<ProductRecommendationsQuery>(
+      PRODUCT_RECOMMENDATIONS_QUERY,
+      {variables: {productId: criticalData.product.id}},
+    )
+    .then(
+      ({productRecommendations}) => productRecommendations ?? [],
+      () => [] as ProductRecommendationsQuery['productRecommendations'],
+    );
+
+  return {...deferredData, ...criticalData, recommendations};
 }
 
 /**
@@ -74,7 +92,7 @@ function loadDeferredData({context, params}: Route.LoaderArgs) {
 }
 
 export default function Product() {
-  const {product} = useLoaderData<typeof loader>();
+  const {product, recommendations} = useLoaderData<typeof loader>();
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -95,6 +113,7 @@ export default function Product() {
   const {title, descriptionHtml} = product;
 
   return (
+    <>
     <div className="product cosmic-product">
       <div className="wra-product-starfield" aria-hidden="true" />
       <div className="product-stage">
@@ -138,6 +157,29 @@ export default function Product() {
         }}
       />
     </div>
+    {/* You may also like — the product → product path. Cards carry
+        the hover back-view and prefetch on intent, so the next
+        product is one tap from here instead of a trip back out to
+        the collection. Renders nothing when no recommendations
+        come back. */}
+    <Suspense fallback={null}>
+      <Await resolve={recommendations}>
+        {(items) =>
+          items.length > 0 ? (
+            <section className="product-recommendations">
+              <p className="shelf-kicker">Keep moving</p>
+              <h2>You may also like</h2>
+              <div className="recommendations-grid">
+                {items.slice(0, 4).map((item) => (
+                  <ProductItem key={item.id} product={item} loading="lazy" />
+                ))}
+              </div>
+            </section>
+          ) : null
+        }
+      </Await>
+    </Suspense>
+    </>
   );
 }
 
@@ -231,4 +273,58 @@ const PRODUCT_QUERY = `#graphql
     }
   }
   ${PRODUCT_FRAGMENT}
+` as const;
+
+// The fragment mirrors the ProductItem fragment on the collection
+// routes field-for-field (including media(first: 2), which is what
+// gives the rail's cards their hover back-view), so the rail renders
+// through the same ProductItem component as the collection grids.
+const PRODUCT_RECOMMENDATIONS_QUERY = `#graphql
+  fragment MoneyProductItem on MoneyV2 {
+    amount
+    currencyCode
+  }
+  fragment ProductItem on Product {
+    id
+    handle
+    title
+    featuredImage {
+      id
+      altText
+      url
+      width
+      height
+    }
+    media(first: 2) {
+      nodes {
+        __typename
+        ... on MediaImage {
+          image {
+            id
+            altText
+            url
+            width
+            height
+          }
+        }
+      }
+    }
+    priceRange {
+      minVariantPrice {
+        ...MoneyProductItem
+      }
+      maxVariantPrice {
+        ...MoneyProductItem
+      }
+    }
+  }
+  query ProductRecommendations(
+    $productId: ID!
+    $country: CountryCode
+    $language: LanguageCode
+  ) @inContext(country: $country, language: $language) {
+    productRecommendations(productId: $productId, intent: RELATED) {
+      ...ProductItem
+    }
+  }
 ` as const;

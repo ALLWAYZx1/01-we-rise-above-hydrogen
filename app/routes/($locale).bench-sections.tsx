@@ -81,6 +81,15 @@ export async function loader({
         category: product.productType || undefined,
       },
       image: product.featuredImage!,
+      // Same hover pairing as the homepage loader: first media image
+      // that is not the featured one (the back view on this catalog).
+      backImage:
+        (product.media?.nodes ?? [])
+          .flatMap((node) =>
+            node.__typename === 'MediaImage' && node.image ? [node.image] : [],
+          )
+          .find((mediaImage) => mediaImage.id !== product.featuredImage?.id) ??
+        null,
     }));
   const spotlightMain = spotlightMainRaw
     ? toSpotlightProduct(spotlightMainRaw)

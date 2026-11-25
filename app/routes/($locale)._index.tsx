@@ -83,6 +83,16 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
         category: product.productType || undefined,
       },
       image: product.featuredImage!,
+      // Hover pair: the first media image that is not the featured
+      // one — on this catalog, the back view. The query already
+      // fetches media(first: 2); until now nothing paired it.
+      backImage:
+        (product.media?.nodes ?? [])
+          .flatMap((node) =>
+            node.__typename === 'MediaImage' && node.image ? [node.image] : [],
+          )
+          .find((mediaImage) => mediaImage.id !== product.featuredImage?.id) ??
+        null,
     }));
 
   type HomepageCollection =
