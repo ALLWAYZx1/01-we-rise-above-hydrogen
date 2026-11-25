@@ -1,4 +1,3 @@
-import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
 import {
   Outlet,
   useRouteError,
@@ -11,84 +10,89 @@ import {
   useRouteLoaderData,
 } from 'react-router';
 import type {Route} from './+types/root';
-import favicon from '~/assets/favicon.svg';
-import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
+
+import {
+  FOOTER_QUERY,
+  HEADER_QUERY,
+  type FooterQuery,
+  type HeaderQuery,
+} from '~/lib/fragments';
+import {PageLayout} from './components/PageLayout';
+import {useNonce} from '~/lib/csp';
+import {envContext} from '~/lib/env';
+import {cacheContext, waitUntilContext} from '~/lib/worker-context';
+import {createRequestStorefrontClient, storefrontClientContext} from '~/lib/storefront';
+import {getLocaleFromRequest} from '~/lib/i18n';
+import {getStoreDomain} from '~/lib/shop';
+import {
+  createLegacyCart,
+  createLegacyCustomerAccount,
+  createLegacyStorefront,
+  legacyContext,
+  setLegacyContext,
+} from '~/lib/context';
+import {
+  createEphemeralSessionManager,
+  createRequestSessionManager,
+} from '~/lib/session';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
-import tailwindCss from './styles/tailwind.css?url';
-import wraReskinStyles from '~/components/sections/wra-reskin.css?url';
 import cosmicStyles from '~/styles/cosmic.css?url';
-import commerceStyles from '~/styles/wra-commerce.css?url';
-import {PageLayout} from './components/PageLayout';
+import wraCommerceStyles from '~/styles/wra-commerce.css?url';
+import tailwindCss from '~/styles/tailwind.css?url';
 
-export type RootLoader = typeof loader;
+// Root middleware (2026.10 pattern, modeled on repo 06): builds the
+// request's Storefront client, publishes it on the typed context handle,
+// and — Phase 1 bridge — attaches the legacy context properties
+// (storefront / cart / customerAccount / env) that existing loaders and
+// components still read. See ~/lib/context for the bridge contract and
+// its deletion schedule (Phases 2–3).
+export const middleware: Route.MiddlewareFunction[] = [
+  async ({request, context}, next) => {
+    const env = context.get(envContext);
+    const storefrontClient = createRequestStorefrontClient(
+      request,
+      env,
+      context.get(cacheContext),
+      context.get(waitUntilContext),
+    );
+    context.set(storefrontClientContext, storefrontClient);
 
-/**
- * Site-wide SEO defaults (salvage, 2026-11-18). Wording recovered
- * verbatim from the pre-PR#144 homepage (old `app/routes/_index.tsx`):
- * title 'We Rise Above | No Final Form' + its description. Routes
- * that export their own meta (the homepage does, with the same
- * wording plus its OG/Twitter set) override these defaults; routes
- * that don't inherit them — so no page can fall back to the stock
- * template's 'Hydrogen | Home' again.
- *
- * TODO(analytics): GA G-F7SLHQZBWV / GTM GTM-TW29LW4X / Meta Pixel
- * 2793791147688986 are NOT added here. Live firing is unverified —
- * adding the tags in code before a real-browser firing check risks
- * double-firing against whatever the current deployment already
- * sends. Add them only after that check.
- */
-export const meta: Route.MetaFunction = () => {
-  const title = 'We Rise Above | No Final Form';
-  const description =
-    'Streetwear armor for the ones still rising. Faith. Discipline. Hard work. No final form.';
-  return [
-    {title},
-    {name: 'description', content: description},
-    {property: 'og:type', content: 'website'},
-    {property: 'og:title', content: title},
-    {property: 'og:description', content: description},
-    {property: 'og:url', content: 'https://weriseabove.life/'},
-    {name: 'twitter:card', content: 'summary_large_image'},
-    {name: 'twitter:title', content: title},
-    {name: 'twitter:description', content: description},
-  ];
-};
+    const session = await (env.SESSION_SECRET
+      ? createRequestSessionManager(request, env.SESSION_SECRET)
+      : createEphemeralSessionManager(request));
 
-/**
- * This is important to avoid re-fetching root queries on sub-navigations
- */
-export const shouldRevalidate: ShouldRevalidateFunction = ({
-  formMethod,
-  currentUrl,
-  nextUrl,
-}) => {
+    const i18n = getLocaleFromRequest(request);
+    setLegacyContext(context, {
+      storefront: createLegacyStorefront(storefrontClient, i18n),
+      cart: createLegacyCart(),
+      customerAccount: createLegacyCustomerAccount(i18n),
+      env,
+    });
+
+    const response = await next();
+    const commitHeaders = await session.commit?.();
+    if (commitHeaders) {
+      for (const [name, value] of new Headers(commitHeaders).entries()) {
+        response.headers.append(name, value);
+      }
+    }
+    return response;
+  },
+];
+
+export const shouldRevalidate: ShouldRevalidateFunction = ({formMethod, currentUrl, nextUrl}) => {
   // revalidate when a mutation is performed e.g add to cart, login...
   if (formMethod && formMethod !== 'GET') return true;
-
   // revalidate when manually revalidating via useRevalidator
   if (currentUrl.toString() === nextUrl.toString()) return true;
 
-  // Defaulting to no revalidation for root loader data to improve performance.
-  // When using this feature, you risk your UI getting out of sync with your server.
-  // Use with caution. If you are uncomfortable with this optimization, update the
-  // line below to `return defaultShouldRevalidate` instead.
-  // For more details see: https://remix.run/docs/en/main/route/should-revalidate
   return false;
 };
 
-/**
- * The main and reset stylesheets are added in the Layout component
- * to prevent a bug in development HMR updates.
- *
- * This avoids the "failed to execute 'insertBefore' on 'Node'" error
- * that occurs after editing and navigating to another page.
- *
- * It's a temporary fix until the issue is resolved.
- * https://github.com/remix-run/remix/issues/9242
- */
 export function links() {
   return [
+    {rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg'},
     {
       rel: 'preconnect',
       href: 'https://cdn.shopify.com',
@@ -97,7 +101,28 @@ export function links() {
       rel: 'preconnect',
       href: 'https://shop.app',
     },
-    {rel: 'icon', type: 'image/svg+xml', href: favicon},
+  ];
+}
+
+export function meta() {
+  return [
+    {title: 'We Rise Above | No Final Form'},
+    {
+      name: 'description',
+      content:
+        'We Rise Above — premium streetwear engineered for the ones still rising. No Final Form.',
+    },
+    {property: 'og:title', content: 'We Rise Above | No Final Form'},
+    {
+      property: 'og:description',
+      content:
+        'Premium streetwear engineered for the ones still rising. No Final Form.',
+    },
+    {property: 'og:type', content: 'website'},
+    {name: 'twitter:card', content: 'summary_large_image'},
+    // TODO(analytics): GA (G-F7SLHQZBWV) + Meta Pixel (2793791147688986) — the Phase 4
+    // analytics wiring lands with the 2026.10 tracker components; see the
+    // Analytics bridge note in ~/lib/legacy-components.
   ];
 }
 
@@ -108,25 +133,7 @@ export async function loader(args: Route.LoaderArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  const {storefront, env} = args.context;
-
-  return {
-    ...deferredData,
-    ...criticalData,
-    publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
-    shop: getShopAnalytics({
-      storefront,
-      publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
-    }),
-    consent: {
-      checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
-      storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
-      withPrivacyBanner: false,
-      // localize the privacy banner
-      country: args.context.storefront.i18n.country,
-      language: args.context.storefront.i18n.language,
-    },
-  };
+  return {...deferredData, ...criticalData};
 }
 
 /**
@@ -134,14 +141,11 @@ export async function loader(args: Route.LoaderArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context}: Route.LoaderArgs) {
-  const {storefront} = context;
-
+  const legacy = legacyContext(context);
   const [header] = await Promise.all([
-    storefront.query(HEADER_QUERY, {
-      cache: storefront.CacheLong(),
-      variables: {
-        headerMenuHandle: 'main-menu', // Adjust to your header menu handle
-      },
+    legacy.storefront.query<HeaderQuery>(HEADER_QUERY, {
+      cache: legacy.storefront.CacheLong(),
+      variables: {headerMenuHandle: 'main-menu'}, // Adjust to your header menu handle
     }),
     // Add other queries here, so that they are loaded in parallel
   ]);
@@ -151,29 +155,33 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
 
 /**
  * Load data for rendering content below the fold. This data is deferred and will be
- * fetched after the initial page load. If it's unavailable, the page should still 200.
- * Make sure to not throw any errors here, as it will cause the page to 500.
+ * fetched after the initial page load. If it's unavailable, then it should still lead to
+ * 400 or 500 errors, it just won't block the page from rendering
  */
 function loadDeferredData({context}: Route.LoaderArgs) {
-  const {storefront, customerAccount, cart} = context;
+  const legacy = legacyContext(context);
+  // Put any loaders here that are not critical
+  const cart = legacy.cart.get();
 
-  // defer the footer query (below the fold)
-  const footer = storefront
-    .query(FOOTER_QUERY, {
-      cache: storefront.CacheLong(),
-      variables: {
-        footerMenuHandle: 'footer', // Adjust to your footer menu handle
-      },
+  // Deferred: Promise for the login state (PageLayout awaits it).
+  const isLoggedIn = legacy.customerAccount.isLoggedIn();
+
+  // Deferred: Promise for Footer Query.
+  const footer = legacy.storefront
+    .query<FooterQuery>(FOOTER_QUERY, {
+      cache: legacy.storefront.CacheLong(),
+      variables: {footerMenuHandle: 'footer'}, // Adjust to your footer menu handle
     })
-    .catch((error: Error) => {
+    .catch((error: unknown) => {
       // Log query errors, but don't throw them so the page can still render
       console.error(error);
       return null;
     });
   return {
-    cart: cart.get(),
-    isLoggedIn: customerAccount.isLoggedIn(),
+    cart,
     footer,
+    isLoggedIn,
+    publicStoreDomain: legacy.env.PUBLIC_STORE_DOMAIN ?? getStoreDomain(legacy.env),
   };
 }
 
@@ -185,16 +193,18 @@ export function Layout({children}: {children?: React.ReactNode}) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="stylesheet" href={tailwindCss}></link>
-        <link rel="stylesheet" href={resetStyles}></link>
-        <link rel="stylesheet" href={appStyles}></link>
-        <link rel="stylesheet" href={wraReskinStyles}></link>
-        <link rel="stylesheet" href={cosmicStyles}></link>
-        <link rel="stylesheet" href={commerceStyles}></link>
+        <link rel="stylesheet" href={tailwindCss} />
+        <link rel="stylesheet" href={resetStyles} />
+        <link rel="stylesheet" href={appStyles} />
+        <link rel="stylesheet" href={cosmicStyles} />
+        <link rel="stylesheet" href={wraCommerceStyles} />
         <Meta />
         <Links />
       </head>
       <body>
+        {/* TODO(Phase 4): the classic Analytics.Provider is gone in
+            2026.10; page/cart trackers (PageViewedTracker,
+            CartAnalyticsTracker) mount here with the GA + Meta wiring. */}
         {children}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
@@ -211,15 +221,9 @@ export default function App() {
   }
 
   return (
-    <Analytics.Provider
-      cart={data.cart}
-      shop={data.shop}
-      consent={data.consent}
-    >
-      <PageLayout {...data}>
-        <Outlet />
-      </PageLayout>
-    </Analytics.Provider>
+    <PageLayout {...data}>
+      <Outlet />
+    </PageLayout>
   );
 }
 
@@ -244,6 +248,9 @@ export function ErrorBoundary() {
           <pre>{errorMessage}</pre>
         </fieldset>
       )}
+      <a href="/">Go back home</a>
     </div>
   );
 }
+
+type RootLoader = typeof loader;

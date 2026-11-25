@@ -1,4 +1,19 @@
-import type {I18nBase} from '@shopify/hydrogen';
+import type {
+  ShopifyCountryCode,
+  ShopifyLanguageCode,
+} from '@shopify/hydrogen';
+
+/**
+ * Local replacement for the classic Hydrogen `I18nBase` type, which
+ * Hydrogen 2026.10 no longer exports. Same shape: a Storefront API
+ * language/country pair, typed with Hydrogen's own i18n code types so
+ * the value satisfies `createShopifyRequestContext`'s legacy fixed-locale
+ * input (`I18nConfig`).
+ */
+export interface I18nBase {
+  language: ShopifyLanguageCode;
+  country: ShopifyCountryCode;
+}
 
 export interface I18nLocale extends I18nBase {
   pathPrefix: string;
