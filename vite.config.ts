@@ -19,10 +19,26 @@ export default defineConfig({
     // Allow a strict Content-Security-Policy
     // without inlining assets as base64:
     assetsInlineLimit: 0,
+    // The Shopify CLI resolves this project's worker path through the
+    // legacy top-level build view (build.outDir + the server build file
+    // name). Left unset, outDir defaults to 'dist' and
+    // `shopify hydrogen build`/`deploy` stat dist/index.js — a file the
+    // React Router build never writes (it writes dist/server/index.js)
+    // — and publish dies with ENOENT (verified 2026-11-25). The server
+    // directory is therefore the top-level default, and each
+    // environment below restates its own outDir explicitly so the
+    // client bundle still lands in dist/client.
+    outDir: 'dist/server',
   },
   environments: {
+    client: {
+      build: {
+        outDir: 'dist/client',
+      },
+    },
     ssr: {
       build: {
+        outDir: 'dist/server',
         // Build the Oxygen Worker entry, which wraps React Router's server
         // build, instead of React Router's default server build module.
         rolldownOptions: {input: './server.ts'},
