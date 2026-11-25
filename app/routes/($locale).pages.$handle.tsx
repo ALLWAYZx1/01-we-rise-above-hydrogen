@@ -1,8 +1,10 @@
 import {useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).pages.$handle';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {legacyContext} from '~/lib/context';
+import type {Page} from '@shopify/hydrogen/storefront-api-types';
 
-export const meta: Route.MetaFunction = ({data}) => {
+export const meta: Route.MetaFunction = ({loaderData: data}) => {
   return [{title: `Hydrogen | ${data?.page.title ?? ''}`}];
 };
 
@@ -26,7 +28,7 @@ async function loadCriticalData({context, request, params}: Route.LoaderArgs) {
   }
 
   const [{page}] = await Promise.all([
-    context.storefront.query(PAGE_QUERY, {
+    legacyContext(context).storefront.query<{page: Page | null}>(PAGE_QUERY, {
       variables: {
         handle: params.handle,
       },

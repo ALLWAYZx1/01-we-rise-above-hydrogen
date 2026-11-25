@@ -1,6 +1,7 @@
 import {useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).search';
-import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
+import {Analytics} from '~/lib/analytics';
+import {getPaginationVariables} from '~/lib/pagination';
 import {SearchForm} from '~/components/SearchForm';
 import {SearchResults} from '~/components/SearchResults';
 import {
@@ -8,6 +9,7 @@ import {
   type PredictiveSearchReturn,
   getEmptyPredictiveSearchResult,
 } from '~/lib/search';
+import {legacyContext} from '~/lib/context';
 import type {
   RegularSearchQuery,
   PredictiveSearchQuery,
@@ -221,7 +223,7 @@ async function regularSearch({
   Route.LoaderArgs,
   'request' | 'context'
 >): Promise<RegularSearchReturn> {
-  const {storefront} = context;
+  const {storefront} = legacyContext(context);
   const url = new URL(request.url);
   const variables = getPaginationVariables(request, {pageBy: 8});
   const term = String(url.searchParams.get('q') || '');
@@ -231,7 +233,7 @@ async function regularSearch({
     errors,
     ...items
   }: {errors?: Array<{message: string}>} & RegularSearchQuery =
-    await storefront.query(SEARCH_QUERY, {
+    await storefront.query<RegularSearchQuery>(SEARCH_QUERY, {
       variables: {...variables, term},
     });
 
@@ -386,7 +388,7 @@ async function predictiveSearch({
   Route.ActionArgs,
   'request' | 'context'
 >): Promise<PredictiveSearchReturn> {
-  const {storefront} = context;
+  const {storefront} = legacyContext(context);
   const url = new URL(request.url);
   const term = String(url.searchParams.get('q') || '').trim();
   const limit = Number(url.searchParams.get('limit') || 10);
@@ -399,7 +401,7 @@ async function predictiveSearch({
     predictiveSearch: items,
     errors,
   }: PredictiveSearchQuery & {errors?: Array<{message: string}>} =
-    await storefront.query(PREDICTIVE_SEARCH_QUERY, {
+    await storefront.query<PredictiveSearchQuery>(PREDICTIVE_SEARCH_QUERY, {
       variables: {
         // customize search options as needed
         limit,

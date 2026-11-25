@@ -4,13 +4,11 @@ import {
   useNavigation,
   useSearchParams,
 } from 'react-router';
+import {legacyContext} from '~/lib/context';
 import type {Route} from './+types/($locale).account.orders._index';
 import {useRef} from 'react';
-import {
-  Money,
-  getPaginationVariables,
-  flattenConnection,
-} from '@shopify/hydrogen';
+import {Money, flattenConnection} from '~/lib/legacy-components';
+import {getPaginationVariables} from '~/lib/pagination';
 import {
   buildOrderSearchQuery,
   parseOrderFilters,
@@ -19,13 +17,13 @@ import {
 } from '~/lib/orderFilters';
 import {CUSTOMER_ORDERS_QUERY} from '~/graphql/customer-account/CustomerOrdersQuery';
 import type {
-  CustomerOrdersFragment,
-  OrderItemFragment,
-} from 'customer-accountapi.generated';
+  Customer,
+  Order,
+} from '@shopify/hydrogen/customer-account-api-types';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 
 type OrdersLoaderData = {
-  customer: CustomerOrdersFragment;
+  customer: Customer;
   filters: OrderFilterParams;
 };
 
@@ -34,7 +32,7 @@ export const meta: Route.MetaFunction = () => {
 };
 
 export async function loader({request, context}: Route.LoaderArgs) {
-  const {customerAccount} = context;
+  const {customerAccount} = legacyContext(context);
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 20,
   });
@@ -74,7 +72,7 @@ function OrdersTable({
   orders,
   filters,
 }: {
-  orders: CustomerOrdersFragment['orders'];
+  orders: Customer['orders'];
   filters: OrderFilterParams;
 }) {
   const hasFilters = !!(filters.name || filters.confirmationNumber);
@@ -199,7 +197,7 @@ function OrderSearchForm({
   );
 }
 
-function OrderItem({order}: {order: OrderItemFragment}) {
+function OrderItem({order}: {order: Order}) {
   const fulfillmentStatus = flattenConnection(order.fulfillments)[0]?.status;
   return (
     <>

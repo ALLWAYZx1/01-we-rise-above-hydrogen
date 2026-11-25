@@ -5,18 +5,19 @@
   "version": "2026.4.8",
   "type": "module",
   "scripts": {
-    "build": "shopify hydrogen build --codegen",
-    "dev": "shopify hydrogen dev --codegen",
-    "preview": "shopify hydrogen preview --build",
+    "build": "react-router build",
+    "dev": "hydrogen skills check --mode=warn && vite dev",
+    "preview": "react-router build && vite preview",
     "lint": "eslint --no-error-on-unmatched-pattern .",
-    "typecheck": "react-router typegen && tsc --noEmit",
-    "codegen": "shopify hydrogen codegen && react-router typegen"
+    "typecheck": "react-router typegen && tsc && hydrogen gql check --fail-on-warn",
+    "dev:https": "hydrogen skills check --mode=warn && vite dev",
+    "start": "vite preview --port ${PORT:-4173} --host 0.0.0.0"
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
-    "@shopify/hydrogen": "2026.4.7",
-    "graphql": "^16.10.0",
-    "graphql-tag": "^2.12.6",
+    "@remix-run/cookie": "^0.6.0",
+    "@remix-run/session": "^0.4.3",
+    "@shopify/hydrogen": "^2026.10.3",
     "isbot": "^5.1.22",
     "react": "^19.3.1",
     "react-dom": "^18.3.1",
@@ -25,7 +26,7 @@
     "tailwindcss": "^4.1.6"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.2.5",
+    "@eslint/compat": "^2.1.1",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
     "@graphql-codegen/cli": "5.0.2",
@@ -43,7 +44,7 @@
     "@types/react-dom": "^18.3.7",
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
-    "eslint": "^9.18.0",
+    "eslint": "10.14.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-eslint-comments": "^3.2.0",
@@ -53,7 +54,8 @@
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^15.14.0",
-    "graphql-config": "^5.0.3",
+    "gql.tada": "^1.9.2",
+    "graphql": "^16.13.2",
     "prettier": "^3.4.2",
     "typescript": "^5.9.2",
     "vite": "^8.0.1"
@@ -63,5 +65,9 @@
   },
   "browserslist": [
     "defaults"
-  ]
+  ],
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "workerd@1.20250310.0": true
+  }
 }

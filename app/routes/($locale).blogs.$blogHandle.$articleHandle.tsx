@@ -1,9 +1,11 @@
 import {useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).blogs.$blogHandle.$articleHandle';
-import {Image} from '@shopify/hydrogen';
+import {Image} from '~/lib/legacy-components';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {legacyContext} from '~/lib/context';
+import type {Blog} from '@shopify/hydrogen/storefront-api-types';
 
-export const meta: Route.MetaFunction = ({data}) => {
+export const meta: Route.MetaFunction = ({loaderData: data}) => {
   return [{title: `Hydrogen | ${data?.article.title ?? ''} article`}];
 };
 
@@ -29,7 +31,7 @@ async function loadCriticalData({context, request, params}: Route.LoaderArgs) {
   }
 
   const [{blog}] = await Promise.all([
-    context.storefront.query(ARTICLE_QUERY, {
+    legacyContext(context).storefront.query<{blog: Blog | null}>(ARTICLE_QUERY, {
       variables: {blogHandle, articleHandle},
     }),
     // Add other queries here, so that they are loaded in parallel

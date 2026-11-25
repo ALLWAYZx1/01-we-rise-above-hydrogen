@@ -26,7 +26,7 @@
  * image path remains for the day a real campaign asset lands.
  */
 import {Link} from 'react-router';
-import {Image} from '@shopify/hydrogen';
+import {Image} from '~/lib/legacy-components';
 import type {SectionCta, SectionImage} from './section-types';
 import type {Stat} from './StatBand';
 

@@ -1,5 +1,6 @@
 import {redirect} from 'react-router';
 import type {Route} from './+types/($locale).cart.$lines';
+import {legacyContext} from '~/lib/context';
 
 /**
  * Automatically creates a new cart based on the URL and redirects straight to checkout.
@@ -12,6 +13,15 @@ import type {Route} from './+types/($locale).cart.$lines';
  * More than one `<variant_id>:<quantity>` separated by a comma, can be supplied in the URL, for
  * carts with more than one product variant.
  *
+ * REACHABILITY (Phase 3 finding): the UNPREFIXED shape (/cart/...)
+ * never reaches this route — the SDK's handleCheckoutRedirect
+ * interceptor inside handleShopifyRoutes (root middleware) matches
+ * the unprefixed cart-permalink pattern first and 302-bounces the
+ * permalink to the store origin, where Shopify resolves it natively
+ * (cart + discount handled there). This route serves the
+ * locale-prefixed shape (/EN-US/cart/...), which the interceptor's
+ * anchored pattern does not match, with the classic semantics.
+ *
  * @example
  * Example path creating a cart with two product variants, different quantities, and a discount code in the querystring:
  * ```js
@@ -20,7 +30,7 @@ import type {Route} from './+types/($locale).cart.$lines';
  * ```
  */
 export async function loader({request, context, params}: Route.LoaderArgs) {
-  const {cart} = context;
+  const {cart} = legacyContext(context);
   const {lines} = params;
   if (!lines) return redirect('/cart');
   const linesMap = lines.split(',').map((line) => {
@@ -54,12 +64,13 @@ export async function loader({request, context, params}: Route.LoaderArgs) {
     });
   }
 
-  // Update cart id in cookie
-  const headers = cart.setCartId(cartResult.id);
-
+  // Update cart id in cookie (rides the redirect's own headers —
+  // classic behavior, verified live in Phase 3).
   // redirect to checkout
   if (cartResult.checkoutUrl) {
-    return redirect(cartResult.checkoutUrl, {headers});
+    return redirect(cartResult.checkoutUrl, {
+      headers: cart.setCartId(cartResult.id),
+    });
   } else {
     throw new Error('No checkout URL found');
   }

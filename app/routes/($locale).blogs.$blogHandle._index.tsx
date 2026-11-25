@@ -1,11 +1,13 @@
 import {Link, useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).blogs.$blogHandle._index';
-import {Image, getPaginationVariables} from '@shopify/hydrogen';
-import type {ArticleItemFragment} from 'storefrontapi.generated';
+import {Image} from '~/lib/legacy-components';
+import {getPaginationVariables} from '~/lib/pagination';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {legacyContext} from '~/lib/context';
+import type {Article, Blog} from '@shopify/hydrogen/storefront-api-types';
 
-export const meta: Route.MetaFunction = ({data}) => {
+export const meta: Route.MetaFunction = ({loaderData: data}) => {
   return [{title: `Hydrogen | ${data?.blog.title ?? ''} blog`}];
 };
 
@@ -33,7 +35,7 @@ async function loadCriticalData({context, request, params}: Route.LoaderArgs) {
   }
 
   const [{blog}] = await Promise.all([
-    context.storefront.query(BLOGS_QUERY, {
+    legacyContext(context).storefront.query<{blog: Blog | null}>(BLOGS_QUERY, {
       variables: {
         blogHandle: params.blogHandle,
         ...paginationVariables,
@@ -69,7 +71,7 @@ export default function Blog() {
       <div className="wra-blog-starfield" aria-hidden="true" />
       <h1>{blog.title}</h1>
       <div className="blog-grid">
-        <PaginatedResourceSection<ArticleItemFragment> connection={articles}>
+        <PaginatedResourceSection<Article> connection={articles}>
           {({node: article, index}) => (
             <ArticleItem
               article={article}
@@ -87,7 +89,7 @@ function ArticleItem({
   article,
   loading,
 }: {
-  article: ArticleItemFragment;
+  article: Article;
   loading?: HTMLImageElement['loading'];
 }) {
   const publishedAt = new Intl.DateTimeFormat('en-US', {

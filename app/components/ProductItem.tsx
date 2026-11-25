@@ -1,5 +1,5 @@
 import {Link} from 'react-router';
-import {Image, Money} from '@shopify/hydrogen';
+import {Image, Money} from '~/lib/legacy-components';
 import type {
   ProductItemFragment,
   CollectionItemFragment,

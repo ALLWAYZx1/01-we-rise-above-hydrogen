@@ -1,13 +1,15 @@
 import {Link, useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).policies.$handle';
 import {type Shop} from '@shopify/hydrogen/storefront-api-types';
+import {legacyContext} from '~/lib/context';
+import type {PoliciesQuery} from 'storefrontapi.generated';
 
 type SelectedPolicies = keyof Pick<
   Shop,
   'privacyPolicy' | 'shippingPolicy' | 'termsOfService' | 'refundPolicy'
 >;
 
-export const meta: Route.MetaFunction = ({data}) => {
+export const meta: Route.MetaFunction = ({loaderData: data}) => {
   return [{title: `Hydrogen | ${data?.policy.title ?? ''}`}];
 };
 
@@ -21,14 +23,14 @@ export async function loader({params, context}: Route.LoaderArgs) {
     (_: unknown, m1: string) => m1.toUpperCase(),
   ) as SelectedPolicies;
 
-  const data = await context.storefront.query(POLICY_CONTENT_QUERY, {
+  const data = await legacyContext(context).storefront.query<{shop: PoliciesQuery['shop']}>(POLICY_CONTENT_QUERY, {
     variables: {
       privacyPolicy: false,
       shippingPolicy: false,
       termsOfService: false,
       refundPolicy: false,
       [policyName]: true,
-      language: context.storefront.i18n?.language,
+      language: legacyContext(context).storefront.i18n?.language,
     },
   });
 

@@ -1,8 +1,9 @@
 import {Link, useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).blogs._index';
-import {getPaginationVariables} from '@shopify/hydrogen';
+import {getPaginationVariables} from '~/lib/pagination';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import type {BlogsQuery} from 'storefrontapi.generated';
+import {legacyContext} from '~/lib/context';
 
 type BlogNode = BlogsQuery['blogs']['nodes'][0];
 
@@ -30,7 +31,7 @@ async function loadCriticalData({context, request}: Route.LoaderArgs) {
   });
 
   const [{blogs}] = await Promise.all([
-    context.storefront.query(BLOGS_QUERY, {
+    legacyContext(context).storefront.query<BlogsQuery>(BLOGS_QUERY, {
       variables: {
         ...paginationVariables,
       },

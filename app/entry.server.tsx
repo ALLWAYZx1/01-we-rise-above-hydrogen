@@ -1,36 +1,65 @@
-import {ServerRouter} from 'react-router';
+import {createContentSecurityPolicy} from '@shopify/hydrogen';
 import {isbot} from 'isbot';
 import {renderToReadableStream} from 'react-dom/server';
-import {
-  createContentSecurityPolicy,
-  type HydrogenRouterContextProvider,
-} from '@shopify/hydrogen';
-import type {EntryContext} from 'react-router';
+import {ServerRouter, type EntryContext, type RouterContextProvider} from 'react-router';
+
+import {NonceProvider} from '~/lib/csp';
+import {envContext} from '~/lib/env';
+import {getMockShopDomain, getStoreDomain, shouldUseMockShop} from '~/lib/shop';
 
 export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   reactRouterContext: EntryContext,
-  context: HydrogenRouterContextProvider,
+  context: RouterContextProvider,
 ) {
-  const {nonce, header, NonceProvider} = createContentSecurityPolicy({
+  const env = context.get(envContext);
+
+  // IMPORTANT: in Hydrogen 2026.10, custom directive arrays EXTEND that
+  // directive's defaults (Shopify domains, 'self', nonce/'unsafe-inline'
+  // fallbacks); they replace only defaults that are solely 'none'. The arrays
+  // below are the ones this template has always shipped: preserve 'self',
+  // data:, blob:, and https://cdn.shopify.com in imgSrc. Add third-party hosts
+  // only when the matching integration is enabled.
+  const csp = createContentSecurityPolicy({
     shop: {
-      checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
-      storeDomain: context.env.PUBLIC_STORE_DOMAIN,
+      storeDomain: shouldUseMockShop(env) ? getMockShopDomain(env) : getStoreDomain(env),
+      checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
+    },
+    directives: {
+      // Phase 4 analytics hosts: Google Analytics (gtag) + Meta pixel,
+      // matching the vendor tags AnalyticsScripts renders in the root
+      // document. imgSrc/connectSrc cover their beacon endpoints.
+      scriptSrc: [
+        "'self'",
+        'https://cdn.shopify.com',
+        'https://www.googletagmanager.com',
+        'https://connect.facebook.net',
+      ],
+      imgSrc: [
+        "'self'",
+        'data:',
+        'blob:',
+        'https://cdn.shopify.com',
+        'https://www.facebook.com',
+        'https://www.google-analytics.com',
+      ],
+      connectSrc: [
+        'https://www.google-analytics.com',
+        'https://region1.google-analytics.com',
+        'https://www.facebook.com',
+        'https://connect.facebook.net',
+      ],
     },
   });
 
   const body = await renderToReadableStream(
-    <NonceProvider>
-      <ServerRouter
-        context={reactRouterContext}
-        url={request.url}
-        nonce={nonce}
-      />
+    <NonceProvider value={csp.nonce}>
+      <ServerRouter context={reactRouterContext} url={request.url} nonce={csp.nonce} />
     </NonceProvider>,
     {
-      nonce,
+      nonce: csp.nonce,
       signal: request.signal,
       onError(error) {
         console.error(error);
@@ -44,7 +73,7 @@ export default async function handleRequest(
   }
 
   responseHeaders.set('Content-Type', 'text/html');
-  responseHeaders.set('Content-Security-Policy', header);
+  csp.applyResponseHeaders(responseHeaders);
 
   return new Response(body, {
     headers: responseHeaders,

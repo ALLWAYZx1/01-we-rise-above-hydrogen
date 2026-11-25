@@ -1,9 +1,14 @@
 import type {Route} from './+types/($locale).collections.all';
 import {useLoaderData} from 'react-router';
-import {getPaginationVariables, Image, Money} from '@shopify/hydrogen';
+import {Image, Money} from '~/lib/legacy-components';
+import {getPaginationVariables} from '~/lib/pagination';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {ProductItem} from '~/components/ProductItem';
 import type {CollectionItemFragment} from 'storefrontapi.generated';
+import {legacyContext} from '~/lib/context';
+import type {ProductConnection} from '@shopify/hydrogen/storefront-api-types';
+import type {ProductItemFragment} from 'storefrontapi.generated';
+import type {PageInfo} from '@shopify/hydrogen/storefront-api-types';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: `Hydrogen | Products`}];
@@ -24,13 +29,13 @@ export async function loader(args: Route.LoaderArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context, request}: Route.LoaderArgs) {
-  const {storefront} = context;
+  const {storefront} = legacyContext(context);
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 8,
   });
 
   const [{products}] = await Promise.all([
-    storefront.query(CATALOG_QUERY, {
+    storefront.query<{products: {nodes: ProductItemFragment[]; pageInfo: PageInfo}}>(CATALOG_QUERY, {
       variables: {...paginationVariables},
     }),
     // Add other queries here, so that they are loaded in parallel

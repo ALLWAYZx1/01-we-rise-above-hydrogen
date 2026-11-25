@@ -29,7 +29,7 @@
  * callers.
  */
 import {Link} from 'react-router';
-import {Image} from '@shopify/hydrogen';
+import {Image} from '~/lib/legacy-components';
 import type {SectionCta, SectionImage} from './section-types';
 import heroNebulaArt from '~/assets/golden-nebula-mandala.jpg';
 

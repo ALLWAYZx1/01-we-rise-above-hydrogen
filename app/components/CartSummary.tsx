@@ -1,6 +1,6 @@
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import type {CartLayout} from '~/components/CartMain';
-import {CartForm, Money, type OptimisticCart} from '@shopify/hydrogen';
+import {CartForm, Money, type OptimisticCart} from '~/lib/legacy-components';
 import {useEffect, useId, useRef, useState} from 'react';
 import {useFetcher} from 'react-router';
 
@@ -126,7 +126,7 @@ function UpdateDiscountForm({
 }) {
   return (
     <CartForm
-      route="/cart"
+      route="/api/cart"
       action={CartForm.ACTIONS.DiscountCodesUpdate}
       inputs={{
         discountCodes: discountCodes || [],
@@ -256,7 +256,7 @@ function AddGiftCardForm({
   return (
     <CartForm
       fetcherKey={fetcherKey}
-      route="/cart"
+      route="/api/cart-bridge"
       action={CartForm.ACTIONS.GiftCardCodesAdd}
     >
       {children}
@@ -279,7 +279,7 @@ function RemoveGiftCardForm({
 }) {
   return (
     <CartForm
-      route="/cart"
+      route="/api/cart-bridge"
       action={CartForm.ACTIONS.GiftCardCodesRemove}
       inputs={{
         giftCardCodes: [giftCardId],

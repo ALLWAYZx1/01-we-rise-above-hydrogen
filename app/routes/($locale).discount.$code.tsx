@@ -1,5 +1,6 @@
 import {redirect} from 'react-router';
 import type {Route} from './+types/($locale).discount.$code';
+import {legacyContext} from '~/lib/context';
 
 /**
  * Automatically applies a discount found on the url
@@ -13,7 +14,7 @@ import type {Route} from './+types/($locale).discount.$code';
  * ```
  */
 export async function loader({request, context, params}: Route.LoaderArgs) {
-  const {cart} = context;
+  const {cart} = legacyContext(context);
   const {code} = params;
 
   const url = new URL(request.url);

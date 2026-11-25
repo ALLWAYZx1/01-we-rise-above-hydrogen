@@ -1,5 +1,7 @@
-import type {CustomerFragment} from 'customer-accountapi.generated';
-import type {CustomerUpdateInput} from '@shopify/hydrogen/customer-account-api-types';
+import type {
+  Customer,
+  CustomerUpdateInput,
+} from '@shopify/hydrogen/customer-account-api-types';
 import {CUSTOMER_UPDATE_MUTATION} from '~/graphql/customer-account/CustomerUpdateMutation';
 import {
   data,
@@ -8,11 +10,12 @@ import {
   useNavigation,
   useOutletContext,
 } from 'react-router';
+import {legacyContext} from '~/lib/context';
 import type {Route} from './+types/($locale).account.profile';
 
 export type ActionResponse = {
   error: string | null;
-  customer: CustomerFragment | null;
+  customer: Customer | null;
 };
 
 export const meta: Route.MetaFunction = () => {
@@ -20,13 +23,13 @@ export const meta: Route.MetaFunction = () => {
 };
 
 export async function loader({context}: Route.LoaderArgs) {
-  await context.customerAccount.handleAuthStatus();
+  await legacyContext(context).customerAccount.handleAuthStatus();
 
   return {};
 }
 
 export async function action({request, context}: Route.ActionArgs) {
-  const {customerAccount} = context;
+  const {customerAccount} = legacyContext(context);
 
   if (request.method !== 'PUT') {
     return data({error: 'Method not allowed'}, {status: 405});
@@ -80,7 +83,7 @@ export async function action({request, context}: Route.ActionArgs) {
 }
 
 export default function AccountProfile() {
-  const account = useOutletContext<{customer: CustomerFragment}>();
+  const account = useOutletContext<{customer: Customer}>();
   const {state} = useNavigation();
   const action = useActionData<ActionResponse>();
   const customer = action?.customer ?? account?.customer;

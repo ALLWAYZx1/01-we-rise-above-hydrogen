@@ -1,11 +1,13 @@
 import type {Route} from './+types/($locale).sitemap.$type.$page[.xml]';
-import {getSitemap} from '@shopify/hydrogen';
+import {getSitemap} from '~/lib/sitemap';
+import {legacyContext} from '~/lib/context';
 
 export async function loader({
   request,
   params,
-  context: {storefront},
+  context,
 }: Route.LoaderArgs) {
+  const {storefront} = legacyContext(context);
   const response = await getSitemap({
     storefront,
     request,
