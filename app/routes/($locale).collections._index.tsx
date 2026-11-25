@@ -2,10 +2,12 @@ import {useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/($locale).collections._index';
 import {Image} from '~/lib/legacy-components';
 import {getPaginationVariables} from '~/lib/pagination';
-import type {CollectionFragment} from 'storefrontapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {legacyContext} from '~/lib/context';
-import type {CollectionConnection} from '@shopify/hydrogen/storefront-api-types';
+import type {
+  Collection,
+  CollectionConnection,
+} from '@shopify/hydrogen/storefront-api-types';
 
 export async function loader(args: Route.LoaderArgs) {
   // Start fetching non-critical data without blocking time to first byte
@@ -65,7 +67,7 @@ export default function Collections() {
         <h1>Collections</h1>
         <p className="shelf-canon">Pressure builds. We rise. No final form.</p>
       </header>
-      <PaginatedResourceSection<CollectionFragment>
+      <PaginatedResourceSection<Collection>
         connection={collections}
         resourcesClassName="collections-grid"
       >
@@ -85,7 +87,7 @@ function CollectionItem({
   collection,
   index,
 }: {
-  collection: CollectionFragment;
+  collection: Collection;
   index: number;
 }) {
   return (

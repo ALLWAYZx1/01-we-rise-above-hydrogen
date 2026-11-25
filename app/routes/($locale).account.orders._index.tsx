@@ -17,13 +17,13 @@ import {
 } from '~/lib/orderFilters';
 import {CUSTOMER_ORDERS_QUERY} from '~/graphql/customer-account/CustomerOrdersQuery';
 import type {
-  CustomerOrdersFragment,
-  OrderItemFragment,
-} from 'customer-accountapi.generated';
+  Customer,
+  Order,
+} from '@shopify/hydrogen/customer-account-api-types';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 
 type OrdersLoaderData = {
-  customer: CustomerOrdersFragment;
+  customer: Customer;
   filters: OrderFilterParams;
 };
 
@@ -72,7 +72,7 @@ function OrdersTable({
   orders,
   filters,
 }: {
-  orders: CustomerOrdersFragment['orders'];
+  orders: Customer['orders'];
   filters: OrderFilterParams;
 }) {
   const hasFilters = !!(filters.name || filters.confirmationNumber);
@@ -197,7 +197,7 @@ function OrderSearchForm({
   );
 }
 
-function OrderItem({order}: {order: OrderItemFragment}) {
+function OrderItem({order}: {order: Order}) {
   const fulfillmentStatus = flattenConnection(order.fulfillments)[0]?.status;
   return (
     <>

@@ -2,18 +2,18 @@ import {Link, useNavigate} from 'react-router';
 import type {MappedProductOptions} from '~/lib/legacy-components';
 import type {
   Maybe,
+  Product,
   ProductOptionValueSwatch,
 } from '@shopify/hydrogen/storefront-api-types';
 import {AddToCartButton} from './AddToCartButton';
 import {useAside} from './Aside';
-import type {ProductFragment} from 'storefrontapi.generated';
 
 export function ProductForm({
   productOptions,
   selectedVariant,
 }: {
   productOptions: MappedProductOptions[];
-  selectedVariant: ProductFragment['selectedOrFirstAvailableVariant'];
+  selectedVariant: Product['selectedOrFirstAvailableVariant'];
 }) {
   const navigate = useNavigate();
   const {open} = useAside();

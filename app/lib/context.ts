@@ -65,10 +65,10 @@ import type {RequestStorefrontClient} from '~/lib/storefront';
  * Known shape note: the handlers' cart data is returned under the
  * classic CartApiQueryFragment type the bridge declares. The top-level
  * shape matches (the custom fragment in ~/lib/cart-handlers restores
- * appliedGiftCards / buyerIdentity); the line-level
- * differences are Phase 4 component-contract items, listed in
- * ~/lib/cart-handlers (merchandise price fields, lineComponents,
- * first:250 cap).
+ * appliedGiftCards / buyerIdentity); the line-level contract was
+ * aligned to the handlers in Phase 4 (see the verdict recorded in
+ * ~/lib/cart-handlers: merchandise price fields and lineComponents
+ * are not restorable; lines are capped at first:250).
  * ─────────────────────────────────────────────────────────────────────────
  */
 

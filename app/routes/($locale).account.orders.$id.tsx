@@ -1,10 +1,8 @@
 import {redirect, useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).account.orders.$id';
 import {Money, Image} from '~/lib/legacy-components';
-import type {
-  OrderLineItemFullFragment,
-  OrderQuery,
-} from 'customer-accountapi.generated';
+import type {OrderQuery} from 'customer-accountapi.generated';
+import type {LineItem} from '@shopify/hydrogen/customer-account-api-types';
 import {legacyContext} from '~/lib/context';
 import {CUSTOMER_ORDER_QUERY} from '~/graphql/customer-account/CustomerOrderQuery';
 
@@ -195,7 +193,7 @@ export default function OrderRoute() {
   );
 }
 
-function OrderLineRow({lineItem}: {lineItem: OrderLineItemFullFragment}) {
+function OrderLineRow({lineItem}: {lineItem: LineItem}) {
   return (
     <tr key={lineItem.id}>
       <td>

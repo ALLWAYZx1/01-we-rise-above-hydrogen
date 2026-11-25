@@ -1,8 +1,8 @@
-import type {CustomerAddressInput} from '@shopify/hydrogen/customer-account-api-types';
 import type {
-  AddressFragment,
-  CustomerFragment,
-} from 'customer-accountapi.generated';
+  Customer,
+  CustomerAddress,
+  CustomerAddressInput,
+} from '@shopify/hydrogen/customer-account-api-types';
 import {legacyContext} from '~/lib/context';
 import {
   data,
@@ -21,11 +21,11 @@ import {
 
 export type ActionResponse = {
   addressId?: string | null;
-  createdAddress?: AddressFragment;
+  createdAddress?: CustomerAddress;
   defaultAddress?: string | null;
   deletedAddress?: string | null;
-  error: Record<AddressFragment['id'], string> | null;
-  updatedAddress?: AddressFragment;
+  error: Record<CustomerAddress['id'], string> | null;
+  updatedAddress?: CustomerAddress;
 };
 
 export const meta: Route.MetaFunction = () => {
@@ -277,7 +277,7 @@ export async function action({request, context}: Route.ActionArgs) {
 }
 
 export default function Addresses() {
-  const {customer} = useOutletContext<{customer: CustomerFragment}>();
+  const {customer} = useOutletContext<{customer: Customer}>();
   const {defaultAddress, addresses} = customer;
 
   return (
@@ -344,7 +344,7 @@ function NewAddressForm() {
 function ExistingAddresses({
   addresses,
   defaultAddress,
-}: Pick<CustomerFragment, 'addresses' | 'defaultAddress'>) {
+}: Pick<Customer, 'addresses' | 'defaultAddress'>) {
   return (
     <div>
       <legend>Existing addresses</legend>
@@ -380,7 +380,7 @@ function ExistingAddresses({
 }
 
 /**
- * The address form renders API address objects (AddressFragment, whose
+ * The address form renders API address objects (CustomerAddress, whose
  * type keeps `territoryCode`) and collects values for the address
  * mutations. This local shape is the display-side contract; the action
  * maps the fields onto CustomerAddressInput (2026.10 renamed the input
@@ -406,9 +406,9 @@ export function AddressForm({
   defaultAddress,
   children,
 }: {
-  addressId: AddressFragment['id'];
+  addressId: CustomerAddress['id'];
   address: AddressFormValues;
-  defaultAddress: CustomerFragment['defaultAddress'];
+  defaultAddress: Customer['defaultAddress'];
   children: (props: {
     stateForMethod: (method: 'PUT' | 'POST' | 'DELETE') => Fetcher['state'];
   }) => React.ReactNode;

@@ -13,7 +13,12 @@ export type CartMainProps = {
 };
 
 export type LineItemChildrenMap = {[parentId: string]: CartLine[]};
-/** Returns a map of all line items and their children. */
+/**
+ * Returns a map of all line items and their children. Children are
+ * linked through parentRelationship — the Phase 4 contract: the
+ * classic lineComponents selection is not available on the 2026.10
+ * cart handlers (see ~/lib/cart-handlers).
+ */
 function getLineItemChildrenMap(lines: CartLine[]): LineItemChildrenMap {
   const children: LineItemChildrenMap = {};
   for (const line of lines) {
@@ -21,13 +26,6 @@ function getLineItemChildrenMap(lines: CartLine[]): LineItemChildrenMap {
       const parentId = line.parentRelationship.parent.id;
       if (!children[parentId]) children[parentId] = [];
       children[parentId].push(line);
-    }
-    if ('lineComponents' in line) {
-      const lineChildren = getLineItemChildrenMap(line.lineComponents);
-      for (const [parentId, childIds] of Object.entries(lineChildren)) {
-        if (!children[parentId]) children[parentId] = [];
-        children[parentId].push(...childIds);
-      }
     }
   }
   return children;

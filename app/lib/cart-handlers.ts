@@ -29,13 +29,24 @@ import {createCartServerHandlers, gql} from '@shopify/hydrogen';
 //   which is why the base fragment dropped them; selecting them fails
 //   the repo's gql check under --fail-on-warn.)
 //   Deliberately NOT re-selected: `lines`. Repo 06's handlers note that
-//   re-selecting lines breaks the library's cart type merge. The
-//   line-level differences that follow are Phase 4 component-contract
-//   items, recorded here so they are not discovered later:
-//     • line merchandise no longer selects price / compareAtPrice /
+//   re-selecting lines breaks the library's cart type merge.
+//   Phase 4 VERIFIED that warning empirically: adding a lines(first:250)
+//   re-selection (merchandise price / compareAtPrice /
+//   availableForSale / requiresShipping + ComponentizableCartLine
+//   lineComponents) to this fragment made the merged CartData type
+//   unassignable in ~/lib/cart-extensions (TS2322 — the merged
+//   lines.nodes union loses id / quantity / cost on one branch), so
+//   typecheck fails with it and the re-selection was reverted. The
+//   line-level deltas are therefore closed as NOT restorable on the
+//   2026.10 handler contract; the component contract types in
+//   ~/lib/storefrontapi-types were aligned down to what the handlers
+//   actually select in Phase 4:
+//     • line merchandise does not carry price / compareAtPrice /
 //       availableForSale / requiresShipping (it gains sku and
 //       product.productType instead);
-//     • ComponentizableCartLine nodes no longer select lineComponents;
+//     • ComponentizableCartLine nodes do not carry lineComponents
+//       (children render through parentRelationship, which the base
+//       fragment does select);
 //     • lines are capped at first: 250 (classic used $numCartLines).
 const cartFragment = gql(`
   fragment CartFragment on Cart {

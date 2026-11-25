@@ -45,12 +45,12 @@ type CartLineImage = {
   height: number;
 };
 
+// Aligned in Phase 4 to the cart server handlers' base fragment (see
+// the Phase 4 verdict in ~/lib/cart-handlers): merchandise carries no
+// price / compareAtPrice / availableForSale / requiresShipping — the
+// cart UI prices lines from `cost`, never from merchandise.
 type CartLineMerchandise = {
   id: string;
-  availableForSale: boolean;
-  compareAtPrice: MoneyFragment | null;
-  price: MoneyFragment;
-  requiresShipping: boolean;
   title: string;
   image: CartLineImage | null;
   product: {handle: string; title: string; id: string; vendor: string};
@@ -70,9 +70,11 @@ type CartLineCommon = {
   parentRelationship: {parent: {id: string}} | null;
 };
 
-export type CartLineFragment =
-  | CartLineCommon
-  | (CartLineCommon & {lineComponents: CartLineCommon[]});
+// Phase 4: the classic union's ComponentizableCartLine variant carried
+// `lineComponents`, which the 2026.10 handlers cannot select (see the
+// cart-handlers verdict). Component children arrive as their own nodes
+// linked by parentRelationship, which CartMain already maps.
+export type CartLineFragment = CartLineCommon;
 
 export type CartApiQueryFragment = {
   id: string;
@@ -103,8 +105,8 @@ export type CartApiQueryFragment = {
   cost: {
     subtotalAmount: MoneyFragment;
     totalAmount: MoneyFragment;
-    totalDutyAmount: MoneyFragment | null;
-    totalTaxAmount: MoneyFragment | null;
+    // No totalDutyAmount / totalTaxAmount: both fields are deprecated
+    // in the 2026-10 Storefront API and are never selected (Phase 2).
   };
 };
 
