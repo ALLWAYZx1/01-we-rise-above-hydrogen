@@ -1,6 +1,6 @@
 import {redirect, useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).collections.$handle';
-import {Analytics} from '~/lib/legacy-components';
+import {Analytics} from '~/lib/analytics';
 import {getPaginationVariables} from '~/lib/pagination';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';

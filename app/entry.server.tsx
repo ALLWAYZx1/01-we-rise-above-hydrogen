@@ -28,8 +28,29 @@ export default async function handleRequest(
       checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
     },
     directives: {
-      scriptSrc: ["'self'", 'https://cdn.shopify.com'],
-      imgSrc: ["'self'", 'data:', 'blob:', 'https://cdn.shopify.com'],
+      // Phase 4 analytics hosts: Google Analytics (gtag) + Meta pixel,
+      // matching the vendor tags AnalyticsScripts renders in the root
+      // document. imgSrc/connectSrc cover their beacon endpoints.
+      scriptSrc: [
+        "'self'",
+        'https://cdn.shopify.com',
+        'https://www.googletagmanager.com',
+        'https://connect.facebook.net',
+      ],
+      imgSrc: [
+        "'self'",
+        'data:',
+        'blob:',
+        'https://cdn.shopify.com',
+        'https://www.facebook.com',
+        'https://www.google-analytics.com',
+      ],
+      connectSrc: [
+        'https://www.google-analytics.com',
+        'https://region1.google-analytics.com',
+        'https://www.facebook.com',
+        'https://connect.facebook.net',
+      ],
     },
   });
 

@@ -9,6 +9,7 @@ import {Aside} from '~/components/Aside';
 import {Footer} from '~/components/Footer';
 import {Header, HeaderMenu} from '~/components/Header';
 import {CartMain} from '~/components/CartMain';
+import {AnalyticsCartSync} from '~/lib/analytics';
 import {
   SEARCH_ENDPOINT,
   SearchFormPredictive,
@@ -61,7 +62,12 @@ function CartAside({cart}: {cart: PageLayoutProps['cart']}) {
       <Suspense fallback={<p>Loading cart ...</p>}>
         <Await resolve={cart}>
           {(cart) => {
-            return <CartMain cart={cart} layout="aside" />;
+            return (
+              <>
+                <AnalyticsCartSync cart={cart} />
+                <CartMain cart={cart} layout="aside" />
+              </>
+            );
           }}
         </Await>
       </Suspense>

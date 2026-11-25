@@ -1,7 +1,8 @@
 import {Suspense} from 'react';
 import {Await, NavLink, useAsyncValue} from 'react-router';
 import {type CartViewPayload} from '@shopify/hydrogen';
-import {useAnalytics, useOptimisticCart} from '~/lib/legacy-components';
+import {useOptimisticCart} from '~/lib/legacy-components';
+import {useAnalytics} from '~/lib/analytics';
 import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 import wraLogo from '~/assets/we-rise-above-logo.png';

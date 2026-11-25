@@ -19,6 +19,12 @@ import {
   type HeaderQuery,
 } from '~/lib/fragments';
 import {PageLayout} from './components/PageLayout';
+import {
+  Analytics,
+  AnalyticsScripts,
+  DEFAULT_GA_MEASUREMENT_ID,
+  DEFAULT_META_PIXEL_ID,
+} from '~/lib/analytics';
 import {cartHandlers} from '~/lib/cart-handlers';
 import {useNonce} from '~/lib/csp';
 import {
@@ -176,9 +182,6 @@ export function meta() {
     },
     {property: 'og:type', content: 'website'},
     {name: 'twitter:card', content: 'summary_large_image'},
-    // TODO(analytics): GA (G-F7SLHQZBWV) + Meta Pixel (2793791147688986) — the Phase 4
-    // analytics wiring lands with the 2026.10 tracker components; see the
-    // Analytics bridge note in ~/lib/legacy-components.
   ];
 }
 
@@ -238,11 +241,19 @@ function loadDeferredData({context}: Route.LoaderArgs) {
     footer,
     isLoggedIn,
     publicStoreDomain: legacy.env.PUBLIC_STORE_DOMAIN ?? getStoreDomain(legacy.env),
+    // Phase 4 analytics wiring: env overrides win, an explicitly empty
+    // env value disables the tag, otherwise the store's public tag IDs
+    // (~/lib/analytics) apply.
+    analytics: {
+      gaId: legacy.env.PUBLIC_GA_MEASUREMENT_ID ?? DEFAULT_GA_MEASUREMENT_ID,
+      metaPixelId: legacy.env.PUBLIC_META_PIXEL_ID ?? DEFAULT_META_PIXEL_ID,
+    },
   };
 }
 
 export function Layout({children}: {children?: React.ReactNode}) {
   const nonce = useNonce();
+  const rootData = useRouteLoaderData<RootLoader>('root');
 
   return (
     <html lang="en">
@@ -258,9 +269,14 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <Links />
       </head>
       <body>
-        {/* TODO(Phase 4): the classic Analytics.Provider is gone in
-            2026.10; page/cart trackers (PageViewedTracker,
-            CartAnalyticsTracker) mount here with the GA + Meta wiring. */}
+        {/* Phase 4 analytics: GA + Meta vendor tags (IDs resolved by the
+            root loader, env-gated). The event bus itself is provided by
+            Analytics.Provider in the App component below. */}
+        <AnalyticsScripts
+          gaId={rootData?.analytics?.gaId}
+          metaPixelId={rootData?.analytics?.metaPixelId}
+          nonce={nonce}
+        />
         {children}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
@@ -277,9 +293,11 @@ export default function App() {
   }
 
   return (
-    <PageLayout {...data}>
-      <Outlet />
-    </PageLayout>
+    <Analytics.Provider shop={data.header?.shop}>
+      <PageLayout {...data}>
+        <Outlet />
+      </PageLayout>
+    </Analytics.Provider>
   );
 }
 

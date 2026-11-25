@@ -3,7 +3,7 @@ import type {Route} from './+types/($locale).products.$handle';
 import {getSelectedProductOptions} from '@shopify/hydrogen';
 import {useOptimisticVariant, getProductOptions, getAdjacentAndFirstAvailableVariants, useSelectedOptionInUrlParam} from '~/lib/legacy-components';
 import type {ProductQuery} from 'storefrontapi.generated';
-import {Analytics} from '~/lib/legacy-components';
+import {Analytics} from '~/lib/analytics';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';

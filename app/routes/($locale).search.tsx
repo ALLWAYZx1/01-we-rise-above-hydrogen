@@ -1,6 +1,6 @@
 import {useLoaderData} from 'react-router';
 import type {Route} from './+types/($locale).search';
-import {Analytics} from '~/lib/legacy-components';
+import {Analytics} from '~/lib/analytics';
 import {getPaginationVariables} from '~/lib/pagination';
 import {SearchForm} from '~/components/SearchForm';
 import {SearchResults} from '~/components/SearchResults';

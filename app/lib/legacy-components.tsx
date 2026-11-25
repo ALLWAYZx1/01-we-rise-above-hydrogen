@@ -37,10 +37,10 @@ import type {CartApiQueryFragment} from 'storefrontapi.generated';
  *     now lives at ~/components/Pagination (Previous/Next are real links
  *     carrying the direction/cursor params that ~/lib/pagination
  *     reads).
- *   • Analytics / useAnalytics — inert passthrough. TODO(Phase 4):
- *     re-implement on the 2026.10 tracker components
- *     (PageViewedTracker / CartAnalyticsTracker, as repo 06 does) and
- *     wire GA G-F7SLHQZBWV + Meta pixel 2793791147688986 there.
+ *   • Analytics / useAnalytics — RETIRED in Phase 4: the real
+ *     implementation (event bus, view trackers, GA G-F7SLHQZBWV +
+ *     Meta pixel 2793791147688986 vendor forwarding) lives in
+ *     ~/lib/analytics.
  *   • useOptimisticCart — identity: the server cart is the source of
  *     truth in Phase 1; optimistic merging returns with Phase 2's
  *     handlers.
@@ -418,44 +418,6 @@ export type CartQueryDataReturn = {
   errors?: Array<{message: string; code?: string; field?: string[]}> | null;
   warnings?: Array<{message: string; code?: string}> | null;
 };
-
-// ── Analytics (inert bridge — TODO Phase 4) ──────────────────────────────
-
-const NullView = (_props: Record<string, unknown>) => null;
-
-export const Analytics = {
-  Provider: ({children}: {children?: React.ReactNode}) => <>{children}</>,
-  ProductView: NullView,
-  CollectionView: NullView,
-  SearchView: NullView,
-  CartView: NullView,
-  PageView: NullView,
-};
-
-export type AnalyticsContextValue = {
-  publish: (eventName: string, data?: Record<string, unknown>) => void;
-  subscribe: (
-    eventName: string,
-    callback: (data: unknown) => void,
-  ) => () => void;
-  canTrack: () => boolean;
-  shop?: {id?: string} | null;
-  cart?: CartApiQueryFragment | null;
-  prevCart?: CartApiQueryFragment | null;
-  customData?: Record<string, unknown>;
-};
-
-export function useAnalytics(): AnalyticsContextValue {
-  return {
-    publish: () => {},
-    subscribe: () => () => {},
-    canTrack: () => false,
-    shop: undefined,
-    cart: undefined,
-    prevCart: undefined,
-    customData: undefined,
-  };
-}
 
 // ── Product option helpers (local ports of the classic helpers) ─────────
 //
