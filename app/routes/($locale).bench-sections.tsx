@@ -1,6 +1,6 @@
 import {useLoaderData, type RouterContextProvider} from 'react-router';
 import '~/components/sections/wra-reskin.css';
-import type {BenchSpotlightQuery} from 'storefrontapi.generated';
+import type {BenchSpotlightQuery, ProductItemFragment} from 'storefrontapi.generated';
 import {StatBand} from '~/components/sections/StatBand';
 import {StandardStatement} from '~/components/sections/StandardStatement';
 import {NumberedSequence} from '~/components/sections/NumberedSequence';
@@ -13,7 +13,6 @@ import {
   ProductSpotlight,
   type SpotlightProduct,
 } from '~/components/sections/ProductSpotlight';
-import type {ProductItemFragment} from 'storefrontapi.generated';
 import type {Collection, ProductConnection} from '@shopify/hydrogen/storefront-api-types';
 import {legacyContext} from '~/lib/context';
 
