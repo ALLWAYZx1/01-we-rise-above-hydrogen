@@ -8,9 +8,10 @@
  * purchasable product, and the sections carry no copy of their own.
  * Everything sits below the fold: lazy-loaded, with intrinsic
  * dimensions declared so each frame holds its space (no CLS).
+ *
+ * 2026-11-25: black Ferrari skyline frame removed on ALLWAYZ's order.
  */
 import campaignMain from '~/assets/campaign-we-rise-above.webp';
-import campaignSplit from '~/assets/campaign-ferrari-skyline.webp';
 import campaignBeanie from '~/assets/campaign-beanie-pedestal.webp';
 import campaignSunset from '~/assets/campaign-ferrari-sunset.webp';
 
@@ -37,10 +38,9 @@ export function CampaignFeature() {
 }
 
 /**
- * Secondary campaign split: the Ferrari skyline feature on one side;
- * on the other, the beanie campaign card with the smaller sunset
- * tile paired under it. The sunset tile is a small source
- * (656×432) — it stays at card scale, never full-bleed.
+ * Secondary campaign split: the beanie campaign card on one side;
+ * on the other, the smaller sunset tile. The sunset tile is a small
+ * source (656×432) — it stays at card scale, never full-bleed.
  */
 export function CampaignSplit() {
   return (
@@ -48,39 +48,26 @@ export function CampaignSplit() {
       <div className="mx-auto grid max-w-[1400px] items-start gap-3 md:grid-cols-2 md:gap-4">
         <figure className="wra-campaign-frame m-0">
           <img
-            src={campaignSplit}
-            alt="We Rise Above campaign — model in the sunrise hoodie leaning on a black Ferrari at golden hour"
-            width={1280}
-            height={853}
+            src={campaignBeanie}
+            alt="We Rise Above campaign — black beanie with gold embroidery on a gold pedestal among campaign boxes"
+            width={1200}
+            height={686}
             loading="lazy"
             decoding="async"
             className="block h-auto w-full"
           />
         </figure>
-        <div className="grid gap-3 md:gap-4">
-          <figure className="wra-campaign-frame m-0">
-            <img
-              src={campaignBeanie}
-              alt="We Rise Above campaign — black beanie with gold embroidery on a gold pedestal among campaign boxes"
-              width={1200}
-              height={686}
-              loading="lazy"
-              decoding="async"
-              className="block h-auto w-full"
-            />
-          </figure>
-          <figure className="wra-campaign-frame m-0">
-            <img
-              src={campaignSunset}
-              alt="We Rise Above campaign — model in the sunrise hoodie beside a red Ferrari at sunset"
-              width={656}
-              height={432}
-              loading="lazy"
-              decoding="async"
-              className="block h-auto w-full"
-            />
-          </figure>
-        </div>
+        <figure className="wra-campaign-frame m-0">
+          <img
+            src={campaignSunset}
+            alt="We Rise Above campaign — model in the sunrise hoodie beside a red Ferrari at sunset"
+            width={656}
+            height={432}
+            loading="lazy"
+            decoding="async"
+            className="block h-auto w-full"
+          />
+        </figure>
       </div>
     </section>
   );
