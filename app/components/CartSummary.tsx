@@ -1,7 +1,7 @@
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import type {CartLayout} from '~/components/CartMain';
 import {CartForm, Money, type OptimisticCart} from '~/lib/legacy-components';
-import {useEffect, useId, useRef, useState} from 'react';
+import {useEffect, useId, useRef} from 'react';
 import {useFetcher} from 'react-router';
 
 type CartSummaryProps = {
@@ -150,7 +150,7 @@ function CartGiftCard({
   const removeButtonRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
   const previousCardIdsRef = useRef<string[]>([]);
   const giftCardAddFetcher = useFetcher({key: 'gift-card-add'});
-  const [removedCardIndex, setRemovedCardIndex] = useState<number | null>(null);
+  const removedCardIndexRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (giftCardAddFetcher.data) {
@@ -163,9 +163,9 @@ function CartGiftCard({
   useEffect(() => {
     const currentCardIds = giftCardCodes?.map((card) => card.id) || [];
 
-    if (removedCardIndex !== null && giftCardCodes) {
+    if (removedCardIndexRef.current !== null && giftCardCodes) {
       const focusTargetIndex = Math.min(
-        removedCardIndex,
+        removedCardIndexRef.current,
         giftCardCodes.length - 1,
       );
       const focusTargetCard = giftCardCodes[focusTargetIndex];
@@ -179,16 +179,16 @@ function CartGiftCard({
         giftCardCodeInput.current.focus();
       }
 
-      setRemovedCardIndex(null);
+      removedCardIndexRef.current = null;
     }
 
     previousCardIdsRef.current = currentCardIds;
-  }, [giftCardCodes, removedCardIndex]);
+  }, [giftCardCodes]);
 
   const handleRemoveClick = (cardId: string) => {
     const index = previousCardIdsRef.current.indexOf(cardId);
     if (index !== -1) {
-      setRemovedCardIndex(index);
+      removedCardIndexRef.current = index;
     }
   };
 

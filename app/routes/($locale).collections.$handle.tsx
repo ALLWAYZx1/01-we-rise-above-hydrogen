@@ -7,8 +7,7 @@ import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {ProductItem} from '~/components/ProductItem';
 import type {ProductItemFragment} from 'storefrontapi.generated';
 import {legacyContext} from '~/lib/context';
-import type {Collection} from '@shopify/hydrogen/storefront-api-types';
-import type {PageInfo} from '@shopify/hydrogen/storefront-api-types';
+import type {Collection, PageInfo} from '@shopify/hydrogen/storefront-api-types';
 
 export const meta: Route.MetaFunction = ({loaderData: data}) => {
   return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
