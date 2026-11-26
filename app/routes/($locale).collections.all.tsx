@@ -92,7 +92,7 @@ const COLLECTION_ITEM_FRAGMENT = `#graphql
       width
       height
     }
-    media(first: 2) {
+    media(first: 10) {
       nodes {
         __typename
         ... on MediaImage {

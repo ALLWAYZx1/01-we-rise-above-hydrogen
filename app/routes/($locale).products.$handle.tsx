@@ -143,7 +143,10 @@ export default function Product() {
           <strong>Description</strong>
         </p>
         <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
+        <div
+          className="product-description"
+          dangerouslySetInnerHTML={{__html: descriptionHtml}}
+        />
         <br />
       </div>
       <Analytics.ProductView
@@ -281,7 +284,7 @@ const PRODUCT_QUERY = `#graphql
 ` as const;
 
 // The fragment mirrors the ProductItem fragment on the collection
-// routes field-for-field (including media(first: 2), which is what
+// routes field-for-field (including media(first: 10), which is what
 // gives the rail's cards their hover back-view), so the rail renders
 // through the same ProductItem component as the collection grids.
 const PRODUCT_RECOMMENDATIONS_QUERY = `#graphql
@@ -300,7 +303,7 @@ const PRODUCT_RECOMMENDATIONS_QUERY = `#graphql
       width
       height
     }
-    media(first: 2) {
+    media(first: 10) {
       nodes {
         __typename
         ... on MediaImage {

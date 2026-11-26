@@ -12,6 +12,9 @@ export const meta: Route.MetaFunction = ({loaderData: data}) => {
 
 export async function loader({params, context}: Route.LoaderArgs) {
   const {customerAccount} = legacyContext(context);
+  // Guard like the sibling account routes: signed-out visitors are
+  // redirected to login instead of throwing a 500 from the query below.
+  await customerAccount.handleAuthStatus();
   if (!params.id) {
     return redirect('/account/orders');
   }

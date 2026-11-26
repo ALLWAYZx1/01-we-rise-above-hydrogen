@@ -83,16 +83,28 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
         category: product.productType || undefined,
       },
       image: product.featuredImage!,
-      // Hover pair: the first media image that is not the featured
-      // one — on this catalog, the back view. The query already
-      // fetches media(first: 2); until now nothing paired it.
-      backImage:
-        (product.media?.nodes ?? [])
-          .flatMap((node) =>
-            node.__typename === 'MediaImage' && node.image ? [node.image] : [],
-          )
-          .find((mediaImage) => mediaImage.id !== product.featuredImage?.id) ??
-        null,
+      // Hover pair: the product's back view. Compare by URL, never by
+      // id — the same file carries a ProductImage gid as featuredImage
+      // and an ImageSource gid under media, so an id comparison can
+      // never exclude the featured image and silently paired the front
+      // with itself (ALLWAYZ, 2026-11-26: "image not showing back on
+      // hover"). Prefer the first different-URL image named as a back
+      // view; fall back to the first different-URL image at all.
+      backImage: (() => {
+        const mediaImages = (product.media?.nodes ?? []).flatMap((node) =>
+          node.__typename === 'MediaImage' && node.image ? [node.image] : [],
+        );
+        const distinct = mediaImages.filter(
+          (mediaImage) => mediaImage.url !== product.featuredImage?.url,
+        );
+        return (
+          distinct.find((mediaImage) =>
+            /back/i.test(`${mediaImage.url} ${mediaImage.altText ?? ''}`),
+          ) ??
+          distinct[0] ??
+          null
+        );
+      })(),
     }));
 
   type HomepageCollection =
@@ -314,7 +326,7 @@ const HOMEPAGE_PRODUCTS_QUERY = `#graphql
       width
       height
     }
-    media(first: 2) {
+    media(first: 10) {
       nodes {
         __typename
         ... on MediaImage {

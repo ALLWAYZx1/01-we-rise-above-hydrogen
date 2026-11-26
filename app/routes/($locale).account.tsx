@@ -15,6 +15,13 @@ export function shouldRevalidate() {
 
 export async function loader({context}: Route.LoaderArgs) {
   const {customerAccount} = legacyContext(context);
+  // Signed-out visitors go to the login flow, not a 500: without this
+  // guard the details query below fails for anonymous requests and the
+  // throw lands on the error boundary — the header's sign-in link
+  // (/account → /account/orders) hit exactly that (ALLWAYZ, 2026-11-26:
+  // "sign in link broken"). Sibling account routes already guard their
+  // own loaders; the parent and the orders routes were missing it.
+  await customerAccount.handleAuthStatus();
   const {data, errors} = await customerAccount.query(CUSTOMER_DETAILS_QUERY, {
     variables: {
       language: customerAccount.i18n.language,

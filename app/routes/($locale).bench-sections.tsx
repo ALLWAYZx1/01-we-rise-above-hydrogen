@@ -81,15 +81,24 @@ export async function loader({
         category: product.productType || undefined,
       },
       image: product.featuredImage!,
-      // Same hover pairing as the homepage loader: first media image
-      // that is not the featured one (the back view on this catalog).
-      backImage:
-        (product.media?.nodes ?? [])
-          .flatMap((node) =>
-            node.__typename === 'MediaImage' && node.image ? [node.image] : [],
-          )
-          .find((mediaImage) => mediaImage.id !== product.featuredImage?.id) ??
-        null,
+      // Same hover pairing as the homepage loader: URL-distinct media
+      // (never id — featured and media carry the same file under
+      // different gid types), preferring the image named as a back view.
+      backImage: (() => {
+        const mediaImages = (product.media?.nodes ?? []).flatMap((node) =>
+          node.__typename === 'MediaImage' && node.image ? [node.image] : [],
+        );
+        const distinct = mediaImages.filter(
+          (mediaImage) => mediaImage.url !== product.featuredImage?.url,
+        );
+        return (
+          distinct.find((mediaImage) =>
+            /back/i.test(`${mediaImage.url} ${mediaImage.altText ?? ''}`),
+          ) ??
+          distinct[0] ??
+          null
+        );
+      })(),
     }));
   const spotlightMain = spotlightMainRaw
     ? toSpotlightProduct(spotlightMainRaw)
@@ -545,7 +554,7 @@ const BENCH_PRODUCTS_QUERY = `#graphql
       width
       height
     }
-    media(first: 2) {
+    media(first: 10) {
       nodes {
         __typename
         ... on MediaImage {

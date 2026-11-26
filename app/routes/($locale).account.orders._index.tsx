@@ -33,6 +33,9 @@ export const meta: Route.MetaFunction = () => {
 
 export async function loader({request, context}: Route.LoaderArgs) {
   const {customerAccount} = legacyContext(context);
+  // Guard like the sibling account routes: signed-out visitors are
+  // redirected to login instead of throwing a 500 from the query below.
+  await customerAccount.handleAuthStatus();
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 20,
   });
