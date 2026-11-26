@@ -260,6 +260,22 @@
   line-height: 1.65;
 }
 
+/* The description is merchant HTML rendered raw; give it its own
+   explicit ivory so its color never depends on ancestor cascade —
+   it rendered black where the inherited color did not reach it
+   (ALLWAYZ, 2026-11-26: "description text is black should be white"). */
+.product-description {
+  color: rgba(247, 240, 232, 0.88);
+  line-height: 1.65;
+}
+
+.product-description p,
+.product-description li,
+.product-description span,
+.product-description div {
+  color: inherit;
+}
+
 .product-main a {
   color: #f2dfb5;
 }

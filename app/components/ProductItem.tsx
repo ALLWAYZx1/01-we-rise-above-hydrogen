@@ -20,7 +20,18 @@ export function ProductItem({
     node.__typename === 'MediaImage' && node.image ? [node.image] : [],
   );
   const image = product.featuredImage ?? mediaImages[0];
-  const backImage = mediaImages.find((media) => media.id !== image?.id);
+  // Hover pair: the back view. Compare by URL, never by id — the same
+  // file carries a ProductImage gid as featuredImage and an ImageSource
+  // gid under media, so an id comparison can never exclude the featured
+  // image and paired the front with itself (ALLWAYZ, 2026-11-26).
+  // Prefer the first different-URL image named as a back view.
+  const distinctImages = mediaImages.filter(
+    (media) => media.url !== image?.url,
+  );
+  const backImage =
+    distinctImages.find((media) =>
+      /back/i.test(`${media.url} ${media.altText ?? ''}`),
+    ) ?? distinctImages[0];
   return (
     <Link
       className="product-item"
