@@ -478,7 +478,7 @@ export function getProductOptions(product: Product): MappedProductOptions[] {
           firstSelectableVariant.product.handle !== product.handle,
       );
       const variantUriQuery = firstSelectableVariant
-        ? `?${firstSelectableVariant.selectedOptions
+        ? `${firstSelectableVariant.selectedOptions
             .map(
               (o) =>
                 `${encodeURIComponent(o.name)}=${encodeURIComponent(o.value)}`,

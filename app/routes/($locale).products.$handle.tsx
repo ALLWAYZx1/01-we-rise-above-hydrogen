@@ -13,11 +13,16 @@ import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {legacyContext} from '~/lib/context';
 
 export const meta: Route.MetaFunction = ({loaderData: data}) => {
+  const product = data?.product;
   return [
-    {title: `Hydrogen | ${data?.product.title ?? ''}`},
+    {title: product?.seo?.title ?? product?.title ?? 'We Rise Above'},
+    {
+      name: 'description',
+      content: product?.seo?.description ?? '',
+    },
     {
       rel: 'canonical',
-      href: `/products/${data?.product.handle}`,
+      href: `/products/${product?.handle ?? ''}`,
     },
   ];
 };

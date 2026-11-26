@@ -10,7 +10,22 @@ import {legacyContext} from '~/lib/context';
 import type {Collection, PageInfo} from '@shopify/hydrogen/storefront-api-types';
 
 export const meta: Route.MetaFunction = ({loaderData: data}) => {
-  return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
+  const collection = data?.collection;
+  return [
+    {
+      title:
+        collection?.seo?.title ??
+        `We Rise Above | ${collection?.title ?? ''} Collection`,
+    },
+    {
+      name: 'description',
+      content: collection?.seo?.description ?? collection?.description ?? '',
+    },
+    {
+      rel: 'canonical',
+      href: `/collections/${collection?.handle ?? ''}`,
+    },
+  ];
 };
 
 export async function loader(args: Route.LoaderArgs) {
@@ -163,6 +178,10 @@ const COLLECTION_QUERY = `#graphql
       handle
       title
       description
+      seo {
+        title
+        description
+      }
       products(
         first: $first,
         last: $last,

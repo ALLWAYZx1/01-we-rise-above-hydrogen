@@ -29,13 +29,13 @@ export function Footer({
                   <strong>No final form.</strong>
                 </p>
               </div>
-              {footer?.menu && header.shop.primaryDomain?.url && (
-                <FooterMenu
-                  menu={footer.menu}
-                  primaryDomainUrl={header.shop.primaryDomain.url}
-                  publicStoreDomain={publicStoreDomain}
-                />
-              )}
+              <FooterMenu
+                menu={footer?.menu ?? null}
+                primaryDomainUrl={
+                  header.shop.primaryDomain?.url ?? publicStoreDomain
+                }
+                publicStoreDomain={publicStoreDomain}
+              />
               <p className="footer-facts">
                 <span>✦ Printed to order</span>
                 <span>✦ Ships from the USA</span>
@@ -55,13 +55,23 @@ function FooterMenu({
   primaryDomainUrl,
   publicStoreDomain,
 }: {
-  menu: FooterQuery['menu'];
+  menu: FooterQuery['menu'] | null;
   primaryDomainUrl: FooterProps['header']['shop']['primaryDomain']['url'];
   publicStoreDomain: string;
 }) {
+  // The admin footer menu carries no policy links, and the old parent guard
+  // made this fallback unreachable whenever any menu existed — so the four
+  // policy pages were never linked from the footer. Always merge the policy
+  // links in, deduped by URL; with no admin menu, the fallback is the menu.
+  const baseItems = menu?.items ?? FALLBACK_FOOTER_MENU.items;
+  const seenUrls = new Set(baseItems.map((item) => item.url));
+  const items = [
+    ...baseItems,
+    ...FALLBACK_FOOTER_MENU.items.filter((item) => !seenUrls.has(item.url)),
+  ];
   return (
     <nav className="footer-menu" role="navigation">
-      {(menu || FALLBACK_FOOTER_MENU).items.map((item) => {
+      {items.map((item) => {
         if (!item.url) return null;
         // if the url is internal, we strip the domain
         const url =
