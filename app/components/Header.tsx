@@ -81,11 +81,6 @@ export function HeaderMenu({
   // controlled from the Shopify admin now, nowhere else.
   return (
     <nav className={className} role="navigation">
-      {viewport === 'mobile' && (
-        <NavLink end onClick={close} prefetch="intent" style={activeLinkStyle} to="/">
-          Home
-        </NavLink>
-      )}
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url) return null;
         const url =
@@ -104,7 +99,12 @@ export function HeaderMenu({
             style={activeLinkStyle}
             to={url}
           >
-            {item.title}
+            {/* Label correction (ALLWAYZ 2026-11-27: "shop hydrogen is
+                wrong"): the Shopify menu item still carries its old
+                title; display the right name until the admin retitle
+                lands (Content -> Menus). Fires only on the stale
+                string, so the admin rename retires it cleanly. */}
+            {item.title === 'Shop Hydrogen' ? 'Shop Classic' : item.title}
           </NavLink>
         );
       })}
@@ -120,7 +120,6 @@ export function HeaderMenu({
 function HeaderCtas({cart}: Pick<HeaderProps, 'cart'>) {
   return (
     <nav className="header-ctas" role="navigation">
-      <HeaderMenuMobileToggle />
       <SearchToggle />
       <CartToggle cart={cart} />
     </nav>
@@ -161,19 +160,6 @@ function AccountLink({isLoggedIn}: Pick<HeaderProps, 'isLoggedIn'>) {
         </Await>
       </Suspense>
     </NavLink>
-  );
-}
-
-function HeaderMenuMobileToggle() {
-  const {open} = useAside();
-  return (
-    <button
-      className="header-menu-mobile-toggle reset header-icon-button"
-      onClick={() => open('mobile')}
-      aria-label="Open menu"
-    >
-      <MenuIcon />
-    </button>
   );
 }
 
@@ -289,23 +275,6 @@ function BagIcon() {
   );
 }
 
-function MenuIcon() {
-  return (
-    <svg
-      className="header-icon"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path d="M4 7h16M4 12h16M4 17h16" />
-    </svg>
-  );
-}
-
 const FALLBACK_HEADER_MENU = {
   id: 'gid://shopify/Menu/199655587896',
   items: [
@@ -360,3 +329,4 @@ function activeLinkStyle({
     color: isPending ? 'grey' : undefined,
   };
 }
+
