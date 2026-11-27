@@ -266,24 +266,21 @@ button.reset:hover:not(:has(> *)) {
   }
 }
 
-.header-menu-mobile-toggle {
-  @media (min-width: 48em) {
-    display: none;
-  }
-}
-
 .header-menu-mobile {
   display: flex;
   flex-direction: column;
   grid-gap: 1rem;
 }
 
+/* ONE NAV, no drawer (ALLWAYZ 2026-11-27: "navi drawer might not be
+   necessary... a lot of dups of navis"): the slide-out menu is gone, so
+   the header menu renders at every width. On small screens it scrolls
+   horizontally instead (wra-commerce.css gives it overflow-x: auto
+   with the scrollbar hidden). */
 .header-menu-desktop {
-  display: none;
+  display: flex;
   grid-gap: 1rem;
   @media (min-width: 45em) {
-    display: flex;
-    grid-gap: 1rem;
     margin-left: 3rem;
   }
 }
@@ -306,8 +303,8 @@ button.reset:hover:not(:has(> *)) {
 /* Seasoning pass (2026-11-27): the center cluster — desktop menu plus
    the account control — sits in the grid's auto column between two 1fr
    tracks, so it lands at the true center of the bar instead of drifting
-   with the menu's width. On mobile the menu hides below 45em and the
-   account icon stands alone at center. */
+   with the menu's width. On mobile the menu scrolls horizontally and
+   the account icon rides at the end of the cluster. */
 .header-center {
   align-items: center;
   display: flex;
@@ -1041,5 +1038,6 @@ button.reset:hover:not(:has(> *)) {
   justify-content: center;
   text-align: center;
 }
+
 
 
