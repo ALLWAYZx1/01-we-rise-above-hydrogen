@@ -40,11 +40,11 @@ export function Header({
         />
         <strong className="sr-only">{shop.name}</strong>
       </NavLink>
-      {/* Center zone (2026-11-27 seasoning pass, ALLWAYZ's screenshots):
-          the header is a 1fr / auto / 1fr grid, so this cluster sits at
-          the true center of the bar. The account control rides in it —
-          on mobile the menu hides and the account icon is left standing
-          alone at center. */}
+      {/* Center zone: the header is a 1fr / auto / 1fr grid, so the menu
+          sits at the true center of the bar. The account icon used to
+          ride at the end of this cluster; ALLWAYZ 2026-11-27 ("profile
+          icon is at the wrong spot") moved it to the right-hand cluster
+          with search and cart, where a shopper expects it. */}
       <div className="header-center">
         <HeaderMenu
           menu={menu}
@@ -52,9 +52,8 @@ export function Header({
           primaryDomainUrl={header.shop.primaryDomain.url}
           publicStoreDomain={publicStoreDomain}
         />
-        <AccountLink isLoggedIn={isLoggedIn} />
       </div>
-      <HeaderCtas cart={cart} />
+      <HeaderCtas cart={cart} isLoggedIn={isLoggedIn} />
     </header>
   );
 }
@@ -114,12 +113,16 @@ export function HeaderMenu({
 
 // Decluttered CTAs (2026-11-27 seasoning pass): the right cluster used
 // to spell out "Sign in / Search / Cart N" as text, crowding the bar
-// next to the menu. The three controls are icons now; the words live
+// next to the menu. The controls are icons now; the words live
 // in aria-labels and screen-reader text, and the cart keeps its count
 // as a small gold numeral (cosmic.css already styles spans in here).
-function HeaderCtas({cart}: Pick<HeaderProps, 'cart'>) {
+function HeaderCtas({
+  cart,
+  isLoggedIn,
+}: Pick<HeaderProps, 'cart' | 'isLoggedIn'>) {
   return (
     <nav className="header-ctas" role="navigation">
+      <AccountLink isLoggedIn={isLoggedIn} />
       <SearchToggle />
       <CartToggle cart={cart} />
     </nav>
@@ -329,4 +332,5 @@ function activeLinkStyle({
     color: isPending ? 'grey' : undefined,
   };
 }
+
 

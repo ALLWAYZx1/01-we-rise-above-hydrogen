@@ -185,7 +185,13 @@ body {
   background: linear-gradient(90deg, rgba(10,6,24,.98), rgba(23,12,47,.95), rgba(10,6,24,.98));
   box-shadow: 0 0 24px rgba(109,40,217,.14);
 }
-.cosmic-home [data-section="marquee-band"] .wra-marquee-track { animation-duration: 30s; }
+/* The scroll itself (ALLWAYZ 2026-11-27: "give the announcement bar
+   motion"): the track never had a base animation — only durations were
+   set, and a duration with no animation-name sits perfectly still.
+   The sequence renders twice, so the -50% loop is seamless. Reduced
+   motion rests it via the global rule. */
+@keyframes wra-marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.cosmic-home [data-section="marquee-band"] .wra-marquee-track { animation-name: wra-marquee-scroll; animation-duration: 30s; animation-timing-function: linear; animation-iteration-count: infinite; }
 .cosmic-home [data-section="marquee-band"] span { color: var(--cosmic-champagne); letter-spacing: .34em; text-shadow: 0 0 12px rgba(216,182,106,.32); }
 .cosmic-home [data-section="marquee-band"] span span { color: var(--cosmic-gold); text-shadow: 0 0 10px rgba(216,182,106,.7); }
 
@@ -850,3 +856,4 @@ body {
     animation: none !important;
   }
 }
+
