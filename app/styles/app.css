@@ -303,8 +303,8 @@ button.reset:hover:not(:has(> *)) {
 /* Seasoning pass (2026-11-27): the center cluster — desktop menu plus
    the account control — sits in the grid's auto column between two 1fr
    tracks, so it lands at the true center of the bar instead of drifting
-   with the menu's width. On mobile the menu scrolls horizontally and
-   the account icon rides at the end of the cluster. */
+   with the menu's width. On mobile the menu scrolls horizontally; the
+   account icon rides with search and cart in the right cluster. */
 .header-center {
   align-items: center;
   display: flex;

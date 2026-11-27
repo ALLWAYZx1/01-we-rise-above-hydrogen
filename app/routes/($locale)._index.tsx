@@ -67,13 +67,24 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
 
   type HomepageProduct = HomepageProductsQuery['products']['nodes'][number];
   const allProducts: HomepageProduct[] = products.nodes;
-  const newDrops = allProducts.slice(0, 8);
-  const featured = allProducts.slice(0, 4);
+  // ONE PASS, NO DUPS (ALLWAYZ 2026-11-27: "front page have dups of
+  // products"): every section used to slice from the top of this same
+  // list, so the campaign piece, New Drops, Featured and the tile grid
+  // all showed the same products. Each section now takes the NEXT
+  // slice of the list — a product appears exactly once on the page.
   const campaign =
     allProducts.find((product: HomepageProduct) => product.featuredImage) ??
     null;
+  const rest = campaign
+    ? allProducts.filter(
+        (product: HomepageProduct) => product.id !== campaign.id,
+      )
+    : allProducts;
+  const newDrops = rest.slice(0, 8);
+  const featured = rest.slice(8, 12);
 
-  const tiles: ProductTile[] = allProducts
+  const tiles: ProductTile[] = rest
+    .slice(12)
     .filter((product: HomepageProduct) => product.featuredImage != null)
     .slice(0, 6)
     .map((product: HomepageProduct) => ({
@@ -351,10 +362,11 @@ const HOMEPAGE_PRODUCTS_QUERY = `#graphql
   }
   query HomepageProducts($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    products(first: 12, sortKey: UPDATED_AT, reverse: true) {
+    products(first: 24, sortKey: UPDATED_AT, reverse: true) {
       nodes {
         ...HomepageProductItem
       }
     }
   }
 ` as const;
+
