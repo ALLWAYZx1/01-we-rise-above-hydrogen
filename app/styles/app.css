@@ -753,6 +753,40 @@ button.reset:hover:not(:has(> *)) {
 
 /*
 * --------------------------------------------------
+* routes/account — centered layout
+* ALLWAYZ 2026-11-27: "the text and containers for them
+* need to be centered" — the account shell is a wide
+* 1400px column, so headings, the account menu, the
+* order filter box, order entries and the profile form
+* all pinned to its left edge. Center them, same as the
+* centered text pages (.page / .policy).
+* --------------------------------------------------
+*/
+.account {
+  text-align: center;
+}
+
+.account .order-search-form,
+.account .account-profile form {
+  margin-inline: auto;
+  max-width: 560px;
+}
+
+.account .order-search-buttons {
+  justify-content: center;
+}
+
+.account .orders fieldset {
+  margin-inline: auto;
+  max-width: 560px;
+}
+
+.account-profile input {
+  text-align: center;
+}
+
+/*
+* --------------------------------------------------
 * Order Search Form - Minimal & Responsive
 * --------------------------------------------------
 */
@@ -984,6 +1018,12 @@ button.reset:hover:not(:has(> *)) {
   width: 100%;
 }
 
+/* Brand block centered too — it sat left while the menu and
+   facts rows below it were already centered (ALLWAYZ 2026-11-27). */
+.footer-inner {
+  text-align: center;
+}
+
 .footer-menu {
   box-sizing: border-box;
   width: 100%;
@@ -1001,4 +1041,5 @@ button.reset:hover:not(:has(> *)) {
   justify-content: center;
   text-align: center;
 }
+
 
