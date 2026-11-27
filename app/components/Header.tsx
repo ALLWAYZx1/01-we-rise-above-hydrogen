@@ -40,13 +40,21 @@ export function Header({
         />
         <strong className="sr-only">{shop.name}</strong>
       </NavLink>
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-        publicStoreDomain={publicStoreDomain}
-      />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      {/* Center zone (2026-11-27 seasoning pass, ALLWAYZ's screenshots):
+          the header is a 1fr / auto / 1fr grid, so this cluster sits at
+          the true center of the bar. The account control rides in it —
+          on mobile the menu hides and the account icon is left standing
+          alone at center. */}
+      <div className="header-center">
+        <HeaderMenu
+          menu={menu}
+          viewport="desktop"
+          primaryDomainUrl={header.shop.primaryDomain.url}
+          publicStoreDomain={publicStoreDomain}
+        />
+        <AccountLink isLoggedIn={isLoggedIn} />
+      </div>
+      <HeaderCtas cart={cart} />
     </header>
   );
 }
@@ -104,23 +112,55 @@ export function HeaderMenu({
   );
 }
 
-function HeaderCtas({
-  isLoggedIn,
-  cart,
-}: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
+// Decluttered CTAs (2026-11-27 seasoning pass): the right cluster used
+// to spell out "Sign in / Search / Cart N" as text, crowding the bar
+// next to the menu. The three controls are icons now; the words live
+// in aria-labels and screen-reader text, and the cart keeps its count
+// as a small gold numeral (cosmic.css already styles spans in here).
+function HeaderCtas({cart}: Pick<HeaderProps, 'cart'>) {
   return (
     <nav className="header-ctas" role="navigation">
       <HeaderMenuMobileToggle />
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
-        <Suspense fallback="Sign in">
-          <Await resolve={isLoggedIn} errorElement="Sign in">
-            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
-          </Await>
-        </Suspense>
-      </NavLink>
       <SearchToggle />
       <CartToggle cart={cart} />
     </nav>
+  );
+}
+
+function AccountLink({isLoggedIn}: Pick<HeaderProps, 'isLoggedIn'>) {
+  return (
+    <NavLink
+      prefetch="intent"
+      to="/account"
+      style={activeLinkStyle}
+      className="header-account-link"
+    >
+      <Suspense
+        fallback={
+          <>
+            <AccountIcon />
+            <span className="sr-only">Sign in</span>
+          </>
+        }
+      >
+        <Await
+          resolve={isLoggedIn}
+          errorElement={
+            <>
+              <AccountIcon />
+              <span className="sr-only">Sign in</span>
+            </>
+          }
+        >
+          {(isLoggedIn) => (
+            <>
+              <AccountIcon />
+              <span className="sr-only">{isLoggedIn ? 'Account' : 'Sign in'}</span>
+            </>
+          )}
+        </Await>
+      </Suspense>
+    </NavLink>
   );
 }
 
@@ -128,11 +168,11 @@ function HeaderMenuMobileToggle() {
   const {open} = useAside();
   return (
     <button
-      className="header-menu-mobile-toggle reset"
+      className="header-menu-mobile-toggle reset header-icon-button"
       onClick={() => open('mobile')}
       aria-label="Open menu"
     >
-      <h3>☰</h3>
+      <MenuIcon />
     </button>
   );
 }
@@ -140,8 +180,12 @@ function HeaderMenuMobileToggle() {
 function SearchToggle() {
   const {open} = useAside();
   return (
-    <button className="reset" onClick={() => open('search')} aria-label="Search">
-      Search
+    <button
+      className="reset header-icon-button"
+      onClick={() => open('search')}
+      aria-label="Search"
+    >
+      <SearchIcon />
     </button>
   );
 }
@@ -153,6 +197,7 @@ function CartBadge({count}: {count: number}) {
   return (
     <a
       href="/cart"
+      className="header-cart-link"
       onClick={(e) => {
         e.preventDefault();
         open('cart');
@@ -165,7 +210,10 @@ function CartBadge({count}: {count: number}) {
       }}
       aria-label={`Cart (${count} items)`}
     >
-      Cart <span aria-label={`(items: ${count})`}>{count}</span>
+      <BagIcon />
+      <span className="header-cart-count" aria-hidden="true">
+        {count}
+      </span>
     </a>
   );
 }
@@ -184,6 +232,78 @@ function CartBanner() {
   const originalCart = useAsyncValue() as CartApiQueryFragment | null;
   const cart = useOptimisticCart(originalCart);
   return <CartBadge count={cart?.totalQuantity ?? 0} />;
+}
+
+function AccountIcon() {
+  return (
+    <svg
+      className="header-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle cx="12" cy="8" r="3.6" />
+      <path d="M4.8 19.4c1.3-3.2 4-4.8 7.2-4.8s5.9 1.6 7.2 4.8" />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg
+      className="header-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="M16 16l4.5 4.5" />
+    </svg>
+  );
+}
+
+function BagIcon() {
+  return (
+    <svg
+      className="header-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M5.5 8h13l-1.1 11a2 2 0 0 1-2 1.8H8.6a2 2 0 0 1-2-1.8L5.5 8Z" />
+      <path d="M9 10V6.5a3 3 0 0 1 6 0V10" />
+    </svg>
+  );
+}
+
+function MenuIcon() {
+  return (
+    <svg
+      className="header-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M4 7h16M4 12h16M4 17h16" />
+    </svg>
+  );
 }
 
 const FALLBACK_HEADER_MENU = {
